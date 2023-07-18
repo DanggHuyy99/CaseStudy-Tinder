@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/home/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" integrity="sha512-rqQltXRuHxtPWhktpAZxLHUVJ3Eombn3hvk9PHjV/N5DMUYnzKPC1i3ub0mEXgFzsaZNeJcoE0YHq0j/GFsdGg==" crossorigin="anonymous" referrerpolicy="no-referrer" /></head>
+<body style="background-image: url(https://tinder.com/static/build/744fe6d80266616aba687006b7d764ad.webp);">
+<div class="loadding" id="loadding">
+    <img id="logo"src="https://i.pinimg.com/originals/2f/46/94/2f46949b9a458189cb08194a47ff4617.png" />
+</div>
+<div style="background-color: #00000052;HEIGHT: 100VH;" id="home">
+    <nav class="navbar navbar-expand-lg navbar-light demo">
+        <div class="container-fluid">
+            <!-- <img src="logotinder-removebg-preview (1).png"> -->
+            <h2 class="showbar">Tinder</h2>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <button class="btn btn-login" type="submit">Log in</button>
+                </div>
+                <div id="login-form" class="login-form">
+                    <h3>Log in</h3>
+                    <form>
+                        <div class="d-flex flex-column">
+                            <input type="text" placeholder="Username">
+                            <input type="password" placeholder="Password">
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="submit">Submit</button>
+                        </div>
+                        <div class="additional-options">
+                            <label><input type="checkbox"> Remember me</label>
+                            <a href="#">Forgot password?</a>
+                        </div>
+                        <div class="social-login">
+                            <button class="facebook-login"><i class="fab fa-facebook"></i> Login with Facebook</button>
+                            <button class="gmail-login"><i class="fab fa-google"></i> Login with Gmail</button>
+                            <button class="qr-login"><i class="fas fa-qrcode"></i> Login with QR Code</button>
+                        </div>
+                    </form>
+                    <button id="close-btn" class="btn btn-close"></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="swiperight">
+        <h1 class="text-center" style="color: white;font-size: 100px;">SWIPE RIGHT
+        </h1>
+        <div class="text-center">
+            <a href="http://localhost:8080/register">
+            <button class="btn btn-register" style="font-size: 20px; color: white; background-image: linear-gradient(to bottom right, #fd326b, #ff5543);">Register</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="/assets/home/homejs.js">
+
+</script>
+</html>

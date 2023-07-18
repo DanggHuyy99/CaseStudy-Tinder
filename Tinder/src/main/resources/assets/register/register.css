@@ -1,0 +1,40 @@
+select.form-select option:first-of-type::before {
+    content: "\f067";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 0.5em;
+}
+.radius {
+    border-radius: 25px;
+}
+.option-text {
+    display: inline-block;
+    margin: 0 1em;
+    opacity: 0.5;
+}
+.image-upload {
+    position: relative;
+    max-width: 150px;
+    max-height: 150px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: gray;
+}
+.image-upload .preview-image {
+    max-width: 100%;
+    height: auto;
+}
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    max-width: 150px;
+    display: none;
+}
+.file-input img {
+    width: 150px;
+    height: 150px;
+}
