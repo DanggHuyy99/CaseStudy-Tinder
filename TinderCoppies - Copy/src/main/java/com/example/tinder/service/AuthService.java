@@ -3,7 +3,6 @@ package com.example.tinder.service;
 import com.example.tinder.model.Photo;
 import com.example.tinder.model.User;
 import com.example.tinder.model.UserProfile;
-import com.example.tinder.model.interest.Interest;
 import com.example.tinder.model.role.Role;
 import com.example.tinder.repository.PhotoRepository;
 import com.example.tinder.repository.UserProfileRepository;
@@ -21,7 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -58,13 +58,6 @@ public class AuthService implements UserDetailsService {
         }
         user.setPhotos(photos);
 
-        List<String> interestNames = request.getInterest();
-        Set<Interest> interests = new HashSet<>();
-        for (String interestName : interestNames){
-            Interest interest = Interest.valueOf(interestName);
-            interests.add(interest);
-        }
-        user.setInterests(interests);
         userProfile.setUser(userRepository.save(user));
         userProfileRepository.save(userProfile);
     }
@@ -84,24 +77,20 @@ public class AuthService implements UserDetailsService {
             bindingResult.addError(error);
             check = true;
         }
-        if (request.getPassword().equals("")) {
-            FieldError error = new FieldError("user", "password", "Password cannot be empty");
-            bindingResult.addError(error);
-            check = true;
-        } else if (!Validate.isPasswordValid(request.getPassword())) {
-            FieldError error = new FieldError("user", "password", "Password must not contain special characters and must not exceed 15 characters");
-            bindingResult.addError(error);
-            check = true;
-        }
-        if (request.getFullName().equals("")) {
-            FieldError error = new FieldError("user", "fullName", "FullName cannot be empty");
-            bindingResult.addError(error);
-            check = true;
-        } else if (!Validate.isFullNameValid(request.getFullName())) {
-            FieldError error = new FieldError("user", "fullName", "The FullName cannot contain special characters, leading and trailing spaces");
-            bindingResult.addError(error);
-            check = true;
-        }
+//        if (request.getPassword().equals("")) {
+//            FieldError error = new FieldError("user", "password", "Password cannot be empty");
+//            bindingResult.addError(error);
+//            check = true;
+//        } else if (!Validate.isPasswordValid(request.getPassword())) {
+//            FieldError error = new FieldError("user", "password", "Password must be alphanumeric, can't be longer than 15 characters, can't contain special characters");
+//            bindingResult.addError(error);
+//            check = true;
+//        }
+//        if (!Validate.isFullNameValid(request.getFullName())) {
+//            FieldError error = new FieldError("user", "fullName", "FullName must be alphanumeric, can't be longer than 15 characters, can't contain special characters");
+//            bindingResult.addError(error);
+//            check = true;
+//        }
         if (request.getEmail().equals("")) {
             FieldError error = new FieldError("user", "email", "Email cannot be empty");
             bindingResult.addError(error);

@@ -284,20 +284,3 @@ body .facebook-login {
     transform: scale(1.1);
     transition: all 0.3s;
 }
-.trademark {
-    vertical-align: top;
-    position: relative;
-    top: -0.2em; /* Điều chỉnh giá trị này để thay đổi vị trí dọc của ký tự ® */
-}
-#swipeRightText {
-    color: white;
-    font-size: 100px;
-    opacity: 1;
-    transition: opacity 0.5s, font-weight 0.5s;
-}
-
-.scrolled #swipeRightText {
-    opacity: 0;
-    font-weight: normal;
-}
-

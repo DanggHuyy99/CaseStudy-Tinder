@@ -29,7 +29,7 @@ public class RegisterRequest {
 
     private Gender gender;
 
-    private List<String> interest;
+    private Interest interest;
 
     private List<String> photoUrls;
 

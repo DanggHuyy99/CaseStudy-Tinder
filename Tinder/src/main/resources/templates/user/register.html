@@ -9,8 +9,10 @@
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/assets/register/register.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-pzjw8w/sjRo71QoKtJcWwylF5jGwosWQN4PB9o4k2Iw78Fv1h7Euw4MnsjuM2n1Y" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+          integrity="sha384-pzjw8w/sjRo71QoKtJcWwylF5jGwosWQN4PB9o4k2Iw78Fv1h7Euw4MnsjuM2n1Y" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <div class="text-center" style="margin: 5% auto;">
@@ -22,6 +24,7 @@
         role="form"
         th:action="@{/register}"
         enctype="multipart/form-data"
+        id="formSubmit"
 >
     <div class="container " style="padding: 0 250px;">
         <br>
@@ -61,7 +64,7 @@
                 <br>
                 <div class="col-md-10">
                     <label for="phone" class="form-label fw-bold">Phone</label>
-                    <input type="number" class="form-control" id="phone" placeholder="070263****"
+                    <input type="text" class="form-control" id="phone" placeholder="070263****"
                            th:field="*{phone}">
                     <p th:errors="*{phone}" class="text-danger"
                        th:if="${#fields.hasErrors('phone')}"></p>
@@ -78,8 +81,9 @@
                 <div class="col-md-10" style="margin: 10px 0">
                     <label class="form-label fw-bold">Giới tính</label>
                     <div class="d-flex justify-content-between">
-                        <div  th:each="gender, iterStat : ${genders}">
-                            <input type="radio" class="btn-check" th:name="options" th:id="'option' + ${iterStat.index+1}" autocomplete="off"
+                        <div th:each="gender, iterStat : ${genders}">
+                            <input type="radio" class="btn-check" th:name="options"
+                                   th:id="'option' + ${iterStat.index+1}" autocomplete="off"
                                    th:value="${gender}" th:field="*{gender}">
                             <label style="width: 105px" class="btn btn-outline-secondary me-2 radius fw-bold"
                                    th:for="'option' + ${iterStat.index+1}" th:text="${gender}"></label>
@@ -89,20 +93,20 @@
                        th:if="${#fields.hasErrors('gender')}"></p>
                 </div>
                 <br>
-<!--                <div class="col-md-10">-->
-<!--                    <label class="form-label fw-bold">Hiển thị cho tôi</label>-->
-<!--                    <div class="d-flex justify-content-between">-->
-<!--                        <input type="radio" class="btn-check" name="options-2" id="show-option1" autocomplete="off">-->
-<!--                        <label style="padding: 5px 35px;" class="btn btn-outline-secondary me-2 radius fw-bold"-->
-<!--                               for="show-option1">Nam</label>-->
-<!--                        <input type="radio" class="btn-check" name="options-2" id="show-option2" autocomplete="off">-->
-<!--                        <label style="padding: 5px 40px;" class="btn btn-outline-secondary me-2 radius fw-bold"-->
-<!--                               for="show-option2">Nữ</label>-->
-<!--                        <input type="radio" class="btn-check" name="options-2" id="show-option3" autocomplete="off">-->
-<!--                        <label style="padding: 5px 10px;" class="btn btn-outline-secondary radius fw-bold"-->
-<!--                               for="show-option3">Mọi người</label>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div class="col-md-10">-->
+                <!--                    <label class="form-label fw-bold">Hiển thị cho tôi</label>-->
+                <!--                    <div class="d-flex justify-content-between">-->
+                <!--                        <input type="radio" class="btn-check" name="options-2" id="show-option1" autocomplete="off">-->
+                <!--                        <label style="padding: 5px 35px;" class="btn btn-outline-secondary me-2 radius fw-bold"-->
+                <!--                               for="show-option1">Nam</label>-->
+                <!--                        <input type="radio" class="btn-check" name="options-2" id="show-option2" autocomplete="off">-->
+                <!--                        <label style="padding: 5px 40px;" class="btn btn-outline-secondary me-2 radius fw-bold"-->
+                <!--                               for="show-option2">Nữ</label>-->
+                <!--                        <input type="radio" class="btn-check" name="options-2" id="show-option3" autocomplete="off">-->
+                <!--                        <label style="padding: 5px 10px;" class="btn btn-outline-secondary radius fw-bold"-->
+                <!--                               for="show-option3">Mọi người</label>-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <br>
                 <div class="col-md-10">
                     <label class="form-label fw-bold">Mình đang tìm</label><br>
@@ -114,40 +118,40 @@
             </div>
             <div style="max-width: 50%;">
                 <label class="form-label fw-bold">Ảnh hồ sơ</label><br>
-<!--                <div class="d-flex justify-content-evenly">-->
-<!--                    <div class="image-upload">-->
-<!--                        <label for="file-input">-->
-<!--                            <img id="preview-image" src="https://via.placeholder.com/100x150" width="100px"-->
-<!--                                 height="150px"-->
-<!--                            >-->
-<!--                        </label>-->
-<!--                        <div class="center">-->
-<!--                            <input id="file-input" type="file"-->
-<!--                                   onchange="document.getElementById('preview-image').src = window.URL.createObjectURL(this.files[0])">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="image-upload">-->
-<!--                        <label for="file-input-2">-->
-<!--                            <img id="preview-image-2" src="https://via.placeholder.com/100x150" width="100px"-->
-<!--                                 height="150px">-->
-<!--                        </label>-->
-<!--                        <div class="center">-->
-<!--                            <input id="file-input-2" type="file"-->
-<!--                                   onchange="document.getElementById('preview-image-2').src = window.URL.createObjectURL(this.files[0])">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="image-upload">-->
-<!--                        <label for="file-input-3">-->
-<!--                            <img id="preview-image-3" src="https://via.placeholder.com/100x150" width="100px"-->
-<!--                                 height="150px"-->
-<!--                            >-->
-<!--                        </label>-->
-<!--                        <div class="center">-->
-<!--                            <input id="file-input-3" type="file"-->
-<!--                                   onchange="document.getElementById('preview-image-3').src = window.URL.createObjectURL(this.files[0])">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div class="d-flex justify-content-evenly">-->
+                <!--                    <div class="image-upload">-->
+                <!--                        <label for="file-input">-->
+                <!--                            <img id="preview-image" src="https://via.placeholder.com/100x150" width="100px"-->
+                <!--                                 height="150px"-->
+                <!--                            >-->
+                <!--                        </label>-->
+                <!--                        <div class="center">-->
+                <!--                            <input id="file-input" type="file"-->
+                <!--                                   onchange="document.getElementById('preview-image').src = window.URL.createObjectURL(this.files[0])">-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                    <div class="image-upload">-->
+                <!--                        <label for="file-input-2">-->
+                <!--                            <img id="preview-image-2" src="https://via.placeholder.com/100x150" width="100px"-->
+                <!--                                 height="150px">-->
+                <!--                        </label>-->
+                <!--                        <div class="center">-->
+                <!--                            <input id="file-input-2" type="file"-->
+                <!--                                   onchange="document.getElementById('preview-image-2').src = window.URL.createObjectURL(this.files[0])">-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                    <div class="image-upload">-->
+                <!--                        <label for="file-input-3">-->
+                <!--                            <img id="preview-image-3" src="https://via.placeholder.com/100x150" width="100px"-->
+                <!--                                 height="150px"-->
+                <!--                            >-->
+                <!--                        </label>-->
+                <!--                        <div class="center">-->
+                <!--                            <input id="file-input-3" type="file"-->
+                <!--                                   onchange="document.getElementById('preview-image-3').src = window.URL.createObjectURL(this.files[0])">-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <br>
                 <div class="d-flex justify-content-evenly">
                     <div class="image-upload">
@@ -170,26 +174,59 @@
                                    onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">
                         </div>
                     </div>
-<!--                    <div class="image-upload">-->
-<!--                        <label for="file-input-5">-->
-<!--                            <img id="preview-image-5" src="https://via.placeholder.com/100x150" width="100px"-->
-<!--                                 height="150px">-->
-<!--                        </label>-->
-<!--                        <div class="center">-->
-<!--                            <input id="file-input-5" type="file"-->
-<!--                                   onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="image-upload">-->
-<!--                        <label for="file-input-6">-->
-<!--                            <img id="preview-image-6" src="https://via.placeholder.com/100x150" width="100px"-->
-<!--                                 height="150px">-->
-<!--                        </label>-->
-<!--                        <div class="center">-->
-<!--                            <input id="file-input-6" type="file"-->
-<!--                                   onchange="document.getElementById('preview-image-6').src = window.URL.createObjectURL(this.files[0])">-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <!--                    <div class="image-upload">-->
+                    <!--                        <label for="file-input-5">-->
+                    <!--                            <img id="preview-image-5" src="https://via.placeholder.com/100x150" width="100px"-->
+                    <!--                                 height="150px">-->
+                    <!--                        </label>-->
+                    <!--                        <div class="center">-->
+                    <!--                            <input id="file-input-5" type="file"-->
+                    <!--                                   onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <div class="image-upload">
+                        <label for="file-input-6">
+                            <img id="preview-image-6" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="150px">
+                        </label>
+                        <div class="center">
+                            <input id="file-input-6" type="file" name="fileUpload" multiple
+                                   onchange="saveImageToLocalStorage(this);document.getElementById('preview-image-6').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="d-flex justify-content-evenly">
+                    <div class="image-upload">
+                        <label for="file-input-7">
+                            <img id="preview-image-7" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="150px">
+                        </label>
+                        <div class="center">
+                            <input id="file-input-7" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-7').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                    <div class="image-upload">
+                        <label for="file-input-8">
+                            <img id="preview-image-8" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="150px">
+                        </label>
+                        <div class="center">
+                            <input id="file-input-8" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-8').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                    <div class="image-upload">
+                        <label for="file-input-9">
+                            <img id="preview-image-9" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="150px">
+                        </label>
+                        <div class="center">
+                            <input id="file-input-9" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-9').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
                 </div>
                 <br>
                 <div class="text-center">
@@ -216,16 +253,19 @@
                         <label class="form-label fw-bold">Sở thích</label>
                         <div>
                             <div class="d-flex justify-content-between" th:each="interest, iterStat : ${interests}">
-                                <input type="checkbox" class="btn-check check" th:name="interest" th:id="'btncheck' + ${iterStat.index+1}" autocomplete="off"
+                                <input type="checkbox" class="btn-check check" th:name="interest"
+                                       th:id="'btncheck' + ${iterStat.index+1}" autocomplete="off"
                                        th:value="${interest}" th:field="*{interest}"
-                                onclick="selectInterest('${interest}')">
+                                       onclick="selectInterest('${interest}')">
                                 <label style="padding: 5px 35px;" class="btn btn-outline-secondary me-2 radius fw-bold"
                                        th:for="'btncheck' + ${iterStat.index+1}" th:text="${interest}"></label>
                             </div>
                         </div>
 
                     </div>
-                    <button id="interestSubmitBtn" type="button" class="btn btn-primary" onclick="saveInterests()">Chọn</button>
+                    <button id="interestSubmitBtn" type="button" class="btn btn-primary" onclick="saveInterests()">
+                        Chọn
+                    </button>
                     <button onclick="hideInterests(event)" class="btn-close">
                         <i class="fas fa-times"></i>
                     </button>
@@ -251,9 +291,12 @@
         </div>
     </div>
     <div class="text-center">
-        <button class="btn btn btn-danger fw-bold" style="padding: 10px 30px;margin: 5% 0;">Đăng ký</button>
+        <button onclick="checkSubmit(event)" class="btn btn btn-danger fw-bold" style="padding: 10px 30px;margin: 5% 0;">Đăng
+            ký
+        </button>
     </div>
 </form>
+
 
 <script>
     function showInterests(event) {
@@ -266,6 +309,7 @@
         event.preventDefault();
         const interestModal = document.getElementById("interestModal");
         interestModal.style.display = "none";
+        showInterestedChecked();
     }
 
     function selectInterest(interest) {
@@ -275,19 +319,83 @@
     }
 
     function saveInterests() {
-        const selectedOptions = document.querySelectorAll(".interest-option.selected");
-        const selectedInterests = Array.from(selectedOptions).map(option => option.dataset.interest);
-
-        const showInterestsDiv = document.querySelector(".showInterests");
-        showInterestsDiv.innerHTML = "";
-        selectedInterestsList.forEach(interest => {
-            const interestItem = document.createElement("span");
-            interestItem.textContent = interest;
-            showInterestsDiv.appendChild(interestItem);
-        });
-
+        showInterestedChecked();
         hideInterests();
     }
+
+    function showInterestedChecked() {
+        const selectedInterests = [];
+        const selectedOptions = document.getElementsByClassName('check');
+        for (const item of selectedOptions) {
+            if (item.checked) {
+                selectedInterests.push(item.value)
+            }
+        }
+        const showInterestsDiv = document.querySelector(".showInterests");
+        showInterestsDiv.innerHTML = "";
+        for (const interest of selectedInterests) {
+            const interestElement = document.createElement("button");
+            interestElement.textContent = interest;
+            interestElement.classList.add("blabla", "custom-css-class")
+            showInterestsDiv.appendChild(interestElement);
+        }
+    }
+
+    function checkSubmit(event) {
+        event.preventDefault();
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        let imageCount = 0;
+        for (const img of fileInputs) {
+            if (img.files.length > 0) {
+                imageCount++
+            }
+        }
+        if (imageCount >= 2){
+            const form = document.getElementById("formSubmit");
+            form.submit();
+        } else {
+            swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please add at least 2 photos to continue',
+            });
+        }
+    }
+
+    function saveImageToLocalStorage(fileInput) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const imageUrl = e.target.result;
+            const savedImages = localStorage.getItem('savedImages');
+            let imageUrls = [];
+
+            if (savedImages) {
+                imageUrls = JSON.parse(savedImages);
+            }
+            imageUrls.push(imageUrl);
+            localStorage.setItem('savedImages', JSON.stringify(imageUrls));
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+
+    function disPlayImagelocalStorage() {
+        const savedImages = localStorage.getItem('savedImages');
+        if (savedImages) {
+            const imageUrls = JSON.parse(savedImages);
+
+            for (let i = 0; i < imageUrls.length; i++) {
+                const imageUrl = imageUrls[i];
+                const imgElement = document.getElementById(`preview-image-${i + 7}`);
+                imgElement.src = imageUrl;
+            }
+        }
+    }
+
+    disPlayImagelocalStorage();
 </script>
 </body>
 </html>

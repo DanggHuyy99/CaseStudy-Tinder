@@ -7,11 +7,11 @@ public class Validate {
     public static boolean isUsernameValid(String username) {
         return Pattern.compile(USERNAME_REGEX).matcher(username).matches();
     }
-    public static final String PASSWORD_REGEX = "^[a-zA-Z0-9]{1,15}$";
+    public static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=[a-zA-Z0-9]*[^a-zA-Z0-9])[^!@#$%^&*(),.?\":{}|<>][a-zA-Z0-9]{1,15}$";
     public static boolean isPasswordValid(String password) {
         return Pattern.compile(PASSWORD_REGEX).matcher(password).matches();
     }
-    public static final String NAME_REGEX = "^[a-zA-ZÀ-Ỹà-ỹ]+( [a-zA-ZÀ-Ỹà-ỹ]+)*$";
+    public static final String NAME_REGEX = "^[/p{L}/s]{4,20}$";
     public static boolean isFullNameValid(String name) {
         return Pattern.compile(NAME_REGEX).matcher(name).matches();
     }

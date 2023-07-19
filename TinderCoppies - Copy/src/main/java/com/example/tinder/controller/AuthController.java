@@ -42,32 +42,38 @@ public class AuthController {
 //loop qua làm từng sau lưu xuông database/
         List<String> listImg = new ArrayList<>();
         for (var file : fileUpload) {
-            if (file.isEmpty()) {
-                continue;
+            //save img to db
+            String name = file.getOriginalFilename();
+            listImg.add(name);
+            request.setPhotoUrls(listImg);
+
+            // Lấy đường dẫn tới thư mục gốc của dự án
+            String projectDir = System.getProperty("user.dir");
+
+            // Lưu file vào thư mục uploads
+            String fileName = file.getOriginalFilename();
+
+            // Đường dẫn đến thư mục lưu trữ file trong thư mục resources
+            String uploadDir = projectDir + "/src/main/resources/assets/imgs/";
+
+            // Tạo thư mục nếu chưa tồn tại
+            Path  directory = Path.of(uploadDir);
+            if (!Files.exists(directory)) {
+                Files.createDirectory(directory,null);
             }
-                //save img to db
-                String name = file.getOriginalFilename();
-                listImg.add(name);
-                request.setPhotoUrls(listImg);
-
-                // Lấy đường dẫn tới thư mục gốc của dự án
-                String projectDir = System.getProperty("user.dir");
-
-                // Lưu file vào thư mục uploads
-                String fileName = file.getOriginalFilename();
-
-                // Đường dẫn đến thư mục lưu trữ file trong thư mục resources
-                String uploadDir = projectDir + "/src/main/resources/assets/imgs/";
-
-                // Tạo thư mục nếu chưa tồn tại
-                Path  directory = Path.of(uploadDir);
-                if (!Files.exists(directory)) {
-                    Files.createDirectory(directory,null);
-                }
-                Path targetPath = directory.resolve(fileName);
-                Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
+            Path targetPath = directory.resolve(fileName);
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
         }
+
+
+
+
+
+
+
+
+
+
 
         model.addAttribute("interests", Interest.values());
         model.addAttribute("genders", Gender.values());

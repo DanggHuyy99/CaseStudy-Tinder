@@ -50,19 +50,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-window.addEventListener('scroll', function() {
-    var swipeRightText = document.getElementById('swipeRightText');
-    var scrolled = window.scrollY;
-    var windowHeight = window.innerHeight;
-    var documentHeight = document.documentElement.scrollHeight;
-
-    if (scrolled > windowHeight) {
-        swipeRightText.style.opacity = '0';
-        swipeRightText.style.fontWeight = 'normal';
-    } else {
-        var opacity = 1 - (scrolled / windowHeight);
-        swipeRightText.style.opacity = opacity.toString();
-        swipeRightText.style.fontWeight = (1 - opacity).toString();
-    }
-});
-window.scrollTo(0, 0);
