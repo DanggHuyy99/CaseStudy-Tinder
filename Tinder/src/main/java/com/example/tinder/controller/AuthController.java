@@ -2,7 +2,7 @@ package com.example.tinder.controller;
 
 import com.example.tinder.model.gender.Gender;
 import com.example.tinder.model.interest.Interest;
-import com.example.tinder.service.AuthService;
+import com.example.tinder.service.auth.AuthService;
 import com.example.tinder.service.auth.request.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;

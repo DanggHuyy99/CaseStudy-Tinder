@@ -26,7 +26,7 @@ public class Validate {
     public static boolean isAgeValid(String ageS) {
         try {
             int age = Integer.parseInt(ageS);
-            if (age > 16 && age <= 80)
+            if (age >= 16 && age <= 69)
                 return true;
         } catch (Exception e) {
             return false;

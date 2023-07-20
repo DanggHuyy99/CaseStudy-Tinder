@@ -156,3 +156,20 @@ p {
     margin:0;
     float: left;
 }
+
+body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    overflow: hidden;
+}
+
+/* Safari */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Ngăn màn hình xê chuyển */
+html, body {
+    height: 100%;
+    margin: 0;
+}

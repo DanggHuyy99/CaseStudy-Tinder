@@ -28,7 +28,6 @@ loginButton.addEventListener('click', function () {
 
 // Xử lý sự kiện submit form
 loginForm.querySelector('form').addEventListener('submit', function (event) {
-    event.preventDefault();
     console.log('Submitted');
     loginForm.style.display = 'none';
 });

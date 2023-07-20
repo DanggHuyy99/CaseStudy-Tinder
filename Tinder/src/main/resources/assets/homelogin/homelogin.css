@@ -143,8 +143,8 @@
     background: linear-gradient(to top right, #FD267A, #FF6036);
 }
 .avatar{
-    width: 30px;
-    height: 30px;
+    width: 43px;
+    height: 40px;
     border-radius: 50%;
     background-image: url(https://images-ssl.gotinder.com/0001unknown/172x172_pct_0_0_100_100_unknown.jpg);
     background-position: 50% 50%;
@@ -352,3 +352,51 @@
 .tab-content.active {
     display: block;
 }
+
+#hidebutton{
+    background-color: #D3DBD6;
+    color: black;
+    font-weight: 700;
+    border-radius: 30px;
+}
+
+#hidebutton:hover{
+    filter: brightness(1.6);
+    transition: 0.5s;
+    font-weight: 900;
+}
+
+
+.bottom-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.bottom-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.bottom-button > div {
+    margin: 0 15px;
+}
+
+.bottom-button > div.hidden {
+    display: none;
+}
+
+.bottom-button > button {
+    transition: transform 0.5s ease;
+    transform: translateX(0%);
+}
+
+.bottom-button.show-hidden-btn > button {
+    transform: translateX(-45%);
+}
+
