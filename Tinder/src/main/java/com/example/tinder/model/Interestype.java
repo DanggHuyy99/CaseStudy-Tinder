@@ -1,13 +1,12 @@
 package com.example.tinder.model;
 
 import com.example.tinder.model.interest.Interest;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Interestype {
     private Interest interest;
 }

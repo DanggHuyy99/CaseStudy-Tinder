@@ -1,13 +1,13 @@
 package com.example.tinder.model;
 
 import com.example.tinder.model.gender.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserProfile {
@@ -28,7 +28,8 @@ public class UserProfile {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 }

@@ -2,12 +2,11 @@ package com.example.tinder.model;
 
 import com.example.tinder.model.gender.Gender;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "preferences")

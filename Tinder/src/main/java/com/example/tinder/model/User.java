@@ -4,16 +4,15 @@ import com.example.tinder.model.interest.Interest;
 import com.example.tinder.model.role.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -25,7 +24,7 @@ public class User {
 
     private String password;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private UserProfile userProfile;
 
@@ -60,7 +59,7 @@ public class User {
     @JsonIgnore
     private Set<Interest> interests;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch =FetchType.LAZY)
     @JsonIgnore
     private Swiper swiper;
 

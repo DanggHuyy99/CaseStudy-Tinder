@@ -36,52 +36,31 @@ public class UserWithProfileRestController {
 
     @GetMapping
     public ResponseEntity<List<UserWithProfileDTO>> getAllUserWithProfile(){
-        List<User> users = userService.getAllUsers();
-        List<UserWithProfileDTO> userWithProfileDTOS = new ArrayList<>();
-
-        for (User user : users){
-            UserProfile userProfile = userProfileService.findUserProfileById(user.getId());
-            List<Photo> photos = photoService.getPhotosByUserId(user.getId());
-            Set<Interest> interests = interestService.getInterestByUserId(user.getId());
-
-            UserWithProfileDTO userWithProfileDTO = new UserWithProfileDTO();
-            userWithProfileDTO.setId(user.getId());
-            userWithProfileDTO.setUsername(user.getUsername());
-            userWithProfileDTO.setUserProfileId(userProfile.getId());
-            userWithProfileDTO.setFullName(userProfile.getFullName());
-            userWithProfileDTO.setEmail(userProfile.getEmail());
-            userWithProfileDTO.setPhone(userProfile.getPhone());
-            userWithProfileDTO.setAge(userProfile.getAge());
-            userWithProfileDTO.setPhotos(photos);
-            userWithProfileDTO.setInterests(interests);
-            userWithProfileDTO.setLocation(userProfile.getLocation());
-
-            userWithProfileDTOS.add(userWithProfileDTO);
-        }
+        List<UserWithProfileDTO> userWithProfileDTOS = userService.getAllUserWithProfileDTO();
         return ResponseEntity.ok(userWithProfileDTOS);
     }
     private final
     @GetMapping("/{userId}") ResponseEntity<UserWithProfileDTO> getUserWithProfile(@PathVariable Long userId) {
-        User user = userService.findUserById(userId);
-        UserProfile userProfile = userProfileService.findUserProfileById(userId);
-        List<Photo> photos = photoService.getPhotosByUserId(userId);
-        Set<Interest> interests = interestService.getInterestByUserId(userId);
+//        User user = userService.findUserById(userId);
+//        UserProfile userProfile = userProfileService.findUserProfileById(userId);
+//        List<Photo> photos = photoService.getPhotosByUserId(userId);
+//        Set<Interest> interests = interestService.getInterestByUserId(userId);
+//
+//        UserWithProfileDTO userWithProfileDTO = new UserWithProfileDTO();
+//        userWithProfileDTO.setId(user.getId());
+//        userWithProfileDTO.setUsername(user.getUsername());
+//
+//
+//        userWithProfileDTO.setUserProfileId(userProfile.getId());
+//        userWithProfileDTO.setFullName(userProfile.getFullName());
+//        userWithProfileDTO.setEmail(userProfile.getEmail());
+//        userWithProfileDTO.setPhone(userProfile.getPhone());
+//        userWithProfileDTO.setAge(userProfile.getAge());
+//        userWithProfileDTO.setPhotos(photos);
+//        userWithProfileDTO.setInterests(interests);
+//        userWithProfileDTO.setLocation(userProfile.getLocation());
 
-        UserWithProfileDTO userWithProfileDTO = new UserWithProfileDTO();
-        userWithProfileDTO.setId(user.getId());
-        userWithProfileDTO.setUsername(user.getUsername());
-
-
-        userWithProfileDTO.setUserProfileId(userProfile.getId());
-        userWithProfileDTO.setFullName(userProfile.getFullName());
-        userWithProfileDTO.setEmail(userProfile.getEmail());
-        userWithProfileDTO.setPhone(userProfile.getPhone());
-        userWithProfileDTO.setAge(userProfile.getAge());
-        userWithProfileDTO.setPhotos(photos);
-        userWithProfileDTO.setInterests(interests);
-        userWithProfileDTO.setLocation(userProfile.getLocation());
-
-
+        UserWithProfileDTO userWithProfileDTO = userService.getUserProfileWithUserId(userId);
         return ResponseEntity.ok(userWithProfileDTO);
     }
 }

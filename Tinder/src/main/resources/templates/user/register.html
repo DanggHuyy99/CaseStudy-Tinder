@@ -13,6 +13,11 @@
           integrity="sha384-pzjw8w/sjRo71QoKtJcWwylF5jGwosWQN4PB9o4k2Iw78Fv1h7Euw4MnsjuM2n1Y" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .invalid-feedback {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 <div class="text-center" style="margin: 5% auto;">
@@ -30,55 +35,61 @@
         <br>
         <div class="row d-flex justify-content-center">
             <div style="max-width: 50%;">
-                <div class="col-md-10">
+                <div class="col-md-10 div-mr">
                     <label for="username" class="form-label fw-bold">Username</label>
                     <input type="text" class="form-control" id="username" placeholder="Username"
-                           th:field="*{username}">
-                    <p th:errors="*{username}" class="text-danger"
+                           th:field="*{username}" oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"
+                           th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''">
+                    <p id="username-error-submit" th:errors="*{username}" class="invalid-feedback"
                        th:if="${#fields.hasErrors('username')}"></p>
+                    <p id="username-error" class="invalid-feedback"></p>
                 </div>
-                <br>
-                <div class="col-md-10">
+                <div class="col-md-10 div-mr">
                     <label for="password" class="form-label fw-bold">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="*********"
-                           th:field="*{password}">
-                    <p th:errors="*{password}" class="text-danger"
+                           th:field="*{password}" oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"
+                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''">
+                    <p id="password-error-submit" th:errors="*{password}" class="invalid-feedback"
                        th:if="${#fields.hasErrors('password')}"></p>
+                    <p id="password-error" class="invalid-feedback"></p>
                 </div>
-                <br>
-                <div class="col-md-10">
-                    <label for="name" class="form-label fw-bold">Fullname</label>
-                    <input type="text" class="form-control" id="name" placeholder="Bing Chilling"
-                           th:field="*{fullName}">
-                    <p th:errors="*{fullName}" class="text-danger"
+                <div class="col-md-10 div-mr">
+                    <label for="fullName" class="form-label fw-bold">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Bing Chilling"
+                           th:field="*{fullName}" oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"
+                           th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''">
+                    <p id="fullName-error-submit" th:errors="*{fullName}" class="invalid-feedback"
                        th:if="${#fields.hasErrors('fullName')}"></p>
+                    <p id="fullName-error" class="invalid-feedback"></p>
                 </div>
-                <br>
-                <div class="col-md-10">
+                <div class="col-md-10 div-mr">
                     <label for="email" class="form-label fw-bold">Email</label>
                     <input type="email" class="form-control" id="email" placeholder="Love@Gmail.com"
-                           th:field="*{email}">
-                    <p th:errors="*{email}" class="text-danger"
+                           th:field="*{email}" oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
+                    <p id="email-error-submit" th:errors="*{email}" class="invalid-feedback"
                        th:if="${#fields.hasErrors('email')}"></p>
+                    <p id="email-error" class="invalid-feedback"></p>
                 </div>
-                <br>
-                <div class="col-md-10">
+                <div class="col-md-10 div-mr">
                     <label for="phone" class="form-label fw-bold">Phone</label>
                     <input type="text" class="form-control" id="phone" placeholder="070263****"
-                           th:field="*{phone}">
-                    <p th:errors="*{phone}" class="text-danger"
+                           th:field="*{phone}" oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"
+                           th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''">
+                    <p id="phone-error-submit" th:errors="*{phone}" class="invalid-feedback"
                        th:if="${#fields.hasErrors('phone')}"></p>
+                    <p id="phone-error" class="invalid-feedback"></p>
                 </div>
-                <br>
-                <div class="col-md-10">
+                <div class="col-md-10 div-mr">
                     <label for="age" class="form-label fw-bold">Age</label>
                     <input type="number" class="form-control" id="age" placeholder="18"
-                           th:field="*{age}">
-                    <p th:errors="*{age}" class="text-danger"
+                           th:field="*{age}" oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"
+                           th:classappend="${#fields.hasErrors('age')} ? 'is-invalid' : ''">
+                    <p id="age-error-submit" th:errors="*{age}" class="invalid-feedback"
                        th:if="${#fields.hasErrors('age')}"></p>
+                    <p id="age-error" class="invalid-feedback"></p>
                 </div>
-                <br>
-                <div class="col-md-10" style="margin: 10px 0">
+                <div class="col-md-10 div-mr">
                     <label class="form-label fw-bold">Giới tính</label>
                     <div class="d-flex justify-content-between">
                         <div th:each="gender, iterStat : ${genders}">
@@ -89,70 +100,12 @@
                                    th:for="'option' + ${iterStat.index+1}" th:text="${gender}"></label>
                         </div>
                     </div>
-                    <p th:errors="*{gender}" class="text-danger"
+                    <p th:errors="*{gender}" class="invalid-feedback"
                        th:if="${#fields.hasErrors('gender')}"></p>
-                </div>
-                <br>
-                <!--                <div class="col-md-10">-->
-                <!--                    <label class="form-label fw-bold">Hiển thị cho tôi</label>-->
-                <!--                    <div class="d-flex justify-content-between">-->
-                <!--                        <input type="radio" class="btn-check" name="options-2" id="show-option1" autocomplete="off">-->
-                <!--                        <label style="padding: 5px 35px;" class="btn btn-outline-secondary me-2 radius fw-bold"-->
-                <!--                               for="show-option1">Nam</label>-->
-                <!--                        <input type="radio" class="btn-check" name="options-2" id="show-option2" autocomplete="off">-->
-                <!--                        <label style="padding: 5px 40px;" class="btn btn-outline-secondary me-2 radius fw-bold"-->
-                <!--                               for="show-option2">Nữ</label>-->
-                <!--                        <input type="radio" class="btn-check" name="options-2" id="show-option3" autocomplete="off">-->
-                <!--                        <label style="padding: 5px 10px;" class="btn btn-outline-secondary radius fw-bold"-->
-                <!--                               for="show-option3">Mọi người</label>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-                <br>
-                <div class="col-md-10">
-                    <label class="form-label fw-bold">Mình đang tìm</label><br>
-                    <button type="button" class="btn btn-outline-secondary radius fw-bold"><i
-                            class="fas fa-plus"></i>
-                        Thêm mục đích hẹn hò
-                    </button>
                 </div>
             </div>
             <div style="max-width: 50%;">
                 <label class="form-label fw-bold">Ảnh hồ sơ</label><br>
-                <!--                <div class="d-flex justify-content-evenly">-->
-                <!--                    <div class="image-upload">-->
-                <!--                        <label for="file-input">-->
-                <!--                            <img id="preview-image" src="https://via.placeholder.com/100x150" width="100px"-->
-                <!--                                 height="150px"-->
-                <!--                            >-->
-                <!--                        </label>-->
-                <!--                        <div class="center">-->
-                <!--                            <input id="file-input" type="file"-->
-                <!--                                   onchange="document.getElementById('preview-image').src = window.URL.createObjectURL(this.files[0])">-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                    <div class="image-upload">-->
-                <!--                        <label for="file-input-2">-->
-                <!--                            <img id="preview-image-2" src="https://via.placeholder.com/100x150" width="100px"-->
-                <!--                                 height="150px">-->
-                <!--                        </label>-->
-                <!--                        <div class="center">-->
-                <!--                            <input id="file-input-2" type="file"-->
-                <!--                                   onchange="document.getElementById('preview-image-2').src = window.URL.createObjectURL(this.files[0])">-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                    <div class="image-upload">-->
-                <!--                        <label for="file-input-3">-->
-                <!--                            <img id="preview-image-3" src="https://via.placeholder.com/100x150" width="100px"-->
-                <!--                                 height="150px"-->
-                <!--                            >-->
-                <!--                        </label>-->
-                <!--                        <div class="center">-->
-                <!--                            <input id="file-input-3" type="file"-->
-                <!--                                   onchange="document.getElementById('preview-image-3').src = window.URL.createObjectURL(this.files[0])">-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-                <br>
                 <div class="d-flex justify-content-evenly">
                     <div class="image-upload">
                         <label for="file-input-4">
@@ -174,16 +127,6 @@
                                    onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">
                         </div>
                     </div>
-                    <!--                    <div class="image-upload">-->
-                    <!--                        <label for="file-input-5">-->
-                    <!--                            <img id="preview-image-5" src="https://via.placeholder.com/100x150" width="100px"-->
-                    <!--                                 height="150px">-->
-                    <!--                        </label>-->
-                    <!--                        <div class="center">-->
-                    <!--                            <input id="file-input-5" type="file"-->
-                    <!--                                   onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
                     <div class="image-upload">
                         <label for="file-input-6">
                             <img id="preview-image-6" src="https://via.placeholder.com/100x150" width="100px"
@@ -191,7 +134,7 @@
                         </label>
                         <div class="center">
                             <input id="file-input-6" type="file" name="fileUpload" multiple
-                                   onchange="saveImageToLocalStorage(this);document.getElementById('preview-image-6').src = window.URL.createObjectURL(this.files[0])">
+                                   onchange="document.getElementById('preview-image-6').src = window.URL.createObjectURL(this.files[0])">
                         </div>
                     </div>
                 </div>
@@ -250,28 +193,30 @@
                 <div class="modal-content">
                     <h3>Chọn sở thích</h3>
                     <div class="col-md-10 btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                        <label class="form-label fw-bold">Sở thích</label>
-                        <div>
-                            <div class="d-flex justify-content-between" th:each="interest, iterStat : ${interests}">
+                        <!--                        <label class="form-label fw-bold">Sở thích</label>-->
+                        <div class="d-flex">
+                            <div th:each="interest, iterStat : ${interests}">
                                 <input type="checkbox" class="btn-check check" th:name="interest"
                                        th:id="'btncheck' + ${iterStat.index+1}" autocomplete="off"
                                        th:value="${interest}" th:field="*{interest}"
                                        onclick="selectInterest('${interest}')">
-                                <label style="padding: 5px 35px;" class="btn btn-outline-secondary me-2 radius fw-bold"
+                                <label class="btn btn-outline-secondary me-2 radius fw-bold" style="margin:15px"
                                        th:for="'btncheck' + ${iterStat.index+1}" th:text="${interest}"></label>
                             </div>
                         </div>
-
                     </div>
-                    <button id="interestSubmitBtn" type="button" class="btn btn-primary" onclick="saveInterests()">
-                        Chọn
-                    </button>
+                    <div class="text-center">
+                        <button id="interestSubmitBtn" type="button" class="btn btn-primary radius fw-bold"
+                                onclick="saveInterests()" style="padding: 5px 20px;margin: 20px auto">
+                            Chọn
+                        </button>
+                    </div>
                     <button onclick="hideInterests(event)" class="btn-close">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-10 div-mr">
                 <label class="form-label fw-bold">Sở thích</label><br>
                 <button onclick="showInterests(event)" class="btn btn-outline-secondary radius fw-bold">
                     <i class="fas fa-plus"></i>
@@ -279,52 +224,49 @@
                 </button>
             </div>
             <div class="showInterests">
-
             </div>
-            <br>
-            <div class="col-md-10">
-                <label class="form-label fw-bold">Khuynh hướng tình dục</label><br>
-                <button type="button" class="btn btn-outline-secondary radius fw-bold"><i class="fas fa-plus"></i>
-                    Thêm khuynh hướng tình dục
-                </button>
-            </div>
+            <!--            <div class="col-md-10">-->
+            <!--                <label class="form-label fw-bold">Khuynh hướng tình dục</label><br>-->
+            <!--                <button type="button" class="btn btn-outline-secondary radius fw-bold"><i class="fas fa-plus"></i>-->
+            <!--                    Thêm khuynh hướng tình dục-->
+            <!--                </button>-->
+            <!--            </div>-->
         </div>
     </div>
     <div class="text-center">
-        <button onclick="checkSubmit(event)" class="btn btn btn-danger fw-bold" style="padding: 10px 30px;margin: 5% 0;">Đăng
+        <button onclick="checkSubmit(event)" class="btn btn-danger fw-bold" style="padding: 10px 30px;margin: 5% 0;">
+            Đăng
             ký
         </button>
     </div>
 </form>
+(811 B)
+https://via.placeholder.com/100x150
 
-
+10:26
 <script>
     function showInterests(event) {
         event.preventDefault();
         const interestModal = document.getElementById("interestModal");
         interestModal.style.display = "block";
     }
-
     function hideInterests() {
         event.preventDefault();
         const interestModal = document.getElementById("interestModal");
         interestModal.style.display = "none";
         showInterestedChecked();
     }
-
     function selectInterest(interest) {
         window.preventDefault();
         const interestOption = document.querySelector(`.interest-option[data-interest="${interest}"]`);
         interestOption.classList.toggle("selected");
     }
-
     function saveInterests() {
         showInterestedChecked();
         hideInterests();
     }
-
     function showInterestedChecked() {
-        const selectedInterests = [];
+        let selectedInterests = [];
         const selectedOptions = document.getElementsByClassName('check');
         for (const item of selectedOptions) {
             if (item.checked) {
@@ -334,13 +276,32 @@
         const showInterestsDiv = document.querySelector(".showInterests");
         showInterestsDiv.innerHTML = "";
         for (const interest of selectedInterests) {
-            const interestElement = document.createElement("button");
+            const interestElement = document.createElement("span");
+            console.log("huy" + interestElement)
             interestElement.textContent = interest;
             interestElement.classList.add("blabla", "custom-css-class")
+            const selectedShowOptions = document.getElementsByClassName('blabla');
+            const closeButton = document.createElement("i");
+            closeButton.classList.add("fas", "fa-times");
+            closeButton.style.color = "red";
+            closeButton.addEventListener("click", function () {
+                this.parentNode.parentNode.removeChild(this.parentNode);
+                selectedInterests = [];
+                for (const interest of selectedShowOptions) {
+                    selectedInterests.push(interest.textContent);
+                    for (let i = 0; i < selectedOptions.length; i++) {
+                        if (selectedInterests.includes(selectedOptions[i].value)) {
+                            selectedOptions[i].checked = true;
+                        } else {
+                            selectedOptions[i].checked = false;
+                        }
+                    }
+                }
+            });
+            interestElement.appendChild(closeButton);
             showInterestsDiv.appendChild(interestElement);
         }
     }
-
     function checkSubmit(event) {
         event.preventDefault();
         const fileInputs = document.querySelectorAll('input[type="file"]');
@@ -350,7 +311,7 @@
                 imageCount++
             }
         }
-        if (imageCount >= 2){
+        if (imageCount >= 2) {
             const form = document.getElementById("formSubmit");
             form.submit();
         } else {
@@ -361,32 +322,25 @@
             });
         }
     }
-
     function saveImageToLocalStorage(fileInput) {
         const file = fileInput.files[0];
         const reader = new FileReader();
-
         reader.onload = function (e) {
             const imageUrl = e.target.result;
             const savedImages = localStorage.getItem('savedImages');
             let imageUrls = [];
-
             if (savedImages) {
                 imageUrls = JSON.parse(savedImages);
             }
             imageUrls.push(imageUrl);
             localStorage.setItem('savedImages', JSON.stringify(imageUrls));
         };
-
         reader.readAsDataURL(file);
     }
-
-
     function disPlayImagelocalStorage() {
         const savedImages = localStorage.getItem('savedImages');
         if (savedImages) {
             const imageUrls = JSON.parse(savedImages);
-
             for (let i = 0; i < imageUrls.length; i++) {
                 const imageUrl = imageUrls[i];
                 const imgElement = document.getElementById(`preview-image-${i + 7}`);
@@ -394,8 +348,147 @@
             }
         }
     }
-
     disPlayImagelocalStorage();
+    let isUsernameError = false;
+    const onBlur = (input) => {
+        // const value = input.value;
+        let errorStatus = checkInput(input)
+        if (!errorStatus.error) {
+            isUsernameError = true;
+            document.getElementById(input.id + '-error').innerText = errorStatus.message;
+        } else {
+            isUsernameError = false;
+            document.getElementById(input.id + '-error').innerText = "";
+        }
+        input.classList.remove("is-invalid", "is-valid");
+        input.classList.add(isUsernameError ? "is-invalid" : "is-valid");
+    }
+    const onInput = (input) => {
+        let errorStatus = checkInput(input)
+        isUsernameError = !errorStatus.error;
+        input.classList.remove("is-invalid", "is-valid");
+        input.classList.add(isUsernameError ? "is-invalid" : "is-valid");
+    }
+    const onFocus = (input) => {
+        // const value = input.value;
+        document.getElementById(input.id + '-error').innerText = "";
+        document.getElementById(input.id + '-error-submit').innerText = "";
+    }
+    function checkInput(input) {
+        let value = input.value;
+        let regex;
+        let message;
+        switch (input.id) {
+            case "username":
+                if (value === "") {
+                    message = "Username can't be empty";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else if (value.length < 5 || value.length > 15) {
+                    message = "Username must be between 5 and 15 characters long";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else {
+                    regex = /^[a-zA-Z0-9]{1,15}$/;
+                    message = "Username can't have special characters"
+                    return {
+                        error: regex.test(value),
+                        message
+                    }
+                }
+            case "password":
+                if (value === "") {
+                    message = "Password can't be empty";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else if (value.length < 5 || value.length > 15) {
+                    message = "Password must be between 5 and 15 characters long";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else {
+                    regex = /^[a-zA-Z0-9]{1,15}$/;
+                    message = "Password can't have special characters"
+                    return {
+                        error: regex.test(value),
+                        message
+                    };
+                }
+            case "fullName":
+                if (value === "") {
+                    message = "Full name can't be empty";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else {
+                    regex = /^[a-zA-ZÀ-Ỹà-ỹ]+( [a-zA-ZÀ-Ỹà-ỹ]+)*$/;
+                    message = "Full name can't have special characters";
+                    return {
+                        error: regex.test(value),
+                        message
+                    }
+                }
+            case "email":
+                if (value === "") {
+                    message = "Email can't be empty";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else {
+                    regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.(com|edu|net|org|biz|info|vn|pro)$/;
+                    message = "Email with invalid domain name";
+                    return {
+                        error: regex.test(value),
+                        message
+                    }
+                }
+            case "phone":
+                if (value === "") {
+                    message = "Phone can't be empty";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else {
+                    regex = /^[0][0-9]{9}$/;
+                    message = "Phone number must have 10 digits and start with 0";
+                    return {
+                        error: regex.test(value),
+                        message
+                    }
+                }
+            case "age":
+                if (value === "") {
+                    message = "Age can't be empty";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else if (value < 16 || value > 69) {
+                    message = "Age must be between 16 and 69";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else {
+                    regex = /^\d+$/;
+                    message = "Age is only allowed to enter numbers";
+                    return {
+                        error: regex.test(value),
+                        message
+                    }
+                }
+        }
+    }
 </script>
 </body>
 </html>

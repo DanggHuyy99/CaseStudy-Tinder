@@ -3,6 +3,7 @@ package com.example.tinder.service.interest;
 import com.example.tinder.model.User;
 import com.example.tinder.model.interest.Interest;
 import com.example.tinder.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 @Data
+@Transactional
 public class InterestService {
     private final UserRepository userRepository;
 
