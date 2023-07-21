@@ -3,6 +3,8 @@ package com.example.tinder.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -22,5 +24,5 @@ public class Match {
     @JoinColumn(name = "user2_id")
     private User user2;
 
-
+    private LocalDateTime matchDate;
 }

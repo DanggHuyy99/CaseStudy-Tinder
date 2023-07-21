@@ -28,6 +28,9 @@ public class UserService {
     private final PhotoService photoService;
     private final InterestService interestService;
 
+    public User findByUsername(String username){
+        return userRepository.findByUsernameIgnoreCase(username);
+    }
     public User findUserById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.orElse(null);

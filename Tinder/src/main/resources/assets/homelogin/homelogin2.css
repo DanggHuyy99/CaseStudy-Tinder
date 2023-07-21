@@ -136,21 +136,21 @@ span.meta span {
     background-position: center;
     background-repeat: no-repeat;
 }
-.info {
-    width: 40px;
-    height: 40px;
-    border-radius: 40px;
-    background: #FFF;
-    border: 5px solid #F0F0F0;
-    float: left;
-    box-shadow: 1px 1px 1px 0px #E9E9E9;
-    margin-top: 14px;
-    margin-left: -4px;
-    background: url(http://web.arjentienkamp.com/codepen/tinder/info.png);
-    background-size: 15px;
-    background-position: center;
-    background-repeat: no-repeat;
-}
+/*.info {*/
+/*    width: 40px;*/
+/*    height: 40px;*/
+/*    border-radius: 40px;*/
+/*    background: #FFF;*/
+/*    border: 5px solid #F0F0F0;*/
+/*    float: left;*/
+/*    box-shadow: 1px 1px 1px 0px #E9E9E9;*/
+/*    margin-top: 14px;*/
+/*    margin-left: -4px;*/
+/*    background: url(http://web.arjentienkamp.com/codepen/tinder/info.png);*/
+/*    background-size: 15px;*/
+/*    background-position: center;*/
+/*    background-repeat: no-repeat;*/
+/*}*/
 p {
     padding:0;
     margin:0;
@@ -173,3 +173,7 @@ html, body {
     height: 100%;
     margin: 0;
 }
+
+/*#namefull{*/
+/*    width: max-content;*/
+/*}*/
