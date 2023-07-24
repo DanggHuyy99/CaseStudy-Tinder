@@ -1,37 +1,197 @@
+var stompClient = null;
+
+// Khi trang web tải xong
+window.onload = function() {
+    // Kết nối tới server WebSocket
+    connect();
+};
+
+function sendMessage(receiverId, content) {
+    var message = {
+        receiverId: receiverId,
+        content: content
+    };
+    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
+}
+
+function closeChat() {
+    document.getElementById("chatContainer").style.display = "none";
+    stompClient.disconnect();
+}
+function connect() {
+    // Tạo đối tượng SockJS và kết nối Stomp client
+    var socket = new SockJS('/ws'); // /ws là endpoint của WebSocket backend, thay đổi nếu cần
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function(frame) {
+        console.log('Web Socket Opened...');
+        // Gán sự kiện nhận tin nhắn từ server
+        stompClient.subscribe('/user/queue/messages', function(message) {
+            var messageDto = JSON.parse(message.body);
+            displayMessage(messageDto.sender, messageDto.content);
+        });
+    });
+}
+
+function disconnect() {
+    if (stompClient !== null) {
+        stompClient.disconnect();
+    }
+    console.log("Disconnected");
+}
+
+
+
+function showChat(receiverUsername) {
+    // Hiển thị khung chat với người dùng có username là receiverUsername
+    var chatContainer = document.getElementById("chatContainer");
+    chatContainer.style.display = "block";
+    document.getElementById("chatUsername").textContent = receiverUsername;
+}
+
+
+// Khi click vào một tương hợp
+function onMatchClick(receiverUsername) {
+    // Hiển thị khung chat và gửi tin nhắn đến tương hợp đó
+    showChat(receiverUsername);
+    // Gửi tin nhắn chào hỏi đến tương hợp
+    sendMessage(receiverUsername, "Xin chào, chúng ta đã trùng khớp. Hãy cùng nhắn tin nhé!");
+}
+
+// Khi nhấn nút gửi trong khung chat
+function onSendMessageClick() {
+    var receiverUsername = document.getElementById("chatUsername").textContent;
+    var content = document.getElementById("messageInput").value;
+    if (content.trim() !== "") {
+        sendMessage(receiverUsername, content);
+        var chatMessages = document.getElementById("chatMessages");
+        var listItem = document.createElement("li");
+        listItem.innerText = "You: " + content;
+        chatMessages.appendChild(listItem);
+        document.getElementById("messageInput").value = "";
+    }
+}
+
+function displayMessage(sender, content) {
+    const chatMessages = document.getElementById("chatMessages");
+    const messageDiv = document.createElement("div");
+    messageDiv.innerText = sender + ": " + content;
+    chatMessages.appendChild(messageDiv);
+}
+
+function openChat(userId, username) {
+    document.getElementById("chatUsername").innerText = username;
+
+    document.getElementById("chatMessages").innerHTML = "";
+
+    document.getElementById("chatContainer").style.display = "block";
+
+    stompClient.connect({}, function (frame) {
+        console.log('Web Socket Opened...');
+        // Subscribe để nhận tin nhắn từ server
+        stompClient.subscribe('/user/queue/messages', function (message) {
+            var messageDto = JSON.parse(message.body);
+            displayMessage(messageDto.sender, messageDto.content);
+        });
+    });
+
+    // Gán sự kiện click cho nút "Send Message"
+    document.getElementById("sendMessageBtn").addEventListener("click", function () {
+        var messageInput = document.getElementById("messageInput");
+        var content = messageInput.value;
+        sendMessage(username, content);
+    });
+
+    // Gán sự kiện click cho nút "Close Chat"
+    document.getElementById("closeChatBtn").addEventListener("click", closeChat);
+}
+
+
+
+
+
+
 $(document).ready(function (event) {
+    function showMatchUser(){
+        $.ajax({
+            url: "/api/matches",
+            method: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                console.log(response)
+                let matchE = document.getElementById("tab1");
+                let html=``
+                if(response && response.length) {
+                    response.forEach(data =>{
 
-    $.ajax({
-        url: "/api/matches",
-        method: "GET",
-        contentType: "application/json",
-        success: function (response) {
-            console.log(response)
-            let matchE = document.getElementById("tab1");
-            let html=``
-            if(response && response.length) {
-                response.forEach(data =>{
+                        html+=`
+                                <div  class=" showMatch col-4" onclick="openChat(${data.id}, '${data.fullname}')">
+                                       <a 
+                                       href="#"
+                                       >
+                                           <div class="">
+                                               <img src="${data.photo[0].imageUrl}"/>
+                                               <span class="matchesName">${data.fullname}</span>
+                
+                                           </div>
+                                       </a>
+                                </div>`
 
-                    html+=`
-<div  class=" showMatch col-4">
-                       <a 
-                       href="/message/${data.id}"
-                       >
-                           <div class="">
-                               <img src="${data.photo[0].imageUrl}"/>
-                               <span class="matchesName">${data.fullname}</span>
-
-                           </div>
-                       </a>
-</div>`
-
-                })
+                    })
+                }
+                matchE.innerHTML = html;
+            },
+            error: function (error) {
+                console.log("Đã có lỗi xảy ra khi like: " + error);
             }
-            matchE.innerHTML = html;
-        },
-        error: function (error) {
-            console.log("Đã có lỗi xảy ra khi like: " + error);
-        }
-    })
+        })
+    }
+
+
+
+    function displayMessage(sender, content) {
+        const chatMessages = document.getElementById("chatMessages");
+        const messageDiv = document.createElement("div");
+        messageDiv.innerText = sender + ": " + content;
+        chatMessages.appendChild(messageDiv);
+    }
+
+
+    // document.getElementById("sendMessageBtn").addEventListener("click", function () {
+    //     const messageInput = document.getElementById("messageInput");
+    //     const content = messageInput.value;
+    //
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     const receiverId = urlParams.get('receiverId');
+    //
+    //
+    //     // Gửi tin nhắn
+    //     $.ajax({
+    //         url: "/api/sendMessage",
+    //         method: "POST",
+    //         contentType: "application/json",
+    //         data: JSON.stringify({
+    //             receiverId: receiverId,
+    //             content: content
+    //         }),
+    //         success: function () {
+    //             // Hiển thị tin nhắn đã gửi
+    //             displayMessage("You", content);
+    //             // Xóa nội dung trong ô input
+    //             messageInput.value = "";
+    //         },
+    //         error: function (error) {
+    //             console.log("Đã có lỗi xảy ra khi gửi tin nhắn: " + error);
+    //         }
+    //     });
+    // });
+
+    // document.getElementById("closeChatBtn").addEventListener("click", function () {
+    //     // Ẩn khung chat khi người dùng click nút close
+    //     document.getElementById("chatContainer").style.display = "none";
+    // });
+
+    showMatchUser()
+
     var swipedProfiles = [];
     var currentProfile = null;
 
@@ -53,6 +213,8 @@ $(document).ready(function (event) {
             swipeDislike();
         }
     });
+
+
 
     addNewProfile();
 
@@ -87,6 +249,7 @@ $(document).ready(function (event) {
                 success: function (response) {
                     if (response) {
                         showMatchPopup();
+                        showMatchUser();
                     }
                 },
                 error: function (error) {
@@ -166,6 +329,11 @@ $(document).ready(function (event) {
 
                 $("div.content").prepend(`<div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});"></div>`);
 
+                $("#photo").off("click").on("click", function () {
+                    // Hiển thị khung chat khi người dùng click vào profile
+                    openChat(currentProfile.fullName);
+                });
+
                 $("#fullName").text(currentProfile.fullName);
                 $("#age").text(currentProfile.age);
                 $("#namefull").text(currentProfile.fullName)
@@ -207,3 +375,4 @@ function showMatchPopup() {
         confirmButtonText: 'OK'
     })
 }
+

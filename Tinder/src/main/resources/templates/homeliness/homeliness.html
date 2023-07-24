@@ -5,13 +5,16 @@
     <title>tinder</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link data-react-helmet="true" rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/assets/homelogin/homelogin2.css" rel="stylesheet">
     <link href="/assets/homelogin/homelogin3.css" rel="stylesheet">
     <link href="/assets/homelogin/homelogin.css" rel="stylesheet">
+    <script src="/webjars/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/plugins/CSSPlugin.min.js"></script>
@@ -24,113 +27,128 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
 <link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
-    <div class="container-flug" th:object="${user}">
-        <div class="side-bar">
-            <div class="top-side-bar d-flex justify-content-between align-items-center">
-                <div class="block-avatar d-flex justify-content-between align-items-center" style="margin-left: 8px;
+<div class="container-flug" th:object="${user}">
+    <div class="side-bar">
+        <div class="top-side-bar d-flex justify-content-between align-items-center">
+            <div class="block-avatar d-flex justify-content-between align-items-center" style="margin-left: 8px;
     border-radius: 30px;">
-<!--                    <div class="avatar me-2">-->
-<!--                    </div>-->
-                    <img  class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}" >
-                    <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
-                    <input type="hidden" id="idcurrent" th:value="${user.id}">
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="acount-action"><i class="fa-solid fa-magnifying-glass"></i></div>
-                    <div class="acount-action"><i class="fa-solid fa-suitcase"></i></div>
-                    <div class="acount-action"><i class="fa-solid fa-shield-heart"></i></div>
-                </div>
+                <!--                    <div class="avatar me-2">-->
+                <!--                    </div>-->
+                <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}">
+                <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
+                <input type="hidden" id="idcurrent" th:value="${user.id}">
             </div>
-            <div class="massage" style="background-color: #121418; height: 100%;">
-                <div class="tab-massage" style=" display:  flex;">
-                    <div class="tab col-6"  >
-                        <button class="tab-button active" data-tab="tab1" style="width: 200px;" >Các tương hợp</button>
-                    </div>
-                    <div class="tab col-6" >
-                        <button class="tab-button" data-tab="tab2" style="width: 200px;">Tin nhắn</button>
-                    </div>
-                </div>
-                <div class="tab-content" style="display: block;" >
-                    <div id="tab1" class="tab-pane active row" >
-
-
-
-                    </div>
-                    <div id="tab2" class="tab-pane"  style="color: white;">
-                        Nội dung cho Tab 2
-                    </div>
-                </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="acount-action"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div class="acount-action"><i class="fa-solid fa-suitcase"></i></div>
+                <div class="acount-action"><i class="fa-solid fa-shield-heart"></i></div>
             </div>
         </div>
-        <div class="wrapper">
-            <div class="content1">
-                <div id="swiper" >
-                    <div class="app">
-                        <div class="content">
-                        </div>
-                    </div>
-                    <div class="info">
-                        <h3 id="fullName"></h3>
-<!--                        <h1 id="namefull"></h1>-->
-                        <h3 id="age"></h3>
-
-                    </div>
+        <div class="massage" style="background-color: #121418; height: 100%;">
+            <div class="tab-massage" style=" display:  flex;">
+                <div class="tab col-6">
+                    <button class="tab-button active" data-tab="tab1" onclick="showMatches()" style="width: 200px;">Các tương hợp</button>
                 </div>
-
-<!--                <div class="info">-->
-<!--                    <h3 th:text="${userprofile.fullName}"></h3>-->
-<!--                    <h3 th:text="${userprofile.age}"></h3>-->
-<!--                    <p> <i class="fa-solid fa-house"></i> sống ở huế</p>-->
-<!--                    <p> <i class="fa-solid fa-location-dot"></i> 69km</p>-->
-<!--                </div>-->
-                <div class="action d-flex" style="z-index: 999;position: absolute; padding: 0 13px">
-                    <button class="btn rounded-circle btn-back">
-                        <i class="fa-solid fa-rotate-right fa-flip-horizontal fa-2xl back"></i>
-                    </button>
-                    <button class="btn rounded-circle btn-back close1" >
-                        <i class="fa-solid fa-xmark fa-2xl close"></i>
-                    </button>
-                    <button class="btn rounded-circle btn-commen ">
-                        <i class="fa-solid fa-star fa-2xl comment"></i>
-                    </button>
-                    <button class="btn rounded-circle btn-heart">
-                        <i class="fa-solid fa-heart fa-2xl heart"></i>
-                    </button>
-                    <button class="btn rounded-circle btn-ratings">
-                        <i class="fa-solid fa-bolt fa-2xl rating"></i>
-                    </button>
+                <div class="tab col-6">
+                    <button class="tab-button" data-tab="tab2" onclick="showMessage()" style="width: 200px;">Tin nhắn</button>
                 </div>
             </div>
-            <div class="bottom-button d-flex">
-                <button class="btn btn-success" id="hidebutton" onclick="hidebutton()">Ẩn
-                </button>
-                <div>
-                    <i class="fa-solid fa-arrow-left"></i>
-                    không
+            <div class="tab-content" style="display: block;">
+                <div id="tab1" class="tab-pane active row" >
+
+
                 </div>
-                <div>
-                    <i class="fa-solid fa-arrow-right"></i>
-                    Thích
-                </div>
-                <div>
-                    <i class="fa-solid fa-arrow-up"></i>
-                    Mở hồ sơ
-                </div>
-                <div>
-                    <i class="fa-solid fa-arrow-down"></i>
-                    Đóng hồ sơ
-                </div>
-                <div>
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                    Siêu thích
-                </div>
-                <div>
-                    <i class="fas fa-arrows-alt-h" ></i>
-                    Ảnh tiếp theo
+                <div id="tab2" class="tab-pane"  style="color: white;">
+<!--                    <div class="chat-container">-->
+<!--                        <div class="chat-header">Chat with <span id="chatUsername"></span></div>-->
+<!--                        <div class="chat-messages" id="chatMessages"></div>-->
+<!--                        <div class="chat-input">-->
+<!--                            <input type="text" id="messageInput" placeholder="Type a message...">-->
+<!--                            <button id="sendMessageBtn">Send</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
     </div>
+    <div class="wrapper">
+        <div class="content1">
+            <div id="swiper">
+                <div class="chat-container chat-container-hidden" id="chatContainer" style="display: none;">
+                    <div class="chat-header">Chat with <span id="chatUsername"></span></div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="messageInput" placeholder="Type a message...">
+                        <button id="sendMessageBtn">Send</button>
+                        <button id="closeChatBtn">Close</button>
+                    </div>
+                </div>
+                <div class="app">
+                    <div class="content content-profile">
+                    </div>
+                </div>
+                <div class="info info-profile">
+                    <h3 id="fullName"></h3>
+                    <!--                        <h1 id="namefull"></h1>-->
+                    <h3 id="age"></h3>
+
+                </div>
+            </div>
+
+            <!--                <div class="info">-->
+            <!--                    <h3 th:text="${userprofile.fullName}"></h3>-->
+            <!--                    <h3 th:text="${userprofile.age}"></h3>-->
+            <!--                    <p> <i class="fa-solid fa-house"></i> sống ở huế</p>-->
+            <!--                    <p> <i class="fa-solid fa-location-dot"></i> 69km</p>-->
+            <!--                </div>-->
+            <div class="action d-flex" style="z-index: 999;position: absolute; padding: 0 13px">
+                <button class="btn rounded-circle btn-back">
+                    <i class="fa-solid fa-rotate-right fa-flip-horizontal fa-2xl back"></i>
+                </button>
+                <button class="btn rounded-circle btn-back close1">
+                    <i class="fa-solid fa-xmark fa-2xl close"></i>
+                </button>
+                <button class="btn rounded-circle btn-commen ">
+                    <i class="fa-solid fa-star fa-2xl comment"></i>
+                </button>
+                <button class="btn rounded-circle btn-heart">
+                    <i class="fa-solid fa-heart fa-2xl heart"></i>
+                </button>
+                <button class="btn rounded-circle btn-ratings">
+                    <i class="fa-solid fa-bolt fa-2xl rating"></i>
+                </button>
+            </div>
+        </div>
+        <div class="bottom-button d-flex">
+            <button class="btn btn-success" id="hidebutton" onclick="hidebutton()">Ẩn
+            </button>
+            <div>
+                <i class="fa-solid fa-arrow-left"></i>
+                không
+            </div>
+            <div>
+                <i class="fa-solid fa-arrow-right"></i>
+                Thích
+            </div>
+            <div>
+                <i class="fa-solid fa-arrow-up"></i>
+                Mở hồ sơ
+            </div>
+            <div>
+                <i class="fa-solid fa-arrow-down"></i>
+                Đóng hồ sơ
+            </div>
+            <div>
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Siêu thích
+            </div>
+            <div>
+                <i class="fas fa-arrows-alt-h"></i>
+                Ảnh tiếp theo
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -141,8 +159,56 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
+<script src="/webjars/sockjs-client/1.1.4/sockjs.min.js"></script>
+
+<!-- Thư viện StompJS -->
+<script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
 </body>
 <script>
+    // var stompClient = null;
+    //
+    // function connect() {
+    //     var socket = new SockJS('/ws');
+    //     stompClient = Stomp.over(socket);
+    //     stompClient.connect({}, function(frame) {
+    //         console.log('Connected: ' + frame);
+    //         stompClient.subscribe('/queue/messages', function(message) {
+    //             var messageDto = JSON.parse(message.body);
+    //             showMessage(messageDto.senderId, messageDto.content);
+    //         });
+    //     });
+    // }
+    //
+    // function disconnect() {
+    //     if (stompClient !== null) {
+    //         stompClient.disconnect();
+    //     }
+    //     console.log("Disconnected");
+    // }
+    //
+    // function sendMessage() {
+    //     var receiverUsername = document.getElementById("receiver-username").value;
+    //     var content = document.getElementById("message-input").value;
+    //     var message = {
+    //         receiverUsername: receiverUsername,
+    //         content: content
+    //     };
+    //     stompClient.send("/app/sendMessage", {}, JSON.stringify(message));
+    //     document.getElementById("message-input").value = "";
+    // }
+    //
+    // function showMessage(senderId, content) {
+    //     var chatMessages = document.getElementById("chat-messages");
+    //     var listItem = document.createElement("li");
+    //     listItem.innerText = "User " + senderId + ": " + content;
+    //     chatMessages.appendChild(listItem);
+    // }
+    //
+    // window.onload = function() {
+    //     connect();
+    // };
+
+
     // ------------tab------------------
     // Lấy tất cả các nút tab
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -165,7 +231,7 @@
         });
     });
 
-    function hidebutton(){
+    function hidebutton() {
         const bottomButton = document.querySelector(".bottom-button");
         bottomButton.classList.toggle("show-hidden-btn");
 
@@ -180,6 +246,20 @@
             iconDivs.forEach((div) => div.classList.remove("hidden"));
         }
     }
+
+    function showMessage() {
+        document.getElementById("tab1").style.display = 'none'
+    }
+
+
+    function showMatches() {
+        document.getElementById("tab2").style.display = 'none'
+        document.getElementById("tab1").style.display = 'flex'
+        document.getElementById("tab1").style.flexWrap = 'wrap'
+    }
+
+
+
 
 </script>
 </html>

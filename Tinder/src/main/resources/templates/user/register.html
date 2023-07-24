@@ -93,14 +93,14 @@
                     <label class="form-label fw-bold">Giới tính</label>
                     <div class="d-flex justify-content-between">
                         <div th:each="gender, iterStat : ${genders}">
-                            <input type="radio" class="btn-check" th:name="options"
+                            <input type="radio" class="btn-check" th:name="options" onclick="onClick(this)"
                                    th:id="'option' + ${iterStat.index+1}" autocomplete="off"
                                    th:value="${gender}" th:field="*{gender}">
                             <label style="width: 105px" class="btn btn-outline-secondary me-2 radius fw-bold"
                                    th:for="'option' + ${iterStat.index+1}" th:text="${gender}"></label>
                         </div>
                     </div>
-                    <p th:errors="*{gender}" class="invalid-feedback"
+                    <p id="gender-error-submit" th:errors="*{gender}" class="text-danger"
                        th:if="${#fields.hasErrors('gender')}"></p>
                 </div>
             </div>
@@ -489,6 +489,12 @@ https://via.placeholder.com/100x150
                 }
         }
     }
+
+    const onClick = (input) => {
+        document.getElementById('gender-error-submit').innerText = "";
+    }
+
+
 </script>
 </body>
 </html>
