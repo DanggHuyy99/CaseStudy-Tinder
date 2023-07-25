@@ -36,12 +36,17 @@
                             role="form"
                     >
                         <div class="d-flex flex-column">
-                            <input type="text" placeholder="Username"
-                            name="username">
-                            <input type="password" placeholder="Password"
-                            name="password">
+                            <input type="text" placeholder="Username" id="username" name="username" class="form-control mb-2" style="width: 340px"
+                                   oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"/>
+                            <span id="username-error" class="invalid-feedback"></span>
+                            <input type="password" placeholder="Password" id="password" name="password" class="form-control mt-2" style="width: 340px"
+                                   oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"/>
+                            <span id="password-error" class="invalid-feedback"></span>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div th:if="${param.error}" class="login-error">
+                            <p class="error text-danger">Incorrect username or password</p>
+                        </div>
+                        <div class="d-flex justify-content-center mt-2">
                             <button type="submit" class="submit" name="submit">Submit</button>
                         </div>
                         <div class="additional-options">
@@ -70,7 +75,83 @@
     </div>
 </div>
 </body>
-<script src="/assets/home/homejs.js">
-
+<script src="/assets/home/homejs.js"></script>
+<script>
+    if(window.location.href.indexOf("error") > -1) {
+        document.getElementById("login-form").style.display = "block";
+    }
+    let isUsernameError = false;
+    const onBlur = (input) => {
+        // const value = input.value;
+        let errorStatus = checkInput(input)
+        if (!errorStatus.error) {
+            isUsernameError = true;
+            document.getElementById(input.id + '-error').innerText = errorStatus.message;
+        } else {
+            isUsernameError = false;
+            document.getElementById(input.id + '-error').innerText = "";
+        }
+        input.classList.remove("is-invalid", "is-valid");
+        input.classList.add(isUsernameError ? "is-invalid" : "is-valid");
+    }
+    const onInput = (input) => {
+        let errorStatus = checkInput(input)
+        isUsernameError = !errorStatus.error;
+        input.classList.remove("is-invalid", "is-valid");
+        input.classList.add(isUsernameError ? "is-invalid" : "is-valid");
+    }
+    const onFocus = (input) => {
+        document.getElementById(input.id + '-error').innerText = "";
+        document.getElementsByClassName("login-error")[0].innerText = "";
+    }
+    function checkInput(input) {
+        let value = input.value;
+        let regex;
+        let message;
+        switch (input.id) {
+            case "username":
+                if (value === "") {
+                    message = "Username can't be empty";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else if (value.length < 5 || value.length > 15) {
+                    message = "Username must be between 5 and 15 characters long";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else {
+                    regex = /^[a-zA-Z0-9]{1,15}$/;
+                    message = "Username can't have special characters"
+                    return {
+                        error: regex.test(value),
+                        message
+                    }
+                }
+            case "password":
+                if (value === "") {
+                    message = "Password can't be empty";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else if (value.length < 5 || value.length > 15) {
+                    message = "Password must be between 5 and 15 characters long";
+                    return {
+                        error: false,
+                        message
+                    }
+                } else {
+                    regex = /^[a-zA-Z0-9]{1,15}$/;
+                    message = "Password can't have special characters"
+                    return {
+                        error: regex.test(value),
+                        message
+                    };
+                }
+        }
+    }
 </script>
 </html>
