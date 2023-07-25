@@ -225,6 +225,11 @@
             </div>
             <div class="showInterests">
             </div>
+            <div class="text-center mt-3">
+                <p class="fw-bold" id="interest-error-submit">
+                    Thêm ít nhất 1 sở thích để tiếp tục
+                </p>
+            </div>
             <!--            <div class="col-md-10">-->
             <!--                <label class="form-label fw-bold">Khuynh hướng tình dục</label><br>-->
             <!--                <button type="button" class="btn btn-outline-secondary radius fw-bold"><i class="fas fa-plus"></i>-->
@@ -240,44 +245,93 @@
         </button>
     </div>
 </form>
-(811 B)
-https://via.placeholder.com/100x150
 
-10:26
 <script>
     function showInterests(event) {
         event.preventDefault();
+        document.getElementById('interest-error-submit').style.color = "black";
         const interestModal = document.getElementById("interestModal");
         interestModal.style.display = "block";
+        let selectedInterests = JSON.parse(sessionStorage.getItem('selectedInterests'));
+        if (selectedInterests) {
+            let table = document.getElementById('interestTable');
+            table.innerHTML = "";
+            for (let i = 0; i < selectedInterests.length; i++) {
+                let row = table.insertRow(i);
+                let cell1 = row.insertCell(0);
+                cell1.innerHTML = selectedInterests[i];
+            }
+        }
     }
+
     function hideInterests() {
         event.preventDefault();
         const interestModal = document.getElementById("interestModal");
         interestModal.style.display = "none";
-        showInterestedChecked();
+
+        let selectedInterests = JSON.parse(sessionStorage.getItem('selectedInterests'));
+        let checkboxes = document.querySelectorAll('#interestModal input[type="checkbox"]');
+
+        sessionStorage.setItem('selectedInterests', JSON.stringify(selectedInterests));
+        checkboxes.forEach(function(checkbox) {
+            if (selectedInterests.includes(checkbox.value)) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+        });
     }
     function selectInterest(interest) {
         window.preventDefault();
         const interestOption = document.querySelector(`.interest-option[data-interest="${interest}"]`);
         interestOption.classList.toggle("selected");
     }
+
     function saveInterests() {
         showInterestedChecked();
+
+        let checkboxes = document.querySelectorAll('#interestModal input[type="checkbox"]');
+        let isChecked = false;
+        for (let i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                isChecked = true;
+                break;
+            }
+        }
+        if (!isChecked) {
+            swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select at least one interest',
+            });
+            return;
+        }
+        let selectedInterests = [];
+        for (let i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selectedInterests.push(checkboxes[i].value);
+            }
+        }
+        sessionStorage.setItem('selectedInterests', JSON.stringify(selectedInterests));
+
         hideInterests();
     }
     function showInterestedChecked() {
+        let checkboxes = document.querySelectorAll('#interestModal input[type="checkbox"]');
+// Lặp qua từng checkbox và lưu giá trị đã chọn vào một mảng
         let selectedInterests = [];
-        const selectedOptions = document.getElementsByClassName('check');
-        for (const item of selectedOptions) {
-            if (item.checked) {
-                selectedInterests.push(item.value)
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedInterests.push(checkbox.value);
             }
-        }
+        });
+// Lưu mảng các giá trị đã chọn vào session storage
+        sessionStorage.setItem('selectedInterests', JSON.stringify(selectedInterests));
+// Tạo các phần tử HTML để hiển thị các giá trị đã chọn
         const showInterestsDiv = document.querySelector(".showInterests");
         showInterestsDiv.innerHTML = "";
         for (const interest of selectedInterests) {
             const interestElement = document.createElement("span");
-            console.log("huy" + interestElement)
             interestElement.textContent = interest;
             interestElement.classList.add("blabla", "custom-css-class")
             const selectedShowOptions = document.getElementsByClassName('blabla');
@@ -286,17 +340,21 @@ https://via.placeholder.com/100x150
             closeButton.style.color = "red";
             closeButton.addEventListener("click", function () {
                 this.parentNode.parentNode.removeChild(this.parentNode);
-                selectedInterests = [];
-                for (const interest of selectedShowOptions) {
-                    selectedInterests.push(interest.textContent);
-                    for (let i = 0; i < selectedOptions.length; i++) {
-                        if (selectedInterests.includes(selectedOptions[i].value)) {
-                            selectedOptions[i].checked = true;
-                        } else {
-                            selectedOptions[i].checked = false;
-                        }
-                    }
+                // Xóa giá trị đã chọn khỏi mảng selectedInterests
+                let index = selectedInterests.indexOf(interest);
+                if (index !== -1) {
+                    selectedInterests.splice(index, 1);
                 }
+                // Cập nhật lại session storage
+                sessionStorage.setItem('selectedInterests', JSON.stringify(selectedInterests));
+                // Cập nhật lại các checkbox trong modal
+                checkboxes.forEach(function(checkbox) {
+                    if (selectedInterests.includes(checkbox.value)) {
+                        checkbox.checked = true;
+                    } else {
+                        checkbox.checked = false;
+                    }
+                });
             });
             interestElement.appendChild(closeButton);
             showInterestsDiv.appendChild(interestElement);
@@ -311,15 +369,26 @@ https://via.placeholder.com/100x150
                 imageCount++
             }
         }
-        if (imageCount >= 2) {
-            const form = document.getElementById("formSubmit");
-            form.submit();
-        } else {
+        const checkboxInputs = document.querySelectorAll('input[type="checkbox"]');
+        let isChecked = false;
+        for (const inter of checkboxInputs) {
+            if (inter.checked) {
+                isChecked = true;
+                break;
+            }
+        }
+        if (imageCount < 2) {
             swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: 'Please add at least 2 photos to continue',
             });
+        }
+        if (!isChecked) {
+            document.getElementById("interest-error-submit").style.color = "red";
+        } else {
+            const form = document.getElementById("formSubmit");
+            form.submit();
         }
     }
     function saveImageToLocalStorage(fileInput) {

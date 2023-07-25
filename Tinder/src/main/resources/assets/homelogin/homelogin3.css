@@ -348,3 +348,112 @@ margin-bottom: 20px;
     z-index: 99999;
     color: white;
 }
+
+
+
+
+
+.message-block {
+    width: 100%;
+    height: 100vh;
+}
+.message-profile-block {
+    width: 450px;
+    height: 100vh;
+    background-color: red;
+}
+
+.chat-container {
+
+    background-color: #111418;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+}
+
+.chat-header {
+    padding: 10px;
+    height: 70px;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #7c8591;
+    font-size: 28px;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.scrollable {
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 10px;
+}
+
+.chat-message-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.chat-input {
+    height: 70px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ccc;
+}
+
+.chat-input input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.chat-input button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.close-button {
+    margin-left: auto;
+    border: none;
+    cursor: pointer;
+    color: #7c8591;
+    background: none;
+    font-size: 38px;
+    transition: all 0.2s ease-in;
+}
+
+.close-button:hover {
+    transform: rotate(90deg); /* Xoay nút 90 độ khi hover vào */
+}
+
+#sendMessageBtn {
+    background-color: #21262e;
+}
+
+#sendMessageBtn.active {
+    background: linear-gradient(135deg, #ff4e4c, #fd3667);
+}
+
+#messageInput {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: white;
+ }

@@ -33,7 +33,7 @@ function showChat(receiverUsername) {
     // Hiển thị khung chat với người dùng có username là receiverUsername
     var chatContainer = document.getElementById("chatContainer");
     chatContainer.style.display = "block";
-    document.getElementById("chatUsername").textContent = receiverUsername;
+    document.getElementById("chatUsername").innerText = "Chat with "+ receiverUsername;
 }
 
 
@@ -75,11 +75,13 @@ function sendMessage(receiveID, content) {
     stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
 }
 function openChat(userId, username) {
-    document.getElementById("chatUsername").innerText = username;
+    document.getElementById("default-container").style.display = "none";
+    document.getElementById("message-container").style.display = "flex";
+    document.getElementById("chatUsername").innerText = "Chat with "+ username;
 
     document.getElementById("chatMessages").innerHTML = "";
 
-    document.getElementById("chatContainer").style.display = "block";
+    document.getElementById("chatContainer").style.display = "flex";
 
     stompClient.connect({}, function (frame) {
         console.log('Web Socket Opened...');

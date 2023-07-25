@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tinder | Hẹn hò, kết bạn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link data-react-helmet="true" rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    \
+
+
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+</head>
+
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/plugins/CSSPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/easing/EasePack.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenLite.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.15.0/utils/Draggable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>  -->
+<link href="/assets/profile/profile.css" rel="stylesheet"><!--
+<link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'> -->
+<div class="container-flug" >
+    <div class="side-bar">
+        <div class="top-side-bar d-flex justify-content-between align-items-center">
+            <div class="block-avatar d-flex justify-content-between align-items-center">
+                <img  class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}" >
+                <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="acount-action"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div class="acount-action"><i class="fa-solid fa-suitcase"></i></div>
+                <div class="acount-action"><i class="fa-solid fa-shield-heart"></i></div>
+            </div>
+        </div>
+
+        <div class="massage" style="background-color: #121418; height: 100%;">
+            <!--            <div class="tab-massage " style="flex-direction: columns; display:  flex;">-->
+            <!--                <div class="tab col-6">-->
+            <!--                    <button class="tab-button active" data-tab="tab1" style="width: 200px;">Các tương hợp</button>-->
+            <!--                </div>-->
+            <!--                <div class="tab col-6">-->
+            <!--                    <button class="tab-button" data-tab="tab2" style="width: 200px;">Tin nhắn</button>-->
+            <!--                </div>-->
+        </div>
+        <div class="tab-content" style="display: block;">
+            <div id="tab1" class="tab-pane active">
+                <img class="active-img"
+                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6UPcrppJK4m1q4wu6KgJMAKP63NXrj_dXLA&usqp=CAU"
+                     alt="">
+            </div>
+            <div id="tab2" class="tab-pane" style="color: white;">
+                <i class="active-massage fa-solid fa-comment fa-flip-horizontal fa-2xl"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper" id="wrapper">
+    <div class="scrollbar" id="style-defau  lt">
+        <div class="force-overflow"></div>
+        <img th:src="${user.getPhotos().get(0).getImageUrl()}" alt="" class="user-img">
+        <div class="info-user">
+            <H1 th:text="${userprofile.fullName}"></H1>
+            <p> <i class="fa-solid fa-house"></i> sống ở huế</p>
+            <p th:text="${userprofile.getGender()}"><i class="fa-regular fa-user"></i></p>
+            <p th:text="${userprofile.getEmail()}"><i class="fa-regular fa-envelope"></i></p>
+            <div style="color: white;" class="interest">
+                <H2>Sở thích</H2>
+
+            </div>
+        </div>
+        <div class="edit-info">
+            <button class="btn-edit-info" onclick="showEdit(event)">Sửa thông tin</button>
+        </div>
+    </div>
+</div>
+<div class="wrapper2" id="wrapper2" th:object="${user}">
+    <form method="post" th:object="${user}" th:action="@{/profile}">
+        <div class="scrollbar" id="style-default">
+            <div class="message-edit">
+                <label class="form-label">Chỉnh sửa</label>
+
+            </div>
+            <div  class="img-all">
+                <div class="d-flex upload-wrapper">
+
+                    <!-- 1 -->
+                    <div class="image-upload col-6" >
+                        <label for="file-input-4">
+                            <img class="preview-image-all" id="preview-image-1" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="120px">
+                        </label>
+                        <div class="center">
+                            <input class="input-upload" id="file-input-1" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-4').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+
+                    <!-- 2 -->
+                    <div class="image-upload col-6">
+                        <label for="file-input-5">
+                            <img class="preview-image-all" id="preview-image-2" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="120px" th:value="${user.photos}" th:field="*{photos}">
+                        </label>
+                        <div class="center">
+                            <input class="input-upload" id="file-input-2" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                    <!-- 3 -->
+                    <div class="image-upload col-6">
+                        <label for="file-input-5">
+                            <img class="preview-image-all" id="preview-image-3" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="120px">
+                        </label>
+                        <div class="center">
+                            <input class="input-upload" id="file-input-3" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                    <!-- 4 -->
+                    <div class="image-upload col-6">
+                        <label for="file-input-5">
+                            <img class="preview-image-all" id="preview-image-4" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="120px">
+                        </label>
+                        <div class="center">
+                            <input class="input-upload" id="file-input-4" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                    <!-- 5 -->
+                    <div class="image-upload col-6">
+                        <label for="file-input-5">
+                            <img class="preview-image-all" id="preview-image-5" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="120px">
+                        </label>
+                        <div class="center">
+                            <input class="input-upload" id="file-input-5" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                    <!-- 6 -->
+                    <div class="image-upload col-6">
+                        <label for="file-input-5">
+                            <img class="preview-image-all" id="preview-image-6" src="https://via.placeholder.com/100x150" width="100px"
+                                 height="120px">
+                        </label>
+                        <div class="center">
+                            <input class="input-upload" id="file-input-6" type="file" name="fileUpload" multiple
+                                   onchange="document.getElementById('preview-image-5').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="fw-bold">Thêm video, ảnh hoặc loop để hoàn thành thêm 4% hồ sơ của bạn, cùng cơ hội nhận được nhiều lượt Thích hơn.</p>
+                    </div>
+                    <div class="edit-info2">
+                        <button class="btn-edit-info2" onclick="showInterests(event)" >Thêm Sở Thích</button>
+                    </div>
+                    <input type="hidden" name="id" th:value="*{id}" >
+                    <label for="name" class="massage-edit2">Tên</label>
+                    <textarea id="name" name="name" class="input-edit" th:value="${user.username}"></textarea>
+                    <label for="email" class="massage-edit2" >Email</label>
+                    <textarea id="email" name="email" class="input-edit" th:value="${userprofile.email}" ></textarea>
+                    <label for="phone" class="massage-edit2">Phone</label>
+                    <textarea id="phone" name="phone" class="input-edit" th:value="${userprofile.phone}"></textarea>
+                    <label for="age" class="massage-edit2">Tuổi</label>
+                    <textarea id="age" name="age" class="input-edit" th:value="${userprofile.age}"></textarea>
+                    <label class="form-label fw-bold">Giới tính</label>
+                    <div class="d-flex justify-content-between">
+                        <div th:each="gender, iterStat : ${genders}">
+                            <input type="radio" class="btn-check" th:name="options"
+                                   th:id="'option' + ${iterStat.index+1}" autocomplete="off"
+                                   th:value="${gender}">
+                            <label style="width: 105px" class="btn btn-outline-secondary me-2 radius fw-bold"
+                                   th:for="'option' + ${iterStat.index+1}" th:text="${gender}"></label>
+                        </div>
+                    </div>
+                    <!--                <p th:errors="{gender}" class="invalid-feedback"-->
+                    <!--                   th:if="${#fields.hasErrors('gender')}"></p>-->
+                </div>
+            </div>
+        </div>
+</div>
+
+<div>
+    <div id="interestModal" class="modal">
+        <div class="modal-content">
+            <h3>Chọn sở thích</h3>
+            <div class="col-md-10 btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <!--                        <label class="form-label fw-bold">Sở thích</label>-->
+                <div class="d-flex">
+                    <div th:each="interest, iterStat : ${interests}">
+                        <input type="checkbox" class="btn-check check" th:name="interest"
+                               th:id="'btncheck' + ${iterStat.index+1}" autocomplete="off"
+                               th:value="${interest}" th:field="*{interests}"
+                               onclick="selectInterest('${interest}')">
+                        <label class="btn btn-outline-secondary me-2 radius fw-bold" style="margin:15px"
+                               th:for="'btncheck' + ${iterStat.index+1}" th:text="${interest}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button id="interestSubmitBtn" type="button" class="btn btn-primary radius fw-bold"
+                        onclick="saveInterests()" style="padding: 5px 20px;margin: 20px auto">
+                    Chọn
+                </button>
+            </div>
+            <button onclick="hideInterests(event)" class="btn-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="col-md-10 div-mr">
+        <label class="form-label fw-bold">Sở thích</label><br>
+        <button onclick="showInterests(event)" class="btn btn-outline-secondary radius fw-bold">
+            <i class="fas fa-plus"></i>
+            Thêm sở thích
+        </button>
+    </div>
+    <div class="showInterests">
+    </div>
+    <!--            <div class="col-md-10">-->
+    <!--                <label class="form-label fw-bold">Khuynh hướng tình dục</label><br>-->
+    <!--                <button type="button" class="btn btn-outline-secondary radius fw-bold"><i class="fas fa-plus"></i>-->
+    <!--                    Thêm khuynh hướng tình dục-->
+    <!--                </button>-->
+    <!--            </div>-->
+    <button type="submit" class="btn btn-outline-secondary radius fw-bold">
+
+        Sửa thông tin
+    </button>
+</div>
+</form>
+</div>
+</div>
+
+</body>
+<script>
+    function showEdit(event) {
+        // event.preventDefault();
+        const editModal = document.getElementById("wrapper2");
+        const profileModal = document.getElementById("wrapper")
+        editModal.style.display = "flex";
+        profileModal.style.display = "none"
+    }
+    // khi bấm x thì tắt bẳng chọn interes, display none
+    function hideEdit() {
+        event.preventDefault();
+        const editModal = document.getElementById("wrapper2");
+        editModal.style.display = "none";
+        showInterestedChecked();
+    }
+    function saveEdit() {
+        showInterestedChecked();
+        hideInterests();
+    }
+    function showInterests(event) {
+        event.preventDefault();
+        const interestModal = document.getElementById("interestModal");
+        interestModal.style.display = "block";
+    }
+    function hideInterests() {
+        event.preventDefault();
+        const interestModal = document.getElementById("interestModal");
+        interestModal.style.display = "none";
+        showInterestedChecked();
+    }
+    function saveInterests() {
+        showInterestedChecked();
+        hideInterests();
+    }
+    function showInterestedChecked() {
+        let selectedInterests = [];
+        const selectedOptions = document.getElementsByClassName('check');
+        for (const item of selectedOptions) {
+            if (item.checked) {
+                selectedInterests.push(item.value)
+            }
+        }
+        const showInterestsDiv = document.querySelector(".showInterests");
+        showInterestsDiv.innerHTML = "";
+        for (const interest of selectedInterests) {
+            const interestElement = document.createElement("span");
+            console.log("huy" + interestElement)
+            interestElement.textContent = interest;
+            interestElement.classList.add("blabla", "custom-css-class")
+            const selectedShowOptions = document.getElementsByClassName('blabla');
+            const closeButton = document.createElement("i");
+            closeButton.classList.add("fas", "fa-times");
+            closeButton.style.color = "red";
+            closeButton.addEventListener("click", function () {
+                this.parentNode.parentNode.removeChild(this.parentNode);
+                selectedInterests = [];
+                for (const interest of selectedShowOptions) {
+                    selectedInterests.push(interest.textContent);
+                    for (let i = 0; i < selectedOptions.length; i++) {
+                        if (selectedInterests.includes(selectedOptions[i].value)) {
+                            selectedOptions[i].checked = true;
+                        } else {
+                            selectedOptions[i].checked = false;
+                        }
+                    }
+                }
+            });
+            interestElement.appendChild(closeButton);
+            showInterestsDiv.appendChild(interestElement);
+        }
+    }
+</script>
+</html>
+

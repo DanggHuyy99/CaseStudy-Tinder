@@ -33,7 +33,7 @@
     border-radius: 30px;">
                 <!--                    <div class="avatar me-2">-->
                 <!--                    </div>-->
-                <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}">
+                <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}" href="/profile">
                 <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
                 <input type="hidden" id="idcurrent" th:value="${user.id}">
             </div>
@@ -70,18 +70,11 @@
             </div>
         </div>
     </div>
-    <div class="wrapper">
+
+    <div id="default-container" class="wrapper">
         <div class="content1">
             <div id="swiper">
-                <div class="chat-container chat-container-hidden" id="chatContainer" style="display: none;">
-                    <div class="chat-header">Chat with <span id="chatUsername"></span></div>
-                    <div class="chat-messages" id="chatMessages"></div>
-                    <div class="chat-input">
-                        <input type="text" id="messageInput" placeholder="Type a message...">
-                        <button id="sendMessageBtn">Send</button>
-                        <button id="closeChatBtn">Close</button>
-                    </div>
-                </div>
+
                 <div class="app">
                     <div class="content content-profile">
                     </div>
@@ -147,6 +140,39 @@
             </div>
         </div>
     </div>
+
+
+    <div id="message-container" class="wrapper">
+        <div class="message-block">
+            <div class="chat-container chat-container-hidden" id="chatContainer" style="display: none;">
+                <div class="chat-header">
+                    <span id="chatUsername"></span>
+                    <button id="closeChatBtn" class="close-button"><i class="fa-regular fa-circle-xmark"></i></button>
+                </div>
+
+                <div class="chat-messages" id="chatMessages"></div>
+
+                <div class="chat-input">
+<!--                    <div class="scrollable">-->
+<!--                        <div class="chat-message-wrapper">-->
+<!--                            <div class="chat-message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis scelerisque.</div>-->
+<!--                            <div class="chat-message"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                        <input type="text" id="messageInput" placeholder="Type a message...">
+                        <button id="sendMessageBtn">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="message-profile-block">
+
+        </div>
+
+
+    </div>
+
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -256,7 +282,17 @@
         document.getElementById("tab1").style.flexWrap = 'wrap'
     }
 
+    document.getElementById("messageInput").addEventListener("input", function () {
+        var inputText = this.value.trim();
 
+        var sendMessageBtn = document.getElementById("sendMessageBtn");
+
+        if (inputText !== "") {
+            sendMessageBtn.classList.add("active");
+        } else {
+            sendMessageBtn.classList.remove("active");
+        }
+    });
 
 
 </script>
