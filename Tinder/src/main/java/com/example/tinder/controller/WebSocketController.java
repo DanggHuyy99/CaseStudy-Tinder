@@ -37,6 +37,7 @@ public class WebSocketController {
     @MessageMapping("/sendMessage")
     @SendToUser("/queue/messages") // Gửi tin nhắn tới user cụ thể
     public Message handleSendMessage(MessageRequest messageRequest, Authentication authentication) {
+        log.error("JSON payload không hợp lệ: " + messageRequest);
         User sender = userService.findByUsername(authentication.getName());
         User receiver = userService.findUserById(messageRequest.getReceiverId());
         String content = messageRequest.getContent();

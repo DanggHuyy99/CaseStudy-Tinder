@@ -1,33 +1,21 @@
 var stompClient = null;
 
-// Khi trang web tải xong
 window.onload = function() {
-    // Kết nối tới server WebSocket
     connect();
 };
-
-function sendMessage(receiverId, content) {
-    var message = {
-        receiverId: receiverId,
-        content: content
-    };
-    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
-}
 
 function closeChat() {
     document.getElementById("chatContainer").style.display = "none";
     stompClient.disconnect();
 }
 function connect() {
-    // Tạo đối tượng SockJS và kết nối Stomp client
-    var socket = new SockJS('/ws'); // /ws là endpoint của WebSocket backend, thay đổi nếu cần
+    var socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
         console.log('Web Socket Opened...');
-        // Gán sự kiện nhận tin nhắn từ server
         stompClient.subscribe('/user/queue/messages', function(message) {
             var messageDto = JSON.parse(message.body);
-            displayMessage(messageDto.sender, messageDto.content);
+            console.log("Nhận tin nhắn mới: ", messageDto);
         });
     });
 }
@@ -78,6 +66,14 @@ function displayMessage(sender, content) {
     chatMessages.appendChild(messageDiv);
 }
 
+function sendMessage(receiveID, content) {
+    var message = {
+        receiverId: receiveID,
+        content: content,
+        senderId:document.getElementById("idcurrent").value
+    };
+    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
+}
 function openChat(userId, username) {
     document.getElementById("chatUsername").innerText = username;
 
@@ -98,7 +94,7 @@ function openChat(userId, username) {
     document.getElementById("sendMessageBtn").addEventListener("click", function () {
         var messageInput = document.getElementById("messageInput");
         var content = messageInput.value;
-        sendMessage(username, content);
+        sendMessage(userId, content);
     });
 
     // Gán sự kiện click cho nút "Close Chat"
