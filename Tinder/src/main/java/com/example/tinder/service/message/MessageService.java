@@ -38,6 +38,6 @@ public class MessageService {
     }
 
     public List<Message> getMessagesBetweenUsers(User user1, User user2) {
-        return messageRepository.findBySenderAndReceiverOrReceiverAndSenderOrderBySentAt(user1, user2, user2, user1);
+        return messageRepository.findBySenderAndReceiverOrReceiverAndSenderOrderBySentAt(user1, user2, user1, user2);
     }
 }

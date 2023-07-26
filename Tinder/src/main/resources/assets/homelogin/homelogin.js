@@ -1,6 +1,6 @@
 var stompClient = null;
 
-$(document).ready(function() {
+$(document).ready(function () {
     connect();
 });
 
@@ -10,15 +10,16 @@ function closeChat() {
     document.getElementById("default-container").style.display = "flex";
     stompClient.disconnect();
 }
+
 function connect() {
     var socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function(frame) {
+    stompClient.connect({}, function (frame) {
         console.log('Web Socket Opened...');
-        stompClient.subscribe('/topic/public', function(message) {
+        stompClient.subscribe('/topic/public', function (message) {
             var messageDto = JSON.parse(message.body);
 
-            if(message.content !== null && messageDto.receiverId === +document.getElementById('idcurrent').value){
+            if (message.content !== null && messageDto.receiverId === +document.getElementById('idcurrent').value) {
                 console.log("Nhận tin nhắn mới: ", messageDto);
                 //ve them tin nhan.
             }
@@ -36,12 +37,11 @@ function disconnect() {
 }
 
 
-
 function showChat(receiverUsername) {
     // Hiển thị khung chat với người dùng có username là receiverUsername
     var chatContainer = document.getElementById("chatContainer");
     chatContainer.style.display = "block";
-    document.getElementById("chatUsername").innerText = "Chat with "+ receiverUsername;
+    document.getElementById("chatUsername").innerText = "Chat with " + receiverUsername;
 }
 
 
@@ -67,21 +67,36 @@ function onSendMessageClick() {
     }
 }
 
-function onEnter(event) {
-    if (event.keyCode === 13) { // Mã phím 13 tương đương với phím Enter
-        onSendMessageClick();
-    }
-}
-
-function getChatHistory(receiverId, callback) {
-    //viet api
-    stompClient.send("/app/chat.getChatHistory", {}, JSON.stringify({ receiverId: receiverId }));
-    stompClient.subscribe('/user/queue/chatHistory', function (message) {
-        console.log("Received message from server:", message);
-        var chatHistory = JSON.parse(message.body);
-        callback(chatHistory);
+function getChatHistory(senderId, receiverId, callback) {
+    var messageRequest = {
+        senderId: senderId,
+        receiverId: receiverId
+    };
+    $.ajax({
+        url: "/api/chat/getChatHistory",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(messageRequest),
+        success: function (chatHistory) {
+            callback(chatHistory);
+        },
+        error: function () {
+            console.log("Lỗi khi lấy lịch sử tin nhắn");
+        }
     });
 }
+
+// function getChatHistory(receiverId, callback) {
+//     //viet api
+//     stompClient.send("/app/chat.getChatHistory", {}, JSON.stringify({receiverId: receiverId}));
+//     stompClient.subscribe('/user/queue/chatHistory', function (message) {
+//         console.log("Received message from server:", message);
+//         var chatHistory = JSON.parse(message.body);
+//         callback(chatHistory);
+//     });
+// }
+
+let previousSender = null;
 
 function displayChatHistory(chatHistory) {
     console.log(chatHistory)
@@ -93,18 +108,46 @@ function displayChatHistory(chatHistory) {
         chatHistory.forEach(function (message) {
             var sender = message.sender.username;
             var content = message.content;
+            var receiver = message.receiver.username;
 
-            var messageDiv = document.createElement("div");
-            messageDiv.innerText = sender + ": " + content;
+            // var messageDiv = document.createElement("div");
+            // messageDiv.innerText = sender + ": " + content;
+            //
+            // chatMessages.appendChild(messageDiv);
+            var messageDivParent = document.createElement("div");
+            messageDivParent.classList.add("parent")
 
-            chatMessages.appendChild(messageDiv);
+            if (previousSender !== sender) {
+                var avatarImg = document.createElement("img");
+                avatarImg.src = imageUrlGlobal;
+                avatarImg.alt = "Avatar";
+                avatarImg.classList.add("avatar");
+
+                messageDivParent.appendChild(avatarImg);
+                previousSender = sender;
+            }
+
+            var messageDiv = document.createElement("span");
+            messageDiv.innerText = content;
+
+            const usernameCurrent = document.getElementById("username-current").value;
+
+            if (sender === usernameCurrent) {
+                messageDiv.classList.add("sender-message");
+            } else {
+                messageDiv.classList.add("receiver-message");
+            }
+            messageDivParent.appendChild(messageDiv);
+            chatMessages.appendChild(messageDivParent);
         });
     } else {
         var noChatDiv = document.createElement("div");
         noChatDiv.innerText = "Không có lịch sử chat.";
         chatMessages.appendChild(noChatDiv);
     }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 function displayMessage(senderId, content) {
     // const chatMessages = document.getElementById("chatMessages");
     // const messageDiv = document.createElement("div");
@@ -113,7 +156,7 @@ function displayMessage(senderId, content) {
     $.ajax({
         url: "/api/user/" + senderId,
         method: "GET",
-        success: function(user) {
+        success: function (user) {
             var senderName = user.username; // Tên người gửi
             var chatMessages = document.getElementById("chatMessages");
             var listItem = document.createElement("li");
@@ -122,100 +165,109 @@ function displayMessage(senderId, content) {
             // Cuộn xuống dưới cùng của khung chat để hiển thị tin nhắn mới nhất
             chatMessages.scrollTop = chatMessages.scrollHeight;
         },
-        error: function() {
+        error: function () {
             console.log("Lỗi khi lấy thông tin người gửi");
         }
     });
 }
+function clearCache() {
+    if (window.performance && window.performance.clearResourceTimings) {
+        console.log("clear resort")
+        window.performance.clearResourceTimings();
+    }
+}
 
 function sendMessage(receiveID, content) {
-    if(content.trim() === "") return;
+    console.log("receiveID", receiveID)
+    if (content.trim() === "") return;
     var message = {
         receiverId: receiveID,
         content: content,
-        senderId:document.getElementById("idcurrent").value
+        senderId: document.getElementById("idcurrent").value
     };
+    console.log(message)
     stompClient.send("/app/chat.addUser", {}, JSON.stringify(message));
     var chatMessages = document.getElementById("chatMessages");
-    var listItem = document.createElement("div");
-    listItem.innerText = "You" + ": " + content;
-    chatMessages.appendChild(listItem);
+    var messageDivParent = document.createElement("div");
+    messageDivParent.classList.add("parent")
+
+    var listItem = document.createElement("span");
+
+    listItem.innerText = content;
+    listItem.classList.add("sender-message"); // Thêm lớp CSS "sender-message"
+    messageDivParent.appendChild(listItem);
+    chatMessages.appendChild(messageDivParent);
     // Cuộn xuống dưới cùng của khung chat để hiển thị tin nhắn mới nhất
     chatMessages.scrollTop = chatMessages.scrollHeight;
-
 }
-function openChat(userId, username) {
-console.log('chonj', userId);
-//huy connect khoi tao lai
-// Gửi yêu cầu lấy lịch sử tin nhắn
-    const messageRequest = {
-        receiverId: userId
-    };
-    stompClient.send('/app/chat.getChatHistory', {}, JSON.stringify(messageRequest));
-    stompClient.subscribe('/user/queue/chatHistory', function(message) {
-        const chatHistory = JSON.parse(message.body);
 
-        // Xóa nội dung cũ trong div chatMessages
-        document.getElementById('chatMessages').innerHTML = '';
 
-        // Hiển thị lịch sử tin nhắn trong div chatMessages
-        chatHistory.forEach(message => {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('chat-message');
-            messageElement.textContent = message.content;
-
-            // Thêm messageElement vào div chatMessages
-            document.getElementById('chatMessages').appendChild(messageElement);
-        });
-    });
+let userIdGlobal = 0;
+let imageUrlGlobal = "";
+function openChat(userId, username, urlImage) {
+    imageUrlGlobal = urlImage;
+    userIdGlobal = userId;
+    // window.currentReceiverId = userId;
+    clearCache()
+    disconnect()
+    connect()
 
 
     document.getElementById("default-container").style.display = "none";
     document.getElementById("message-container").style.display = "flex";
-    document.getElementById("chatUsername").innerText = "Chat with "+ username;
+    // document.getElementById("chatUsername").innerText = "Chat with " + username;
+
+    var chatUsername = document.getElementById("chatUsername");
+    chatUsername.innerHTML = `<img src="${imageUrlGlobal}" class="avatar-user" alt="User Image"> Chat with ${username}`;
 
     document.getElementById("chatMessages").innerHTML = "";
 
     document.getElementById("chatContainer").style.display = "flex";
 
+    var currentUserId = document.getElementById("idcurrent").value;
+    getChatHistory(currentUserId, userId, function(chatHistory) {
+        displayChatHistory(chatHistory);
+    });
 
 
-        // getChatHistory(userId, function(chatHistory) {
-        //     displayChatHistory(chatHistory);
-        // });
+    // getChatHistory(userId, function(chatHistory) {
+    //     displayChatHistory(chatHistory);
+    // });
 
-        // Subscribe để nhận tin nhắn từ server
+    // Subscribe để nhận tin nhắn từ server
 
-        // stompClient.subscribe('/user/queue/messages', function (message) {
-        //     var messageDto = JSON.parse(message.body);
-        //     displayMessage(messageDto.sender, messageDto.content);
-        // });
-
-
-
-
+    // stompClient.subscribe('/user/queue/messages', function (message) {
+    //     var messageDto = JSON.parse(message.body);
+    //     displayMessage(messageDto.sender, messageDto.content);
+    // });
 
 
     // Gán sự kiện click cho nút "Send Message"
-    document.getElementById("sendMessageBtn").addEventListener("click", function () {
-        var messageInput = document.getElementById("messageInput");
-        var content = messageInput.value;
-        sendMessage(userId, content);
-        messageInput.value = "";
-
-    });
+    // document.getElementById("sendMessageBtn").addEventListener("click", async () => {
+    //     console.log("userId", userId)
+    //     var messageInput = document.getElementById("messageInput");
+    //     var content = messageInput.value;
+    //     await sendMessage(userId, content);
+    //     messageInput.value = "";
+    //
+    // });
 
     // Gán sự kiện click cho nút "Close Chat"
     document.getElementById("closeChatBtn").addEventListener("click", closeChat);
+
+}
+
+const handleSubmitMessage = async () => {
+    console.log("userId", userIdGlobal)
+    var messageInput = document.getElementById("messageInput");
+    var content = messageInput.value;
+    await sendMessage(userIdGlobal, content);
+    messageInput.value = "";
 }
 
 
-
-
-
-
 $(document).ready(function (event) {
-    function showMatchUser(){
+    function showMatchUser() {
         $.ajax({
             url: "/api/matches",
             method: "GET",
@@ -223,12 +275,11 @@ $(document).ready(function (event) {
             success: function (response) {
                 console.log(response)
                 let matchE = document.getElementById("tab1");
-                let html=``
-                if(response && response.length) {
-                    response.forEach(data =>{
-
-                        html+=`
-                                <div  class=" showMatch col-4" onclick="openChat(${data.id}, '${data.fullname}')">
+                let html = ``
+                if (response && response.length) {
+                    response.forEach(data => {
+                        html += `
+                                <div  class=" showMatch col-4" onclick="openChat(${data.id}, '${data.fullname}', '${data.photo[0].imageUrl}')">
                                        <a 
                                        href="#"
                                        >
@@ -249,7 +300,6 @@ $(document).ready(function (event) {
             }
         })
     }
-
 
 
     function displayMessage(sender, content) {
@@ -317,7 +367,6 @@ $(document).ready(function (event) {
             swipeDislike();
         }
     });
-
 
 
     addNewProfile();
