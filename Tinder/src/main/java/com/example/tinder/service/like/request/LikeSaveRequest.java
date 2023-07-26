@@ -14,5 +14,5 @@ public class LikeSaveRequest {
 
     private Long likeeId;
 
-    private LocalDateTime likeDate;
+
 }

@@ -6,6 +6,8 @@ window.onload = function() {
 
 function closeChat() {
     document.getElementById("chatContainer").style.display = "none";
+    document.getElementById("message-container").style.display = "none";
+    document.getElementById("default-container").style.display = "flex";
     stompClient.disconnect();
 }
 function connect() {
@@ -47,10 +49,10 @@ function onMatchClick(receiverUsername) {
 
 // Khi nhấn nút gửi trong khung chat
 function onSendMessageClick() {
-    var receiverUsername = document.getElementById("chatUsername").textContent;
+    var receiverId = document.getElementById("receiverId").value;
     var content = document.getElementById("messageInput").value;
     if (content.trim() !== "") {
-        sendMessage(receiverUsername, content);
+        sendMessage(receiverId, content);
         var chatMessages = document.getElementById("chatMessages");
         var listItem = document.createElement("li");
         listItem.innerText = "You: " + content;
@@ -59,11 +61,64 @@ function onSendMessageClick() {
     }
 }
 
-function displayMessage(sender, content) {
-    const chatMessages = document.getElementById("chatMessages");
-    const messageDiv = document.createElement("div");
-    messageDiv.innerText = sender + ": " + content;
-    chatMessages.appendChild(messageDiv);
+function onEnter(event) {
+    if (event.keyCode === 13) { // Mã phím 13 tương đương với phím Enter
+        onSendMessageClick();
+    }
+}
+
+function getChatHistory(receiverId, callback) {
+    stompClient.send("/app/chat.getChatHistory", {}, JSON.stringify({ receiverId: receiverId }));
+    stompClient.subscribe('/user/queue/chatHistory', function (message) {
+        console.log("Received message from server:", message);
+        var chatHistory = JSON.parse(message.body);
+        callback(chatHistory);
+    });
+}
+
+function displayChatHistory(chatHistory) {
+    console.log(chatHistory)
+    var chatMessages = document.getElementById("chatMessages");
+    chatMessages.innerHTML = ""; // Xóa nội dung cũ trước khi hiển thị lịch sử chat mới
+
+    // Kiểm tra xem chatHistory có dữ liệu không
+    if (chatHistory && chatHistory.length > 0) {
+        chatHistory.forEach(function (message) {
+            var sender = message.sender.username;
+            var content = message.content;
+
+            var messageDiv = document.createElement("div");
+            messageDiv.innerText = sender + ": " + content;
+
+            chatMessages.appendChild(messageDiv);
+        });
+    } else {
+        var noChatDiv = document.createElement("div");
+        noChatDiv.innerText = "Không có lịch sử chat.";
+        chatMessages.appendChild(noChatDiv);
+    }
+}
+function displayMessage(senderId, content) {
+    // const chatMessages = document.getElementById("chatMessages");
+    // const messageDiv = document.createElement("div");
+    // messageDiv.innerText = sender + ": " + content;
+    // chatMessages.appendChild(messageDiv);
+    $.ajax({
+        url: "/api/user/" + senderId,
+        method: "GET",
+        success: function(user) {
+            var senderName = user.username; // Tên người gửi
+            var chatMessages = document.getElementById("chatMessages");
+            var listItem = document.createElement("li");
+            listItem.innerText = senderName + ": " + content;
+            chatMessages.appendChild(listItem);
+            // Cuộn xuống dưới cùng của khung chat để hiển thị tin nhắn mới nhất
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        },
+        error: function() {
+            console.log("Lỗi khi lấy thông tin người gửi");
+        }
+    });
 }
 
 function sendMessage(receiveID, content) {
@@ -73,8 +128,39 @@ function sendMessage(receiveID, content) {
         senderId:document.getElementById("idcurrent").value
     };
     stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
+    var chatMessages = document.getElementById("chatMessages");
+    var listItem = document.createElement("div");
+    listItem.innerText = "You" + ": " + content;
+    chatMessages.appendChild(listItem);
+    // Cuộn xuống dưới cùng của khung chat để hiển thị tin nhắn mới nhất
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
 }
 function openChat(userId, username) {
+
+// Gửi yêu cầu lấy lịch sử tin nhắn
+    const messageRequest = {
+        receiverId: userId
+    };
+    stompClient.send('/app/chat.getChatHistory', {}, JSON.stringify(messageRequest));
+    stompClient.subscribe('/user/queue/chatHistory', function(message) {
+        const chatHistory = JSON.parse(message.body);
+
+        // Xóa nội dung cũ trong div chatMessages
+        document.getElementById('chatMessages').innerHTML = '';
+
+        // Hiển thị lịch sử tin nhắn trong div chatMessages
+        chatHistory.forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message');
+            messageElement.textContent = message.content;
+
+            // Thêm messageElement vào div chatMessages
+            document.getElementById('chatMessages').appendChild(messageElement);
+        });
+    });
+
+
     document.getElementById("default-container").style.display = "none";
     document.getElementById("message-container").style.display = "flex";
     document.getElementById("chatUsername").innerText = "Chat with "+ username;
@@ -83,20 +169,31 @@ function openChat(userId, username) {
 
     document.getElementById("chatContainer").style.display = "flex";
 
-    stompClient.connect({}, function (frame) {
-        console.log('Web Socket Opened...');
+
+
+        // getChatHistory(userId, function(chatHistory) {
+        //     displayChatHistory(chatHistory);
+        // });
+
         // Subscribe để nhận tin nhắn từ server
-        stompClient.subscribe('/user/queue/messages', function (message) {
-            var messageDto = JSON.parse(message.body);
-            displayMessage(messageDto.sender, messageDto.content);
-        });
-    });
+
+        // stompClient.subscribe('/user/queue/messages', function (message) {
+        //     var messageDto = JSON.parse(message.body);
+        //     displayMessage(messageDto.sender, messageDto.content);
+        // });
+
+
+
+
+
 
     // Gán sự kiện click cho nút "Send Message"
     document.getElementById("sendMessageBtn").addEventListener("click", function () {
         var messageInput = document.getElementById("messageInput");
         var content = messageInput.value;
         sendMessage(userId, content);
+        messageInput.value = "";
+
     });
 
     // Gán sự kiện click cho nút "Close Chat"
@@ -234,7 +331,6 @@ $(document).ready(function (event) {
         if (currentProfile) {
             const idCurrentUser = document.getElementById("idcurrent").value;
             const idLikedProfile = currentProfile.id;
-            const currentDate = new Date();
             $.ajax({
                 url: "/api/likes/like",
                 method: "POST",
@@ -242,7 +338,6 @@ $(document).ready(function (event) {
                 data: JSON.stringify({
                     likerId: idCurrentUser,
                     likeeId: idLikedProfile,
-                    likeDate: currentDate
                 }),
                 success: function (response) {
                     if (response) {

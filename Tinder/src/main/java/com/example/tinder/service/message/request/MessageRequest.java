@@ -1,5 +1,6 @@
 package com.example.tinder.service.message.request;
 
+import com.example.tinder.model.Message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +14,12 @@ public class MessageRequest {
     private Long receiverId;
 
     private String content;
+
+    public static MessageRequest fromEntity(Message message) {
+        MessageRequest messageRequest = new MessageRequest();
+        messageRequest.setSenderId(message.getSender().getId());
+        messageRequest.setReceiverId(message.getReceiver().getId());
+        messageRequest.setContent(message.getContent());
+        return messageRequest;
+    }
 }

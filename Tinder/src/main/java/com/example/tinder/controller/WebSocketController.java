@@ -1,5 +1,6 @@
 package com.example.tinder.controller;
 
+import com.example.tinder.model.ChatMessage;
 import com.example.tinder.model.Message;
 import com.example.tinder.model.User;
 import com.example.tinder.repository.MessageRepository;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
@@ -19,8 +21,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Date;
-import java.util.Optional;
+import java.security.Principal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.rmi.server.LogStream.log;
 
@@ -35,7 +38,7 @@ public class WebSocketController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/sendMessage")
-    @SendToUser("/queue/messages") // Gửi tin nhắn tới user cụ thể
+    @SendToUser("/user/queue/messages") // Gửi tin nhắn tới user cụ thể
     public Message handleSendMessage(MessageRequest messageRequest, Authentication authentication) {
         log.error("JSON payload không hợp lệ: " + messageRequest);
         User sender = userService.findByUsername(authentication.getName());
@@ -79,4 +82,46 @@ public class WebSocketController {
             log.error("Đã có lỗi xảy ra khi xử lý tin nhắn: " + e.getMessage());
         }
     }
+
+    @MessageMapping("/chat.getChatHistory")
+//    @SendTo("/user/queue/chatHistory")
+    public List<Message> getChatHistory(MessageRequest messageDto, Authentication authentication) {
+        Long receiverId = messageDto.getReceiverId();
+        String senderUsername = authentication.getName();
+        User sender = userRepository.findByUsernameIgnoreCase(senderUsername);
+        User receiver = userRepository.findById(receiverId).orElse(null);
+
+        if (sender != null && receiver != null) {
+            return messageService.getMessagesBetweenUsers(sender, receiver);
+//            List<MessageRequest> chatHistoryDto = chatHistory.stream()
+//                    .map(MessageRequest::fromEntity)
+//                    .collect(Collectors.toList());
+//            return chatHistoryDto;
+        }
+        return Collections.emptyList();
+    }
+
+//    @MessageMapping("/chat.getChatHistory")
+//    @SendTo("/queue/messages")
+//    public List<ChatMessage> getChatHistory(MessageRequest messageDto, Authentication authentication) {
+//        Long receiverId = messageDto.getReceiverId();
+//        String senderUsername = authentication.getName();
+//        User sender = userRepository.findByUsernameIgnoreCase(senderUsername);
+//        User receiver = userRepository.findById(receiverId).orElse(null);
+//
+//        List<ChatMessage> chatHistory = new ArrayList<>();
+//
+//        if (sender != null && receiver != null) {
+//            List<Message> messages = messageService.getMessagesBetweenUsers(sender, receiver);
+//            for (Message message : messages) {
+//                ChatMessage chatMessage = new ChatMessage();
+//                chatMessage.setSender(message.getSender().getUsername());
+//                chatMessage.setContent(message.getContent());
+//                chatMessage.setSentTime(message.getSentAt());
+//                chatHistory.add(chatMessage);
+//            }
+//        }
+//
+//        return chatHistory;
+//    }
 }
