@@ -230,12 +230,6 @@
                     Thêm ít nhất 1 sở thích để tiếp tục
                 </p>
             </div>
-            <!--            <div class="col-md-10">-->
-            <!--                <label class="form-label fw-bold">Khuynh hướng tình dục</label><br>-->
-            <!--                <button type="button" class="btn btn-outline-secondary radius fw-bold"><i class="fas fa-plus"></i>-->
-            <!--                    Thêm khuynh hướng tình dục-->
-            <!--                </button>-->
-            <!--            </div>-->
         </div>
     </div>
     <div class="text-center">
@@ -383,8 +377,8 @@
                 title: 'Error',
                 text: 'Please add at least 2 photos to continue',
             });
-        } else
-        if (!isChecked) {
+
+        }else if (!isChecked) {
             document.getElementById("interest-error-submit").style.color = "red";
         } else {
             const form = document.getElementById("formSubmit");
