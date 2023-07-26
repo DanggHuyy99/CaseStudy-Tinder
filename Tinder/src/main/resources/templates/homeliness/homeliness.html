@@ -31,11 +31,13 @@
         <div class="top-side-bar d-flex justify-content-between align-items-center">
             <div class="block-avatar d-flex justify-content-between align-items-center" style="margin-left: 8px;
     border-radius: 30px;">
-
-                <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}" href="/profile">
+            <a href="/profile">
+                <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}" >
                 <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
                 <input type="hidden" id="idcurrent" th:value="${user.id}">
                 <input type="hidden" id="username-current" th:value="${user.username}">
+            </a>
+
 
             </div>
             <div class="d-flex justify-content-between align-items-center">

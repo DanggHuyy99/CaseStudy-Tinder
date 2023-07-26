@@ -5,11 +5,15 @@ $(document).ready(function () {
 });
 
 function closeChat() {
+    isChatOpen = false;
+    document.getElementById("messageInput").removeEventListener("keyup", handleEnterKey);
     document.getElementById("chatContainer").style.display = "none";
     document.getElementById("message-container").style.display = "none";
     document.getElementById("default-container").style.display = "flex";
     stompClient.disconnect();
 }
+
+let receiverId = 0;
 
 function connect() {
     var socket = new SockJS('/ws');
@@ -20,6 +24,10 @@ function connect() {
             var messageDto = JSON.parse(message.body);
 
             if (message.content !== null && messageDto.receiverId === +document.getElementById('idcurrent').value) {
+                const currentUserId = document.getElementById("idcurrent").value;
+                getChatHistory(currentUserId, receiverId, function(chatHistory) {
+                    displayChatHistory(chatHistory);
+                });
                 console.log("Nhận tin nhắn mới: ", messageDto);
                 //ve them tin nhan.
             }
@@ -199,12 +207,16 @@ function sendMessage(receiveID, content) {
     chatMessages.appendChild(messageDivParent);
     // Cuộn xuống dưới cùng của khung chat để hiển thị tin nhắn mới nhất
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+
 }
 
 
 let userIdGlobal = 0;
 let imageUrlGlobal = "";
+let isChatOpen = false;
 function openChat(userId, username, urlImage) {
+    receiverId = userId;
     imageUrlGlobal = urlImage;
     userIdGlobal = userId;
     // window.currentReceiverId = userId;
@@ -255,6 +267,9 @@ function openChat(userId, username, urlImage) {
     // Gán sự kiện click cho nút "Close Chat"
     document.getElementById("closeChatBtn").addEventListener("click", closeChat);
 
+    document.getElementById("messageInput").addEventListener("keyup", handleEnterKey);
+    isChatOpen = true;
+
 }
 
 const handleSubmitMessage = async () => {
@@ -263,8 +278,21 @@ const handleSubmitMessage = async () => {
     var content = messageInput.value;
     await sendMessage(userIdGlobal, content);
     messageInput.value = "";
+
+    var sendMessageBtn = document.getElementById("sendMessageBtn");
+    sendMessageBtn.classList.remove("active");
 }
 
+function handleEnterKey(event) {
+    if (isChatOpen && event.keyCode === 13) {
+        event.preventDefault();
+        sendMessage(userIdGlobal, event.target.value);
+        event.target.value = "";
+        var sendMessageBtn = document.getElementById("sendMessageBtn");
+        sendMessageBtn.classList.remove("active");
+    }
+
+}
 
 $(document).ready(function (event) {
     function showMatchUser() {
