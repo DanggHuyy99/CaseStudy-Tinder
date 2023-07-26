@@ -36,19 +36,37 @@ public class WebSocketController {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
-
     @MessageMapping("/sendMessage")
-    @SendToUser("/user/queue/messages") // Gửi tin nhắn tới user cụ thể
-    public Message handleSendMessage(MessageRequest messageRequest, Authentication authentication) {
+    @SendTo("/topic/public") // Gửi tin nhắn tới user cụ thể
+    public void handleSendMessage(MessageRequest messageRequest, Authentication authentication) {
         log.error("JSON payload không hợp lệ: " + messageRequest);
         User sender = userService.findByUsername(authentication.getName());
         User receiver = userService.findUserById(messageRequest.getReceiverId());
         String content = messageRequest.getContent();
 
         messageService.sendAndSaveMessage(sender, receiver, content);
+        messagingTemplate.convertAndSendToUser(receiver.getUsername(), "/queue/reply", messageRequest);
 
-        return new Message(content);
+        //return messageRequest;
     }
+    @MessageMapping("/chat.addUser")
+    @SendTo("/topic/public")// Gửi tin nhắn tới user cụ thể
+    public MessageRequest addUser(MessageRequest messageRequest, Authentication authentication, SimpMessageHeaderAccessor headerAccessor) {
+        log.error("JSON payload không hợp lệ: " + messageRequest);
+        User sender = userService.findByUsername(authentication.getName());
+        User receiver = userService.findUserById(messageRequest.getReceiverId());
+        String content = messageRequest.getContent();
+        if(headerAccessor.getSessionAttributes() != null){
+            headerAccessor.getSessionAttributes().put("username", sender.getUsername());
+        }
+
+
+        messageService.sendAndSaveMessage(sender, receiver, content);
+
+        return messageRequest;
+    }
+
+
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload MessageRequest messageRequest, SimpMessageHeaderAccessor headerAccessor) {
@@ -83,23 +101,23 @@ public class WebSocketController {
         }
     }
 
-    @MessageMapping("/chat.getChatHistory")
-//    @SendTo("/user/queue/chatHistory")
-    public List<Message> getChatHistory(MessageRequest messageDto, Authentication authentication) {
-        Long receiverId = messageDto.getReceiverId();
-        String senderUsername = authentication.getName();
-        User sender = userRepository.findByUsernameIgnoreCase(senderUsername);
-        User receiver = userRepository.findById(receiverId).orElse(null);
-
-        if (sender != null && receiver != null) {
-            return messageService.getMessagesBetweenUsers(sender, receiver);
-//            List<MessageRequest> chatHistoryDto = chatHistory.stream()
-//                    .map(MessageRequest::fromEntity)
-//                    .collect(Collectors.toList());
-//            return chatHistoryDto;
-        }
-        return Collections.emptyList();
-    }
+//    @MessageMapping("/chat.getChatHistory")
+////    @SendTo("/user/queue/chatHistory")
+//    public List<Message> getChatHistory(MessageRequest messageDto, Authentication authentication) {
+//        Long receiverId = messageDto.getReceiverId();
+//        String senderUsername = authentication.getName();
+//        User sender = userRepository.findByUsernameIgnoreCase(senderUsername);
+//        User receiver = userRepository.findById(receiverId).orElse(null);
+//
+//        if (sender != null && receiver != null) {
+//            return messageService.getMessagesBetweenUsers(sender, receiver);
+////            List<MessageRequest> chatHistoryDto = chatHistory.stream()
+////                    .map(MessageRequest::fromEntity)
+////                    .collect(Collectors.toList());
+////            return chatHistoryDto;
+//        }
+//        return Collections.emptyList();
+//    }
 
 //    @MessageMapping("/chat.getChatHistory")
 //    @SendTo("/queue/messages")

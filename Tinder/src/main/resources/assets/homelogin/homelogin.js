@@ -1,8 +1,8 @@
 var stompClient = null;
 
-window.onload = function() {
+$(document).ready(function() {
     connect();
-};
+});
 
 function closeChat() {
     document.getElementById("chatContainer").style.display = "none";
@@ -15,12 +15,18 @@ function connect() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
         console.log('Web Socket Opened...');
-        stompClient.subscribe('/user/queue/messages', function(message) {
+        stompClient.subscribe('/topic/public', function(message) {
             var messageDto = JSON.parse(message.body);
-            console.log("Nhận tin nhắn mới: ", messageDto);
+
+            if(message.content !== null && messageDto.receiverId === +document.getElementById('idcurrent').value){
+                console.log("Nhận tin nhắn mới: ", messageDto);
+                //ve them tin nhan.
+            }
+
         });
     });
 }
+
 
 function disconnect() {
     if (stompClient !== null) {
@@ -68,6 +74,7 @@ function onEnter(event) {
 }
 
 function getChatHistory(receiverId, callback) {
+    //viet api
     stompClient.send("/app/chat.getChatHistory", {}, JSON.stringify({ receiverId: receiverId }));
     stompClient.subscribe('/user/queue/chatHistory', function (message) {
         console.log("Received message from server:", message);
@@ -122,12 +129,13 @@ function displayMessage(senderId, content) {
 }
 
 function sendMessage(receiveID, content) {
+    if(content.trim() === "") return;
     var message = {
         receiverId: receiveID,
         content: content,
         senderId:document.getElementById("idcurrent").value
     };
-    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
+    stompClient.send("/app/chat.addUser", {}, JSON.stringify(message));
     var chatMessages = document.getElementById("chatMessages");
     var listItem = document.createElement("div");
     listItem.innerText = "You" + ": " + content;
@@ -137,7 +145,8 @@ function sendMessage(receiveID, content) {
 
 }
 function openChat(userId, username) {
-
+console.log('chonj', userId);
+//huy connect khoi tao lai
 // Gửi yêu cầu lấy lịch sử tin nhắn
     const messageRequest = {
         receiverId: userId
