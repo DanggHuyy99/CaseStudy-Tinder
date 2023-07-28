@@ -53,7 +53,7 @@ function closeChat() {
     document.getElementById("chatContainer").style.display = "none";
     document.getElementById("message-container").style.display = "none";
     document.getElementById("default-container").style.display = "flex";
-    stompClient.disconnect();
+    // stompClient.disconnect();
 }
 
 let receiverId = 0;
@@ -898,7 +898,7 @@ function showNotification(username, userId, imgUrl) {
         title: '<i class="fa-regular fa-envelope"></i> Tin nhắn mới',
         text: `Tin nhắn mới từ ${username} `,
         icon: 'envelope',
-        timer: 99000,
+        timer: 5000,
         toast: true,
         position: 'top-end',
         showCancelButton: true,
