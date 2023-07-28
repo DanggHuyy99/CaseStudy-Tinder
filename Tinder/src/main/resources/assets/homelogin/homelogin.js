@@ -831,8 +831,8 @@ $(document).ready(function (event) {
                     <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
                     <div id="dislike">KHÔNG</div>
                      <div id="like">THÍCH</div>
-                    
-                  
+
+
                        <div class="info info-profile">
                             <h3 id="fullName">${currentProfile.fullName}</h3>
                             <!--                        <h1 id="namefull"></h1>-->
@@ -840,7 +840,7 @@ $(document).ready(function (event) {
 
                        </div>
                     </div>
-                    
+
                     `);
 
                 //
@@ -875,6 +875,41 @@ $(document).ready(function (event) {
         swipe();
     }
 });
+    function addNewProfile1(users) {
+        // Tiếp tục xử lý hiển thị người dùng như bạn đã làm trước đó
+        // Bạn có thể sử dụng "users" để lọc và hiển thị chỉ những người dùng có cùng "interest" như đã mô tả ở trên
+        // Ví dụ:
+        let unswipedUsers = users.filter(user => !swipedProfiles.includes(user.id));
+
+        if (unswipedUsers.length === 0) {
+            showUserOver();
+            return;
+        }
+
+        let index = Math.floor(Math.random() * unswipedUsers.length);
+        let currentProfile = unswipedUsers[index];
+        console.log(currentProfile);
+
+        $("div.content").find('.like-text').css('opacity', 0);
+        $("div.content").find('.dislike-text').css('opacity', 0);
+
+        $("div.content").prepend(`
+        <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
+        <div id="dislike">KHÔNG</div>
+         <div id="like">THÍCH</div>
+        
+      
+           <div class="info info-profile">
+                <h3 id="fullName">${currentProfile.fullName}</h3>
+                <!--                        <h1 id="namefull"></h1>-->
+                <h3 id="age">${currentProfile.age}</h3>
+           </div>
+        </div>
+        
+        `);
+
+        swipe();
+    }
 
 function showTinderNotification() {
     var notification = document.querySelector(".tinder-notification");
