@@ -21,14 +21,14 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
 
-    public void sendAndSaveMessage(User sender, User receiver, String content) {
+    public void  sendAndSaveMessage(User sender, User receiver, String content) {
         Message message = new Message();
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setContent(content);
         message.setSentAt(new Date());
 
-        MessageRequest messageDto = new MessageRequest(sender.getId(), receiver.getId(), content);
+        MessageRequest messageDto = new MessageRequest(sender.getId(), receiver.getId(), content, sender.getUserProfile().getFullName(),sender.getPhotos().get(0).getImageUrl());
         messagingTemplate.convertAndSendToUser(receiver.getUsername(), "/queue/messages", messageDto);
 
         messageRepository.save(message);

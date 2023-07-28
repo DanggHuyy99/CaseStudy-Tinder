@@ -5,6 +5,8 @@ import com.example.tinder.model.role.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
@@ -45,8 +47,8 @@ public class User {
     @JsonIgnore
     private List<Message> receivedMessages;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @Fetch(FetchMode.SUBSELECT)
     private List<Photo> photos;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

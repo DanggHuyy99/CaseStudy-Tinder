@@ -401,3 +401,166 @@
 }
 
 
+
+
+.emoji-container {
+    display: none;
+    position: absolute;
+    bottom: 40px;
+    left: 66%;
+    transform: translateX(-50%);
+    background-color: #333333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex-wrap: wrap;
+    max-width: 223px;
+    margin-bottom: 29px;
+    padding: 0 3px;
+    animation: fadeInOut 0.3s ease-in-out;
+
+}
+
+.scroll-emoji{
+    font-size: 20px;
+    overflow-y: auto;
+    max-height: 200px;
+    height: 200px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .scroll-emoji {
+    scrollbar-width: none;
+}
+
+.scroll-emoji::-webkit-scrollbar {
+    display: none;
+}
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.8); /* Kích thước ban đầu nhỏ hơn */
+        left: 905px
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1); /* Kích thước phóng to */
+        left: 905px
+    }
+}
+
+/* Định nghĩa lớp hiển thị khi bạn click vào nút emoji */
+.emoji-container-visible {
+    display: block;
+}
+
+.show {
+    display: flex;
+}
+
+#emojiButton{
+    background: transparent;
+    font-size: 38px;
+/* margin-left: 94px; */
+    margin: 0px -21px;
+    margin-top: -2px;
+}
+
+
+.emoji-item {
+    display: inline-block;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.emoji-item:hover {
+    filter: brightness(1.9);
+    background-color: #666666;
+}
+
+#show-icon-hover{
+    color: white;
+}
+#show-icon-hover{
+    height: 31px;
+    padding: 0 5px
+}
+
+.divider{
+    width: 100%;
+    font-size: 23px;
+
+    margin: 3px 0;
+
+    border-top: 3px solid white;
+}
+
+
+
+
+.search-container {
+    position: relative;
+}
+
+input[type="search"] {
+    padding: 8px 32px 8px 8px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 16px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.3s;
+    background-color: #333333;
+    color: white;
+}
+
+/* Hiệu ứng hover cho input search */
+input[type="search"]:hover {
+    border-color: #999;
+}
+
+/* Thiết kế nút search */
+.search-button {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    background: transparent !important;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.search-button{
+    background: transparent;
+}
+
+.search-button i {
+    margin-right: -17px;
+    font-size: 20px;
+    color: #999;
+}
+
+/* Hiệu ứng hover cho nút search */
+.search-button:hover i {
+    color: #666;
+}
+
+
+.noFoundEmoji {
+    display: none;
+    text-align: center;
+    margin-top: 53px;
+}
+
+.noFoundEmoji i {
+    font-size: 50px;
+    color: #ccc;
+}
+
+.noFoundEmoji h2 {
+    font-size: 18px;
+    color: #ccc;
+    margin-top: 10px;
+}

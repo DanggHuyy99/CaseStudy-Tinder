@@ -14,6 +14,14 @@
     <link href="/assets/homelogin/homelogin.css" rel="stylesheet">
     <script src="/webjars/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-YbGv5MBK10IuIK3gYYdL50LyvhH1zsewzFnyeby6zW+pxYlZHsOwUhs1vbcdlYp0ybB9G6RYqSMtGAd/HIhIw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+</head>
 </head>
 <body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/plugins/CSSPlugin.min.js"></script>
@@ -26,68 +34,77 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
 <link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
 <div class="container-flug" th:object="${user}">
     <div class="side-bar">
         <div class="top-side-bar d-flex justify-content-between align-items-center">
             <div class="block-avatar d-flex justify-content-between align-items-center" style="margin-left: 8px;
     border-radius: 30px;">
-            <a href="/profile">
-                <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}" >
-                <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
-                <input type="hidden" id="idcurrent" th:value="${user.id}">
-                <input type="hidden" id="username-current" th:value="${user.username}">
-            </a>
+                <a href="/profile" style="display: contents">
+                    <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}">
+                    <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
+                    <input type="hidden" id="idcurrent" th:value="${user.id}">
+                    <input type="hidden" id="username-current" th:value="${user.username}">
+                    <input type="hidden" id="full-name-current" th:value="${userprofile.fullName}">
+                    <input type="hidden" id="url-img-current" th:value="${user.getPhotos().get(0).getImageUrl()}">
+                </a>
 
 
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="acount-action"><i class="fa-solid fa-magnifying-glass"></i></div>
                 <div class="acount-action"><i class="fa-solid fa-suitcase"></i></div>
-                <div class="acount-action"><i class="fa-solid fa-shield-heart"></i></div>
+                <div class="acount-action"><i class="fas fa-crown" id="vipAccount"></i></div>
             </div>
         </div>
         <div class="massage" style="background-color: #121418; height: 100%;">
             <div class="tab-massage" style=" display:  flex;">
                 <div class="tab col-6">
-                    <button class="tab-button active" data-tab="tab1" onclick="showMatches()" style="width: 200px;">Các tương hợp</button>
+                    <button class="tab-button active" data-tab="tab1" onclick="showMatches()" style="width: 200px;">Các
+                        tương hợp
+                    </button>
                 </div>
                 <div class="tab col-6">
-                    <button class="tab-button" data-tab="tab2" onclick="showMessage()" style="width: 200px;">Tin nhắn</button>
+                    <button class="tab-button" data-tab="tab2" onclick="showMessage()" style="width: 200px;">Tin nhắn
+                    </button>
                 </div>
             </div>
             <div class="tab-content" style="display: block;">
-                <div id="tab1" class="tab-pane active row" >
+                <div id="tab1" class="tab-pane active row">
 
 
                 </div>
-                <div id="tab2" class="tab-pane"  style="color: white;">
-<!--                    <div class="chat-container">-->
-<!--                        <div class="chat-header">Chat with <span id="chatUsername"></span></div>-->
-<!--                        <div class="chat-messages" id="chatMessages"></div>-->
-<!--                        <div class="chat-input">-->
-<!--                            <input type="text" id="messageInput" placeholder="Type a message...">-->
-<!--                            <button id="sendMessageBtn">Send</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                <div id="tab2" class="tab-pane" style="color: white;">
+                    <!--                    <div class="chat-container">-->
+                    <!--                        <div class="chat-header">Chat with <span id="chatUsername"></span></div>-->
+                    <!--                        <div class="chat-messages" id="chatMessages"></div>-->
+                    <!--                        <div class="chat-input">-->
+                    <!--                            <input type="text" id="messageInput" placeholder="Type a message...">-->
+                    <!--                            <button id="sendMessageBtn">Send</button>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="tinder-notification">
+        <button id="grab"></button>
+        <h2 id="seeAllUsers">Bạn đã gặp hết tất cả người dùng</h2>
+        <h3 id="expandAge">Vui lòng mở rộng độ tuổi để tìm thêm tương hợp</h3>
+        <button id="backToDiscover">Quay lại khám phá</button>
+    </div>
     <div id="default-container" class="wrapper">
-        <div class="content1">
+        <div class="content1" id="content1">
             <div id="swiper">
 
                 <div class="app">
                     <div class="content content-profile">
                     </div>
                 </div>
-                <div class="info info-profile">
-                    <h3 id="fullName"></h3>
-                    <!--                        <h1 id="namefull"></h1>-->
-                    <h3 id="age"></h3>
 
-                </div>
             </div>
 
             <!--                <div class="info">-->
@@ -153,24 +170,163 @@
                     <button id="closeChatBtn" class="close-button"><i class="fa-regular fa-circle-xmark"></i></button>
                 </div>
 
-                <div class="chat-messages" id="chatMessages"></div>
+
+                <div class="chat-messages" id="chatMessages">
+
+                </div>
 
                 <div class="chat-input">
-<!--                    <div class="scrollable">-->
-<!--                        <div class="chat-message-wrapper">-->
-<!--                            <div class="chat-message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis scelerisque.</div>-->
-<!--                            <div class="chat-message"></div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                        <input type="text" id="messageInput" placeholder="Type a message...">
-                        <button id="sendMessageBtn" onclick="handleSubmitMessage()">Send</button>
+
+                    <!--                    <div class="scrollable">-->
+                    <!--                        <div class="chat-message-wrapper">-->
+                    <!--                            <div class="chat-message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis scelerisque.</div>-->
+                    <!--                            <div class="chat-message"></div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <input type="text" id="messageInput" placeholder="Type a message...">
+                    <button id="emojiButton">😀</button>
+                    <div class="emoji-container">
+                        <div class="search-container">
+                            <input type="search" oninput="filterEmoji()" placeholder="Tìm emoji">
+                            <button class="search-button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="scroll-emoji">
+                            <div class="noFoundEmoji">
+                                <i class="far fa-frown"></i>
+                                <h2>Không tìm thấy emoji</h2>
+                            </div>
+                            <span class="emoji-item" data-emoji="😀" data-description="Mặt cười vui vẻ"
+                                  onclick="insertEmoji('😀')">😀</span>
+                            <span class="emoji-item" data-emoji="😁" data-description="Mặt cười hạnh phúc"
+                                  onclick="insertEmoji('😁')">😁</span>
+                            <span class="emoji-item" data-emoji="😂" data-description="Cười đến té ghế"
+                                  onclick="insertEmoji('😂')">😂</span>
+                            <span class="emoji-item" data-emoji="🤣" data-description="Cười đến rơi nước mắt"
+                                  onclick="insertEmoji('🤣')">🤣</span>
+                            <span class="emoji-item" data-emoji="😃" data-description="Mặt cười tươi tắn"
+                                  onclick="insertEmoji('😃')">😃</span>
+                            <span class="emoji-item" data-emoji="😄" data-description="Mặt cười rạng rỡ"
+                                  onclick="insertEmoji('😄')">😄</span>
+                            <span class="emoji-item" data-emoji="😅" data-description="Mặt cười thoải mái"
+                                  onclick="insertEmoji('😅')">😅</span>
+                            <span class="emoji-item" data-emoji="😆" data-description="Mặt cười vui sướng"
+                                  onclick="insertEmoji('😆')">😆</span>
+                            <span class="emoji-item" data-emoji="😇" data-description="Mặt cười thiên thần"
+                                  onclick="insertEmoji('😇')">😇</span>
+                            <span class="emoji-item" data-emoji="😈" data-description="Mặt cười quỷ dữ"
+                                  onclick="insertEmoji('😈')">😈</span>
+                            <span class="emoji-item" data-emoji="👿" data-description="Mặt cười ác quỷ"
+                                  onclick="insertEmoji('👿')">👿</span>
+                            <span class="emoji-item" data-emoji="😉" data-description="Mặt cười nháy mắt"
+                                  onclick="insertEmoji('😉')">😉</span>
+                            <span class="emoji-item" data-emoji="😊" data-description="Mặt cười vui mừng"
+                                  onclick="insertEmoji('😊')">😊</span>
+                            <span class="emoji-item" data-emoji="😋" data-description="Mặt cười ngon miệng"
+                                  onclick="insertEmoji('😋')">😋</span>
+                            <span class="emoji-item" data-emoji="😌" data-description="Mặt cười thư giãn"
+                                  onclick="insertEmoji('😌')">😌</span>
+                            <span class="emoji-item" data-emoji="😍" data-description="Mặt cười yêu mến"
+                                  onclick="insertEmoji('😍')">😍</span>
+                            <span class="emoji-item" data-emoji="😎" data-description="Mặt cười ngầu"
+                                  onclick="insertEmoji('😎')">😎</span>
+                            <span class="emoji-item" data-emoji="😏" data-description="Mặt cười tự tin"
+                                  onclick="insertEmoji('😏')">😏</span>
+                            <span class="emoji-item" data-emoji="😐" data-description="Mặt cười thờ ơ"
+                                  onclick="insertEmoji('😐')">😐</span>
+                            <span class="emoji-item" data-emoji="😑" data-description="Mặt cười lạnh lùng"
+                                  onclick="insertEmoji('😑')">😑</span>
+                            <span class="emoji-item" data-emoji="❤️" data-description="Trái tim đỏ"
+                                  onclick="insertEmoji('❤️')">❤️</span>
+                            <span class="emoji-item" data-emoji="💛" data-description="Trái tim vàng"
+                                  onclick="insertEmoji('💛')">💛</span>
+                            <span class="emoji-item" data-emoji="💚" data-description="Trái tim xanh lá"
+                                  onclick="insertEmoji('💚')">💚</span>
+                            <span class="emoji-item" data-emoji="💙" data-description="Trái tim xanh dương"
+                                  onclick="insertEmoji('💙')">💙</span>
+                            <span class="emoji-item" data-emoji="💜" data-description="Trái tim tím"
+                                  onclick="insertEmoji('💜')">💜</span>
+                            <span class="emoji-item" data-emoji="🧡" data-description="Trái tim cam"
+                                  onclick="insertEmoji('🧡')">🧡</span>
+                            <span class="emoji-item" data-emoji="💔" data-description="Trái tim tan vỡ"
+                                  onclick="insertEmoji('💔')">💔</span>
+                            <span class="emoji-item" data-emoji="💕" data-description="Trái tim hai mảnh ghép"
+                                  onclick="insertEmoji('💕')">💕</span>
+                            <span class="emoji-item" data-emoji="💖" data-description="Trái tim vòng hoa"
+                                  onclick="insertEmoji('💖')">💖</span>
+                            <span class="emoji-item" data-emoji="💗" data-description="Trái tim tình yêu"
+                                  onclick="insertEmoji('💗')">💗</span>
+                            <span class="emoji-item" data-emoji="🐶" data-description="Hình con chó"
+                                  onclick="insertEmoji('🐶')">🐶</span>
+                            <span class="emoji-item" data-emoji="🐱" data-description="Hình con mèo"
+                                  onclick="insertEmoji('🐱')">🐱</span>
+                            <span class="emoji-item" data-emoji="🐼" data-description="Hình con gấu trúc"
+                                  onclick="insertEmoji('🐼')">🐼</span>
+                            <span class="emoji-item" data-emoji="🐯" data-description="Hình con hổ"
+                                  onclick="insertEmoji('🐯')">🐯</span>
+                            <span class="emoji-item" data-emoji="🦁" data-description="Hình con sư tử"
+                                  onclick="insertEmoji('🦁')">🦁</span>
+                            <span class="emoji-item" data-emoji="🐵" data-description="Hình con khỉ"
+                                  onclick="insertEmoji('🐵')">🐵</span>
+                            <span class="emoji-item" data-emoji="🐘" data-description="Hình con voi"
+                                  onclick="insertEmoji('🐘')">🐘</span>
+                            <span class="emoji-item" data-emoji="🦄" data-description="Hình ngựa một sừng"
+                                  onclick="insertEmoji('🦄')">🦄</span>
+                            <span class="emoji-item" data-emoji="🐢" data-description="Hình con rùa"
+                                  onclick="insertEmoji('🐢')">🐢</span>
+                            <span class="emoji-item" data-emoji="🦔" data-description="Hình con nhím"
+                                  onclick="insertEmoji('🦔')">🦔</span>
+                            <span class="emoji-item" data-emoji="🍔" data-description="Hình bánh mỳ kẹp thịt"
+                                  onclick="insertEmoji('🍔')">🍔</span>
+                            <span class="emoji-item" data-emoji="🍕" data-description="Hình bánh pizza"
+                                  onclick="insertEmoji('🍕')">🍕</span>
+                            <span class="emoji-item" data-emoji="🍟" data-description="Hình khoai tây chiên"
+                                  onclick="insertEmoji('🍟')">🍟</span>
+                            <span class="emoji-item" data-emoji="🍦" data-description="Hình kem"
+                                  onclick="insertEmoji('🍦')">🍦</span>
+                            <span class="emoji-item" data-emoji="🍪" data-description="Hình bánh quy"
+                                  onclick="insertEmoji('🍪')">🍪</span>
+                            <span class="emoji-item" data-emoji="🍫" data-description="Hình sô cô la"
+                                  onclick="insertEmoji('🍫')">🍫</span>
+                            <span class="emoji-item" data-emoji="🍩" data-description="Hình bánh rán"
+                                  onclick="insertEmoji('🍩')">🍩</span>
+                            <span class="emoji-item" data-emoji="🍓" data-description="Hình dâu tây"
+                                  onclick="insertEmoji('🍓')">🍓</span>
+                            <span class="emoji-item" data-emoji="🍎" data-description="Hình quả táo"
+                                  onclick="insertEmoji('🍎')">🍎</span>
+                            <span class="emoji-item" data-emoji="💼" data-description="Hình cặp tài liệu"
+                                  onclick="insertEmoji('💼')">💼</span>
+                            <span class="emoji-item" data-emoji="💻" data-description="Hình máy tính"
+                                  onclick="insertEmoji('💻')">💻</span>
+                            <span class="emoji-item" data-emoji="📱" data-description="Hình điện thoại di động"
+                                  onclick="insertEmoji('📱')">📱</span>
+                            <span class="emoji-item" data-emoji="📚" data-description="Hình sách"
+                                  onclick="insertEmoji('📚')">📚</span>
+                            <span class="emoji-item" data-emoji="✏️" data-description="Hình bút chì"
+                                  onclick="insertEmoji('✏️')">✏️</span>
+                            <span class="emoji-item" data-emoji="📝" data-description="Hình viết"
+                                  onclick="insertEmoji('📝')">📝</span>
+                            <span class="emoji-item" data-emoji="🗂️" data-description="Hình tài liệu"
+                                  onclick="insertEmoji('🗂️')">🗂️</span>
+                            <span class="emoji-item" data-emoji="📅" data-description="Hình lịch"
+                                  onclick="insertEmoji('📅')">📅</span>
+                            <span class="emoji-item" data-emoji="📎" data-description="Hình bấm giấy"
+                                  onclick="insertEmoji('📎')">📎</span>
+                            <span class="emoji-item" data-emoji="🔒" data-description="Hình khóa"
+                                  onclick="insertEmoji('🔒')">🔒</span>
+                        </div>
+                        <hr class="divider">
+                        <div id="show-icon-hover"></div>
+                    </div>
+                    <button id="sendMessageBtn" onclick="handleSubmitMessage()">Send</button>
                 </div>
                 <input type="hidden" id="receiverId">
+
             </div>
         </div>
 
         <div class="message-profile-block">
-
         </div>
     </div>
 
@@ -298,4 +454,134 @@
 
 
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const emojiButton = document.getElementById('emojiButton');
+        const emojiContainer = document.querySelector('.emoji-container');
+        const showIconHover = document.getElementById('show-icon-hover');
+
+        const emojiItems = document.querySelectorAll('.emoji-item');
+
+
+        emojiItems.forEach(item => {
+            item.addEventListener('mouseover', () => {
+                const emoji = item.dataset.emoji; // Lấy nội dung emoji từ thuộc tính data-emoji
+                const description = item.dataset.description;
+                showIconHover.innerText = `${emoji}: ${description}`; // Đặt nội dung emoji vào div show-icon-hover
+            });
+
+            item.addEventListener('mouseout', () => {
+                showIconHover.innerHTML = ''; // Xóa nội dung khi rời chuột khỏi icon
+            });
+        });
+
+        emojiButton.addEventListener('click', () => {
+            if (emojiContainer.style.display === 'none') {
+                emojiContainer.style.display = 'block';
+                emojiContainer.classList.toggle('show')
+            } else {
+                emojiContainer.style.display = 'none';
+            }
+        });
+    });
+
+    function insertEmoji(emoji) {
+        const messageInput = document.getElementById('messageInput');
+        messageInput.value += emoji;
+    }
+
+    document.addEventListener('click', (event) => {
+        // Kiểm tra nếu sự kiện click không phát sinh từ emojiButton hoặc các phần tử con của emojiContainer, thì ẩn emojiContainer đi
+        if (!emojiButton.contains(event.target) && !emojiContainer.contains(event.target)) {
+            emojiContainer.style.display = 'none';
+        }
+    });
+
+    function filterEmoji() {
+        var input, filter, emojiContainer, emojiItems, noFoundEmoji;
+        input = document.querySelector('input[type="search"]');
+        filter = input.value.toUpperCase();
+        emojiContainer = document.querySelector('.scroll-emoji');
+        emojiItems = emojiContainer.getElementsByClassName('emoji-item');
+        noFoundEmoji = document.querySelector('.noFoundEmoji');
+
+        var foundEmoji = false;
+
+        for (var i = 0; i < emojiItems.length; i++) {
+            var description = emojiItems[i].getAttribute('data-description').toUpperCase();
+            if (description.indexOf(filter) > -1) {
+                emojiItems[i].style.display = '';
+                foundEmoji = true;
+            } else {
+                emojiItems[i].style.display = 'none';
+            }
+        }
+
+        if (foundEmoji) {
+            noFoundEmoji.style.display = 'none';
+        } else {
+            noFoundEmoji.style.display = 'block';
+        }
+    }
+
+
+    document.getElementById("vipAccount").addEventListener("click", function () {
+        const idCurrentUser = document.getElementById("idcurrent").value;
+        $.ajax({
+            url: "api/users/isVipAccount",
+            method: "GET",
+            data: {
+                userId: idCurrentUser,
+            },
+            success: function (isVip) {
+                if (isVip){
+                    swal.fire({
+                        icon: 'info',
+                        title: 'Tài khoản VIP',
+                        text: 'Bạn đã là tài khoản VIP rồi.',
+                    });
+                } else {
+                    swal.fire({
+                        icon: "warning",
+                        title: "Xác nhận nâng cấp tài khoản",
+                        text: "Bạn có muốn nâng cấp tài khoản thành VIP?",
+                        showCancelButton: true,
+                        confirmButtonText: "Nâng cấp tài khoản",
+                        cancelButtonText: "Hủy",
+                        reverseButtons: true,
+                    }).then((result) => {
+                        // Nếu người dùng bấm nút "Nâng cấp tài khoản"
+                        if (result.isConfirmed) {
+                            // Gọi API để nâng cấp tài khoản
+                            $.ajax({
+                                url: "/api/users/upgradeAccount",
+                                method: "POST",
+                                data: {
+                                    userId: idCurrentUser,
+                                },
+                                success: function (response) {
+                                    swal.fire({
+                                        icon: "success",
+                                        title: "Nâng cấp tài khoản thành công!",
+                                        text: "Tài khoản của bạn đã được nâng cấp thành VIP.",
+                                    });
+                                },
+                                error: function (error) {
+                                    swal.fire({
+                                        icon: "error",
+                                        title: "Lỗi",
+                                        text: "Đã có lỗi xảy ra khi nâng cấp tài khoản. Vui lòng thử lại sau.",
+                                    });
+                                },
+                            });
+                        }
+                    });
+                }
+            }
+        })
+    });
+
+</script>
+
+
 </html>

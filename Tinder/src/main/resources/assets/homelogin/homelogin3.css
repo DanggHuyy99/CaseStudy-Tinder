@@ -492,17 +492,25 @@ margin-bottom: 20px;
 
 
 
-#chatMessages .parent {
-    /* Thêm độ cao tối đa cho tin nhắn */
-    max-height: 200px; /* Điều chỉnh độ cao tối đa tùy ý */
-    /* Cuộn xuống dưới cùng của khung chat khi có tin nhắn mới */
-    overflow-y: hidden;
-    overflow-y: auto;
-}
+/*#chatMessages .parent {*/
+/*    !* Thêm độ cao tối đa cho tin nhắn *!*/
+/*    max-height: 200px; !* Điều chỉnh độ cao tối đa tùy ý *!*/
+/*    !* Cuộn xuống dưới cùng của khung chat khi có tin nhắn mới *!*/
+/*    overflow-y: hidden;*/
+/*    overflow-y: auto;*/
+/*}*/
 
 .parent {
     width: 100%;
     height: 48px;
+}
+
+.parent-right{
+    text-align: right;
+}
+
+.parent-left{
+    text-align: left;
 }
 /* CSS cho tin nhắn của người gửi */
 .sender-message {
@@ -516,7 +524,19 @@ margin-bottom: 20px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     margin-top: 8px;
-    margin-left: 100px;
+    margin-left: 5px;
+}
+.parent-right:hover > .date-sent-sender{
+    display: inline-block !important;
+}
+/*.sender-message:hover + .date-sent-sender{*/
+/*    display: block;*/
+/*}*/
+
+
+.receiver-message:hover + .date-sent-receiver,
+.sender-message:hover + .date-sent-sender{
+    display: block;
 }
 
 /* CSS cho tin nhắn của người nhận */
@@ -530,10 +550,14 @@ margin-bottom: 20px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     margin-top: 8px;
-    margin-right:  100px;
+    margin-right:  5px;
     background-color: #21262E;
 }
 
+.parent-left span.receiver-message:first-child:not(:first-child + img) {
+    /* Kiểm tra nếu span.receiver-message là thẻ đầu tiên trong parent và không có img đứng sau nó */
+    margin-left: 46px;
+}
 
 .avatar-user {
     border-radius: 50%;
@@ -543,4 +567,98 @@ margin-bottom: 20px;
 
 .avatar{
     float: left;
+    margin-top: 7px;
+    margin-right: 4px;
+}
+
+.date-sent-sender{
+    color: #898686;
+    font-size: 14px;
+    line-height: 51px;
+    display: none;
+}
+
+.date-sent-receiver{
+    color: #898686;
+    font-size: 14px;
+    line-height: 51px;
+    display: none;
+}
+
+
+.tinder-notification {
+    position: fixed;
+    bottom: -100%; /* Ẩn thông báo bên dưới màn hình */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #111418;
+    padding: 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: bottom 0.3s ease-in-out;
+    z-index: 9999;
+    width: 100%;
+    height: 207px;
+    line-height: 1.9;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+}
+
+.fade-out {
+    animation: fadeOut 1s forwards;
+    display: none;
+}
+
+#grab {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 53px;
+    height: 12px;
+    background: linear-gradient(to top right, #FD267A, #FF6036);
+    border-radius: 10px;
+    cursor: grab;
+}
+
+#seeAllUsers{
+    color: white;
+    text-align: center;
+    font-size: 23px;
+    padding: 10px;
+}
+
+#expandAge{
+    color: white;
+    text-align: center;
+    font-size: 21px;
+}
+
+#backToDiscover{
+    background: linear-gradient(to top right, #FE3F5C, #FC646B);
+    width: 100%;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    padding: 4px;
+    margin: 16px 0;
+}
+
+.tab-content{
+    overflow-y: auto;
+    max-height: 600px;
+}
+.tab-content::-webkit-scrollbar {
+    display: none;
 }

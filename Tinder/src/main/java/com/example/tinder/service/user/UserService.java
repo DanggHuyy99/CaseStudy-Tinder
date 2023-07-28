@@ -44,6 +44,10 @@ public class UserService {
         return userRepository.findByUsernameIgnoreCase(username);
     }
 
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -98,5 +102,14 @@ public class UserService {
         userWithProfileDTO.setLocation(userProfile.getLocation());
 
         return userWithProfileDTO;
+    }
+
+    public boolean isVipAccount(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.isVIPaccount();
+        }
+        return false;
     }
 }

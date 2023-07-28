@@ -56,6 +56,7 @@ public class WebSocketController {
         User sender = userService.findByUsername(authentication.getName());
         User receiver = userService.findUserById(messageRequest.getReceiverId());
         String content = messageRequest.getContent();
+        messageRequest.setSenderName(sender.getUserProfile().getFullName());
         if(headerAccessor.getSessionAttributes() != null){
             headerAccessor.getSessionAttributes().put("username", sender.getUsername());
         }
@@ -82,6 +83,8 @@ public class WebSocketController {
                 log.error("Người gửi không tồn tại với ID: " + messageRequest.getSenderId());
                 return;
             }
+            messageRequest.setSenderName(sender.getUserProfile().getFullName());
+            messageRequest.setPhotos(sender.getPhotos().get(0).getImageUrl());
 
             Long receiverId = messageRequest.getReceiverId();
             String content = messageRequest.getContent();

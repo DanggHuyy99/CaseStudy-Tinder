@@ -34,4 +34,8 @@ public class LikeService {
             throw new RuntimeException("Invalid user");
         }
     }
+
+    public long countLikesByLikerAndCurrentDate(Long likerId) {
+        return likeRepository.countLikesByLikerAndCurrentDate(likerId);
+    }
 }

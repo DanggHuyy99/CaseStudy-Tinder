@@ -1,9 +1,12 @@
 package com.example.tinder.service.message.request;
 
 import com.example.tinder.model.Message;
+import com.example.tinder.model.Photo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,6 +17,10 @@ public class MessageRequest {
     private Long receiverId;
 
     private String content;
+
+    private String senderName;
+
+    private String photos;
 
     public static MessageRequest fromEntity(Message message) {
         MessageRequest messageRequest = new MessageRequest();
