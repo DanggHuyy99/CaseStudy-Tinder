@@ -6,5 +6,6 @@ public enum Interest {
     TRAVEL,
     COOKING,
     READING,
-    COFFEE
+    COFFEE,
+    DRINK
 }

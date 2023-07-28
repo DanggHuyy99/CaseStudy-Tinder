@@ -334,11 +334,39 @@ function openChat(userId, username, urlImage) {
     imageUrlGlobal = urlImage;
     console.log(imageUrlGlobal)
     userIdGlobal = userId;
+    console.log("id nguoi nhan", receiverId)
     // window.currentReceiverId = userId;
     clearCache()
     disconnect()
     connect()
+    $.ajax({
+        url: "/api/userprofiles/" + receiverId,
+        method: "GET",
+        success: function (user) {
+            console.log(1232132)
+            console.log(user)
+            let interests = ""
+            user.interests.forEach(i => {
+                interests += `<button disabled style="width: 105px" className="btn btn-outline-secondary me-2 radius fw-bold"
+                       htmlFor="option1">${i}</button>`
 
+            })
+            let html = `
+                <img class="avatar-onClick" src="${user.photos[0].imageUrl}" >
+                <p>${user.fullName}</p></br>
+                <p>${user.age}</p></br>
+                <p>${user.gender}</p></br>
+                <p>${user.phone}</p></br>
+                <p>${interests}</p></br>
+            `;
+            console.log(document.getElementById("style-default"))
+            document.getElementById("style-default").innerHTML = html;
+            console.log(user)
+        },
+        error: function () {
+            console.log("Lỗi khi lấy thông tin người gửi");
+        }
+    });
     document.getElementById("default-container").style.display = "none";
     document.getElementById("message-container").style.display = "flex";
     // document.getElementById("chatUsername").innerText = "Chat with " + username;
@@ -916,7 +944,29 @@ function showNotification(username, userId, imgUrl) {
             openChat(userId, username, imgUrl)
         }
     });
+    var tinderNotification = document.querySelector(".tinder-notification");
+    swal.fire({
+        title: '<i class="fa-regular fa-envelope"></i> Tin nhắn mới',
+        text: `Tin nhắn mới từ ${username} `,
+        icon: 'envelope',
+        timer: 99000,
+        toast: true,
+        position: 'top-end',
+        showCancelButton: true,
+        confirmButtonText: '<i class="fas fa-eye"></i> Xem tin nhắn',
+        cancelButtonText: '<i class="fas fa-times"></i> Đóng',
+        showClass: {
+            popup: 'animate__animated animate__lightSpeedInRight'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__lightSpeedOutRight'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
 
+            openChat(userId, username, imgUrl)
+        }
+    });
 }
 
 

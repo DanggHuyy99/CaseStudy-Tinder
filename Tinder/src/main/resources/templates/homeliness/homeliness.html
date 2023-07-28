@@ -12,6 +12,7 @@
     <link href="/assets/homelogin/homelogin2.css" rel="stylesheet">
     <link href="/assets/homelogin/homelogin3.css" rel="stylesheet">
     <link href="/assets/homelogin/homelogin.css" rel="stylesheet">
+    <link href="/assets/homelogin/profileUser.css" rel="stylesheet">
     <script src="/webjars/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css">
@@ -63,12 +64,13 @@
 
             </div>
             <div class="d-flex justify-content-between align-items-center">
-                <div class="acount-action"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <button class="acount-action" onclick="showCategory()"><i class="fa-solid fa-magnifying-glass"></i>
+                </button>
                 <div class="acount-action"><i class="fa-solid fa-suitcase"></i></div>
                 <div class="acount-action"><i class="fas fa-crown" id="vipAccount"></i></div>
             </div>
         </div>
-        <div class="massage" style="background-color: #121418; height: 100%;">
+        <div class="massage" style="background-color: #121418; height: 100%;" id="massage">
             <div class="tab-massage" style=" display:  flex;">
                 <div class="tab col-6">
                     <button class="tab-button active" data-tab="tab1" onclick="showMatches()" style="width: 200px;">Các
@@ -96,6 +98,78 @@
                     <!--                    </div>-->
                 </div>
             </div>
+        </div>
+        <div class="search-category" id="search-category">
+            <div class="interest-card"></div>
+            <div class="scrollbar4" >
+                <div class="search-item">
+                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('DRINK')">
+                        <img class="category-img"
+                             src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
+                             alt="">
+                        <div class="search-content">
+                            <p style="color: aliceblue;">Thích ăn nhậu</p>
+
+                        </div>
+                    </a>
+                </div>
+                <div class="search-item">
+                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('SPORTS')">
+                        <img class="category-img"
+                             src="https://shopvnb.com/uploads/images/tin_tuc/vot-cau-long-qua-cung-tac-hai-gi-cach-chon-vot-cau-long-phu-hop-1.webp"
+                             alt="">
+                        <div class="search-content">
+                            <p style="color: aliceblue;">Yêu thể thao</p>
+
+                        </div>
+                    </a>
+                </div>
+                <div class="search-item">
+                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('MUSIC')">
+                        <img class="category-img"
+                             src="https://img.pikbest.com/backgrounds/20191024/music-festival-symbol-background-image_2762753.jpg!w700wp"
+                             alt="">
+                        <div class="search-content">
+                            <p style="color: aliceblue;">Yêu âm nhạc</p>
+
+                        </div>
+                    </a>
+                </div>
+                <div class="search-item">
+                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('TRAVEL')">
+                        <img class="category-img"
+                             src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
+                             alt="">
+                        <div class="search-content">
+                            <p style="color: aliceblue;">Thích du lịch</p>
+
+                        </div>
+                    </a>
+                </div>
+                <div class="search-item">
+                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('COOKING')">
+                        <img class="category-img"
+                             src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
+                             alt="">
+                        <div class="search-content">
+                            <p style="color: aliceblue;">Thích nấu ăn</p>
+
+                        </div>
+                    </a>
+                </div>
+                <div class="search-item">
+                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('COFFEE')">
+                        <img class="category-img"
+                             src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
+                             alt="">
+                        <div class="search-content">
+                            <p style="color: aliceblue;">Thích cà phê</p>
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="tinder-notification">
@@ -333,8 +407,9 @@
 
             </div>
         </div>
-
-        <div class="message-profile-block">
+        <div class="message-profile-block" id="profileBlock" >
+            <div class="scrollbar3" id="style-default">
+            </div>
         </div>
     </div>
 
@@ -500,9 +575,9 @@
 
     document.addEventListener('click', (event) => {
         // Kiểm tra nếu sự kiện click không phát sinh từ emojiButton hoặc các phần tử con của emojiContainer, thì ẩn emojiContainer đi
-        if (!emojiButton.contains(event.target) && !emojiContainer.contains(event.target)) {
-            emojiContainer.style.display = 'none';
-        }
+        // if (!emojiButton.contains(event.target) && !emojiContainer.contains(event.target)) {
+        //     emojiContainer.style.display = 'none';
+        // }
     });
 
     function filterEmoji() {
@@ -588,6 +663,27 @@
             }
         })
     });
+    function chooseInterest(interest) {
+        console.log(interest)
+        $.ajax({
+            url: "/api/users/getUserCategory/" + interest,
+            method: "GET",
+            success: function (user) {
+                console.log("List user", user)
+            },
+            error: function (error) {
+                console.log("Lỗi khi lấy thông tin người gửi");
+            }
+        });
+    }
+    function showCategory() {
+        event.preventDefault();
+        console.log(123)
+        const searchCategory = document.getElementById("search-category");
+        const massage = document.getElementById("massage")
+        searchCategory.style.display = "flex";
+        massage.style.display = "none"
+    }
 
 </script>
 

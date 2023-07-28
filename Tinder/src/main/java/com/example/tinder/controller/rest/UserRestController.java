@@ -2,6 +2,7 @@ package com.example.tinder.controller.rest;
 
 import com.example.tinder.model.Photo;
 import com.example.tinder.model.User;
+import com.example.tinder.model.interest.Interest;
 import com.example.tinder.repository.UserRepository;
 import com.example.tinder.service.user.UserService;
 import lombok.AllArgsConstructor;
@@ -73,5 +74,12 @@ public class UserRestController {
     public ResponseEntity<Boolean> isVipAccount(@RequestParam Long userId) {
         boolean isVip = userService.isVipAccount(userId);
         return ResponseEntity.ok(isVip);
+    }
+    @GetMapping("/getUserCategory/{interest}")
+    public  ResponseEntity<List<User>> getUserByCategory(@PathVariable Interest interest){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication.getName();
+        List<User> user = userRepository.findByInterests(interest).get();
+        return ResponseEntity.ok(user);
     }
 }
