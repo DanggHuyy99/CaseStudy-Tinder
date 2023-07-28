@@ -189,7 +189,7 @@ function displayChatHistory(chatHistory) {
             var receiver = message.receiver.username;
             var sendDate = formatTimestamp(message.sentAt);
             var idCurrent = message.sender.id;
-            if (+idCurrent === +document.getElementById("idcurrent").value){
+            if (+idCurrent === +document.getElementById("idcurrent").value) {
                 console.log("hello")
             }
 
@@ -280,6 +280,7 @@ function displayMessage(senderId, content) {
         }
     });
 }
+
 function clearCache() {
     if (window.performance && window.performance.clearResourceTimings) {
         console.log("clear resort")
@@ -379,7 +380,7 @@ function openChat(userId, username, urlImage) {
     document.getElementById("chatContainer").style.display = "flex";
 
     var currentUserId = document.getElementById("idcurrent").value;
-    getChatHistory(currentUserId, userId, function(chatHistory) {
+    getChatHistory(currentUserId, userId, function (chatHistory) {
         displayChatHistory(chatHistory);
     });
 
@@ -553,7 +554,7 @@ $(document).ready(function (event) {
         Draggable.create("#photo", {
             throwProps: false,
             onDrag: function () {
-                if (Math.round(this.x) < 50 && Math.round(this.x) > -50){
+                if (Math.round(this.x) < 50 && Math.round(this.x) > -50) {
                     document.getElementById("like").style.display = "none";
                     document.getElementById("dislike").style.display = "none";
                 }
@@ -561,14 +562,14 @@ $(document).ready(function (event) {
 
                     document.getElementById("like").style.display = "block";
                     document.getElementById("dislike").style.display = "none";
-                    if (Math.round(this.x) < 150){
+                    if (Math.round(this.x) < 150) {
                         document.getElementById("like").style.opacity = "0.3";
                     } else if (Math.round(this.x) < 300) {
                         document.getElementById("like").style.opacity = "0.7";
                     } else {
                         document.getElementById("like").style.opacity = "1";
                     }
-                } else if (Math.round(this.endX) < -50){
+                } else if (Math.round(this.endX) < -50) {
                     console.log(this.pointerX)
                     console.log(this.pointerY)
                     // document.getElementById("photo").style.transform =  'rotate(-30deg)';
@@ -589,7 +590,7 @@ $(document).ready(function (event) {
 
                     document.getElementById("dislike").style.display = "block";
                     document.getElementById("like").style.display = "none";
-                    if (Math.round(this.x) > -150){
+                    if (Math.round(this.x) > -150) {
                         document.getElementById("dislike").style.opacity = "0.3";
                     } else if (Math.round(this.x) > -300) {
                         document.getElementById("dislike").style.opacity = "0.7";
@@ -602,12 +603,12 @@ $(document).ready(function (event) {
             onDragEnd: function (endX) {
                 if (Math.round(this.endX) > 50) {
                     console.log(this.endX)
-                    document.getElementById("like").style.display='block'
-                    document.getElementById("dislike").style.display='none'
+                    document.getElementById("like").style.display = 'block'
+                    document.getElementById("dislike").style.display = 'none'
                     swipeLike();
-                } else if (Math.round(this.endX) < -50){
-                    document.getElementById("dislike").style.display='block'
-                    document.getElementById("like").style.display='none'
+                } else if (Math.round(this.endX) < -50) {
+                    document.getElementById("dislike").style.display = 'block'
+                    document.getElementById("like").style.display = 'none'
                     swipeDislike();
                 }
                 console.log(Math.round(this.endX));
@@ -626,8 +627,8 @@ $(document).ready(function (event) {
                 data: {
                     userId: idCurrentUser,
                 },
-                success: function (isVip){
-                    if (isVip){
+                success: function (isVip) {
+                    if (isVip) {
                         $.ajax({
                             url: "/api/likes/like",
                             method: "POST",
@@ -672,9 +673,9 @@ $(document).ready(function (event) {
                             data: {
                                 likerId: idCurrentUser,
                             },
-                            success: function (likeCount){
-                                console.log("like count",likeCount)
-                                if (likeCount < 5){
+                            success: function (likeCount) {
+                                console.log("like count", likeCount)
+                                if (likeCount < 5) {
                                     $.ajax({
                                         url: "/api/likes/like",
                                         method: "POST",
@@ -826,22 +827,28 @@ $(document).ready(function (event) {
                 // $("div.content").find('.info').find('h3').eq(0).text(currentProfile.fullName);
                 // $("div.content").find('.info').find('h3').eq(1).text(currentProfile.age);
 
+                let interests = currentProfile.interests;
+
+                let interestsHTML = interests.map(interest => `<span class="custom-css-class disabled">${interest}</span>`).join("");
+
 
                 $("div.content").prepend(`
                     <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
-                    <div id="dislike">KHÔNG</div>
-                     <div id="like">THÍCH</div>
 
+                        <div id="dislike">KHÔNG</div>
+                        <div id="like">THÍCH</div>
+                      
+                        <div class="info info-profile">
 
-                       <div class="info info-profile">
                             <h3 id="fullName">${currentProfile.fullName}</h3>
-                            <!--                        <h1 id="namefull"></h1>-->
                             <h3 id="age">${currentProfile.age}</h3>
-
-                       </div>
+                            <div id="interest"></div>
+                        </div>
                     </div>
 
-                    `);
+                `);
+                $("#interest").html(interestsHTML);
+
 
                 //
                 // $("#fullName").text(currentProfile.fullName);
@@ -925,7 +932,7 @@ function showTinderNotification() {
     }
 }
 
-function showUserOver(){
+function showUserOver() {
     Swal.fire({
         title: "Thông báo!",
         text: "Bạn đã gặp hết tất cả người dùng.\nVui lòng mở rộng độ tuổi để tìm thêm tương hợp.",
