@@ -21,11 +21,4 @@ public class PhotoService {
         return photoRepository.findByUserId(id);
     }
 
-    public void deletePhoto(Long id) {
-        photoRepository.deleteById(id);
-    }
-
-    public Optional<Photo> findById(Long id) {
-        return photoRepository.findById(id);
-    }
 }

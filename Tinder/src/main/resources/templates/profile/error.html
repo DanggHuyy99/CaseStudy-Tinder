@@ -18,6 +18,12 @@
             flex-wrap: wrap;
             padding: 10px;
         }
+        .error-be {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 0;
+            margin-top: 10px;
+        }
     </style>
 
 
@@ -58,14 +64,14 @@
         </div>
 
         <div class="massage" style="background-color: #101418; height: 100%;">
-<!--            <div class="tab-massage " style="flex-direction: columns; display:  flex;">-->
-<!--                <div class="tab col-6">-->
-<!--                    <button class="tab-button active" data-tab="tab1" style="width: 200px;">Các tương hợp</button>-->
-<!--                </div>-->
-<!--                <div class="tab col-6">-->
-<!--                    <button class="tab-button" data-tab="tab2" style="width: 200px;">Tin nhắn</button>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div class="tab-massage " style="flex-direction: columns; display:  flex;">-->
+            <!--                <div class="tab col-6">-->
+            <!--                    <button class="tab-button active" data-tab="tab1" style="width: 200px;">Các tương hợp</button>-->
+            <!--                </div>-->
+            <!--                <div class="tab col-6">-->
+            <!--                    <button class="tab-button" data-tab="tab2" style="width: 200px;">Tin nhắn</button>-->
+            <!--                </div>-->
+            <!--            </div>-->
             <div class="tab-content" style="display: block;">
                 <div id="tab1" class="tab-pane active alert alert-dark text-center logout">
                     <a href="http://localhost:8080/logout" style="width: 100%;margin-left: 0;text-decoration: none;color: white">
@@ -80,38 +86,6 @@
         </div>
     </div>
 
-    <div class="wrapper" id="wrapper">
-        <div class="scrollbar" id="style-defau  lt">
-            <div class="force-overflow"></div>
-            <img th:src="${user.getPhotos().get(0).getImageUrl()}" alt="" class="user-img">
-            <div class="info-user">
-                <H1 th:text="${userprofile.fullName}"></H1>
-                <p><i class="fa-solid fa-house"></i> sống ở huế</p>
-                <span class="d-flex"><i class="fas fa-user" style="padding: 5px 3px;line-height: 15px"></i><p
-                        th:utext="${userprofile.getGender()}"></p></span>
-                <span class="d-flex"><i class="fa-solid fa-envelope" style="padding: 5px 3px;line-height: 15px"></i><p
-                        th:text="${userprofile.getEmail()}"></p></span>
-                <div style="color: white;" class="interest">
-                    <H2>Sở thích</H2>
-                </div>
-                <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                    <div class="d-flex flex-wrap">
-                        <div th:each="interest, iterStat : ${interests}">
-                            <input type="text" class="btn-check check" th:name="interest"
-                                   th:id="'show' + ${iterStat.index+1}" autocomplete="off"
-                                   th:value="${interest}">
-                            <label class="btn btn-outline-secondary me-2 radius fw-bold"
-                                   style="margin:10px; border-radius: 25px"
-                                   th:for="'show' + ${iterStat.index+1}" th:text="${interest}"></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="edit-info">
-                <button class="btn-edit-info" onclick="showEdit(event)">Sửa thông tin</button>
-            </div>
-        </div>
-    </div>
     <div class="wrapper2" id="wrapper2">
         <form method="post" th:object="${userprofile}" th:action="@{/profile}" role="form" enctype="multipart/form-data"
               id="formSubmit">
@@ -134,8 +108,6 @@
                         <input id="fullName" name="fullName" class="form-control" th:value="${userprofile.fullName}"
                                th:field="*{fullName}" oninput="onInput(this)" onfocus="onFocus(this)"
                                onblur="onBlur(this)"/>
-<!--                        <p id="fullName-error-submit" th:errors="*{fullName}" class="invalid-feedback"-->
-<!--                           th:if="${#fields.hasErrors('fullName')}"></p>-->
                         <span id="fullName-error" class="invalid-feedback"></span>
 
 
@@ -143,8 +115,8 @@
                         <input id="email" name="email" class="form-control" th:value="${userprofile.email}"
                                th:field="*{email}" oninput="onInput(this)" onfocus="onFocus(this)" onblur="onBlur(this)"/>
                         <span id="email-error" class="invalid-feedback"></span>
-                        <span id="email-error-submit" th:errors="*{email}" class="invalid-feedback"
-                                th:if="${#fields.hasErrors('email')}"></span>
+                        <p id="email-error-submit" th:errors="*{email}" class="text-danger error-be"
+                              th:if="${#fields.hasErrors('email')}"></p>
 
 
                         <label for="phone" class="massage-edit2 form-label fw-bold">Phone</label>
@@ -152,8 +124,8 @@
                                th:field="*{phone}" oninput="onInput(this)" onfocus="onFocus(this)"
                                onblur="onBlur(this)"/>
                         <span id="phone-error" class="invalid-feedback"></span>
-                        <span th:errors="*{phone}" class="invalid-feedback"
-                              th:if="${#fields.hasErrors('phone')}"></span>
+                        <p id="phone-error-submit" th:errors="*{phone}" class="text-danger error-be"
+                              th:if="${#fields.hasErrors('phone')}"></p>
 
 
                         <label for="age" class="massage-edit2 form-label fw-bold">Age</label>
@@ -281,13 +253,6 @@
 
     renderPhoto()
 
-    function showEdit(event) {
-        // event.preventDefault();
-        const editModal = document.getElementById("wrapper2");
-        const profileModal = document.getElementById("wrapper")
-        editModal.style.display = "flex";
-        profileModal.style.display = "none"
-    }
 
     function checkSubmit(event) {
         event.preventDefault();

@@ -66,11 +66,12 @@ public class UserService {
             userWithProfileDTO.setUsername(user.getUsername());
 
             if (userProfile != null) {
-                userWithProfileDTO.setUserProfileId(userProfile.getId());   //
+                userWithProfileDTO.setUserProfileId(userProfile.getId());
                 userWithProfileDTO.setFullName(userProfile.getFullName());
                 userWithProfileDTO.setEmail(userProfile.getEmail());
                 userWithProfileDTO.setPhone(userProfile.getPhone());
                 userWithProfileDTO.setAge(userProfile.getAge());
+                userWithProfileDTO.setGender(userProfile.getGender());
                 userWithProfileDTO.setLocation(userProfile.getLocation());
             }
             userWithProfileDTO.setPhotos(photos);

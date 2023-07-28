@@ -20,7 +20,7 @@
 
 .tab-content {
     display: none;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .tab-content.active {
@@ -162,12 +162,13 @@ a {
 }
 
 .avatar {
-    width: 30px;
-    height: 30px;
+    width: 43px;
+    height: 40px;
     border-radius: 50%;
-    background-image: url(https://images-ssl.gotinder.com/0001unknown/172x172_pct_0_0_100_100_unknown.jpg);
-    background-position: 50% 50%;
-    background-size: auto 100%;
+    /*background-image: url(https://images-ssl.gotinder.com/0001unknown/172x172_pct_0_0_100_100_unknown.jpg);*/
+    /*background-position: 50% 50%;*/
+    /*background-size: auto 100%;*/
+    background: transparent;
 }
 
 .block-avatar {
@@ -176,7 +177,8 @@ a {
 }
 
 .block-avatar:hover {
-    background-color: #101418;
+    scale: 1.2;
+    cursor: pointer;
 }
 
 .name-acount {
@@ -265,7 +267,7 @@ body {
 /*}*/
 .btn-edit-info {
     width: 320px;
-    margin-top: 75px;
+    margin-top: 125px;
     margin-right: 20px;
     padding: 10px 20px;
     border: none;
@@ -339,7 +341,8 @@ body {
 .text-center{
     color: #919ba6;
 }
-.input-edit{
+
+.form-control {
     width: 100%;
     background-color: #101418;
     border-left: none;
@@ -347,6 +350,12 @@ body {
     height: 40px;
     color: white;
 }
+
+.form-control:focus {
+    background-color: #101418;
+    color: white;
+}
+
 .massage-edit2{
     color: white;
     margin: 15px 0;
@@ -356,17 +365,17 @@ body {
     margin-bottom: 0px;
 }
 .btn-edit-info2 {
-    width: 320px;
-    margin-top: 20px;
+    width: 180px;
+    margin-top: 10px;
     margin-right: 20px;
-    padding: 10px 20px;
+    padding: 10px 10px;
     border: none;
     border-radius: 24px;
     font-size: 16px;
     color: white;
-    background-image: linear-gradient(to right, #fd267a, #ff6036);
+    background-image: linear-gradient(to right, #ff6036, #fd267a);
     /* cursor: pointer; */
-    margin-left: 30px;
+    margin-left: 10px;
 
     /* transform: translate(-50%, -50%); */
 }
@@ -462,4 +471,7 @@ body {
 }
 .modal-content .d-flex {
     flex-wrap: wrap;
+}
+.logout {
+    background-color: rgba(43, 50, 59, 0.7);
 }

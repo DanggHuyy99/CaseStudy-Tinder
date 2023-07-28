@@ -29,6 +29,7 @@ public class SpringConfig {
                 .authorizeHttpRequests((authorize) ->
 //                                authorize.anyRequest().permitAll()
                                 authorize.requestMatchers("/register/**").permitAll()
+                                        .requestMatchers("/profile").permitAll()
                                         .requestMatchers("/assets/**").permitAll()
                                         .requestMatchers("/index").permitAll()
                                         .requestMatchers("/api/**").permitAll()

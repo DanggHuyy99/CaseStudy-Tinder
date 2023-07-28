@@ -6,15 +6,19 @@ import com.example.tinder.model.UserProfile;
 import com.example.tinder.model.interest.Interest;
 import com.example.tinder.repository.UserProfileRepository;
 import com.example.tinder.repository.UserRepository;
+import com.example.tinder.service.auth.request.RegisterRequest;
 import com.example.tinder.service.interest.InterestService;
 import com.example.tinder.service.photo.PhotoService;
 import com.example.tinder.service.user.request.ProfileRequest;
 import com.example.tinder.service.user.request.UserWithProfileDTO;
+import com.example.tinder.validate.Validate;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.util.*;
 
@@ -68,42 +72,41 @@ public class UserProfileService {
         userProfileRepository.save(userProfile);
     }
 
-//    public UserWithProfileDTO editProfileUser(UserWithProfileDTO updatedUserDTO) {
-//        Optional<User> user = userRepository.findById(updatedUserDTO.getId());
-//        if (!user.isPresent()) {
-//            throw new RuntimeException("Không tìm thấy người dùng với ID: " + updatedUserDTO.getId());
-//        }
-//        UserProfile userProfile = findUserProfileById(updatedUserDTO.getUserProfileId());
-//        userProfile.setFullName(updatedUserDTO.getFullName());
-//        userProfile.setEmail(updatedUserDTO.getEmail());
-//        userProfile.setPhone(updatedUserDTO.getPhone());
-//        userProfile.setAge(updatedUserDTO.getAge());
-//        userProfile.setLocation(updatedUserDTO.getLocation());
-//        Set<Interest> interests = interestService.getInterestByUserId(updatedUserDTO.getId());
-//        interests.clear();
-//        interests.addAll(updatedUserDTO.getInterests());
-//        saveUserProfile(userProfile);
-//        user.get().setUsername(updatedUserDTO.getUsername());
-//        userRepository.save(user.get());
-//        return updatedUserDTO;
-//    }
-//
-//    public UserWithProfileDTO getUserProfileWithUserId(Long userId){
-//        Optional<User> user = userRepository.findById(userId);
-//        UserProfile userProfile = findUserProfileById(userId);
-//        List<Photo> photos = photoService.getPhotosByUserId(userId);
-//        Set<Interest> interests = interestService.getInterestByUserId(userId);
-//        UserWithProfileDTO userWithProfileDTO = new UserWithProfileDTO();
-//        userWithProfileDTO.setId(user.get().getId());
-//        userWithProfileDTO.setUsername(user.get().getUsername());
-//        userWithProfileDTO.setUserProfileId(userProfile.getId());
-//        userWithProfileDTO.setFullName(userProfile.getFullName());
-//        userWithProfileDTO.setEmail(userProfile.getEmail());
-//        userWithProfileDTO.setPhone(userProfile.getPhone());
-//        userWithProfileDTO.setAge(userProfile.getAge());
-//        userWithProfileDTO.setPhotos(photos);
-//        userWithProfileDTO.setInterests(interests);
-//        userWithProfileDTO.setLocation(userProfile.getLocation());
-//        return userWithProfileDTO;
-//    }
+    public boolean checkProfileUser(ProfileRequest request, BindingResult bindingResult) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsernameIgnoreCase(username);
+        User checkEmail = userRepository.findByUserProfileEmailAndIdNot(request.getEmail(), user.getId());
+        User checkPhone = userRepository.findByUserProfilePhoneAndIdNot(request.getPhone(), user.getId());
+        boolean check = false;
+        if (request.getEmail().equals("")) {
+            FieldError error = new FieldError("userprofile", "email", "Email can't be empty");
+            bindingResult.addError(error);
+            check = true;
+        }
+        else if (checkEmail != null) {
+            FieldError error = new FieldError("userprofile", "email", "There is already an account registered with the same email");
+            bindingResult.addError(error);
+            check = true;
+        }
+        else if (!Validate.isEmailValid(request.getEmail())) {
+            FieldError error = new FieldError("userprofile", "email", "Invalid email (domain name only supports .com|edu|net|org|biz|info|pro) or country domain name for example .vn,...");
+            bindingResult.addError(error);
+            check = true;
+        }
+        if (request.getPhone().equals("")) {
+            FieldError error = new FieldError("userprofile", "phone", "Phone can't be empty");
+            bindingResult.addError(error);
+            check = true;
+        } else if (checkPhone != null) {
+            FieldError error = new FieldError("userprofile", "phone", "There is already an account registered with the same phone number");
+            bindingResult.addError(error);
+            check = true;
+        } else if (!Validate.isPhoneValid(request.getPhone())) {
+            FieldError error = new FieldError("userprofile", "phone", "Phone number must have 10 digits and start with 0");
+            bindingResult.addError(error);
+            check = true;
+        }
+        return check;
+    }
 }

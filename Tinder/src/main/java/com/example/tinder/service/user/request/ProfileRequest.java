@@ -11,6 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class ProfileRequest {
+    private Long id;
+
     private String fullName;
 
     private String phone;

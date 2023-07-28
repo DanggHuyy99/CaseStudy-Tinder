@@ -43,6 +43,7 @@
         <div class="top-side-bar d-flex justify-content-between align-items-center">
             <div class="block-avatar d-flex justify-content-between align-items-center" style="margin-left: 8px;
     border-radius: 30px;">
+<<<<<<< Updated upstream
                 <a href="/profile" style="display: contents">
                     <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}">
                     <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
@@ -50,6 +51,13 @@
                     <input type="hidden" id="username-current" th:value="${user.username}">
                     <input type="hidden" id="full-name-current" th:value="${userprofile.fullName}">
                     <input type="hidden" id="url-img-current" th:value="${user.getPhotos().get(0).getImageUrl()}">
+=======
+                <a href="/profile">
+                    <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}" href="/profile">
+                    <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
+                    <input type="hidden" id="idcurrent" th:value="${user.id}">
+                    <input type="hidden" id="username-current" th:value="${user.username}">
+>>>>>>> Stashed changes
                 </a>
 
 
