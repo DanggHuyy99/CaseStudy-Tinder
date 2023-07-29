@@ -30,9 +30,10 @@ public class UserService {
     private final PhotoService photoService;
     private final InterestService interestService;
 
-    public User findByUsername(String username){
+    public User findByUsername(String username) {
         return userRepository.findByUsernameIgnoreCase(username);
     }
+
     public User findUserById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.orElse(null);
@@ -52,11 +53,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<UserWithProfileDTO> getAllUserWithProfileDTO() {
-        List<User> users = userRepository.findAll();
+    public List<UserWithProfileDTO> getAllUserWithProfileDTO(Long id) {
+        List<User> users = userRepository.findUserNotLikeOrMatch(id);
         List<UserWithProfileDTO> userWithProfileDTOS = new ArrayList<>();
 
-        for (User user : users){
+        for (User user : users) {
             UserProfile userProfile = user.getUserProfile();
             List<Photo> photos = user.getPhotos();
             Set<Interest> interests = user.getInterests();
@@ -82,7 +83,7 @@ public class UserService {
         return userWithProfileDTOS;
     }
 
-    public UserWithProfileDTO getUserProfileWithUserId(Long userId){
+    public UserWithProfileDTO getUserProfileWithUserId(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         UserProfile userProfile = userProfileService.findUserProfileById(userId);
         List<Photo> photos = photoService.getPhotosByUserId(userId);

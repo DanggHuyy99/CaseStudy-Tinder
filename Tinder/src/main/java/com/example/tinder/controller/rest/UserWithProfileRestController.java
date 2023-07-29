@@ -45,7 +45,7 @@ public class UserWithProfileRestController {
     public ResponseEntity<List<UserWithProfileDTO>> getAllUserWithProfile(Authentication authentication){
         String name= authentication.getName();
         User user = userRepository.findByUsernameIgnoreCase(name);
-        List<UserWithProfileDTO> userWithProfileDTOS = userService.getAllUserWithProfileDTO();
+        List<UserWithProfileDTO> userWithProfileDTOS = userService.getAllUserWithProfileDTO(user.getId());
         List<UserWithProfileDTO> newUserWithProfileDTOS   =  userWithProfileDTOS.stream().filter(e -> !Objects.equals(e.getUserProfileId(), user.getId())).toList();
         return ResponseEntity.ok(newUserWithProfileDTOS);
     }

@@ -74,4 +74,10 @@ public class MatchService {
 
         return userMatches;
     }
+
+
+    public boolean hasMatched(Long userId1, Long userId2) {
+        return matchRepository.existsByUser1IdAndUser2Id(userId1, userId2)
+                || matchRepository.existsByUser1IdAndUser2Id(userId2, userId1);
+    }
 }

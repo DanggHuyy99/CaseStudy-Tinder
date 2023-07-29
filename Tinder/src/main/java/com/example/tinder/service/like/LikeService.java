@@ -5,6 +5,7 @@ import com.example.tinder.model.User;
 import com.example.tinder.repository.LikeRepository;
 import com.example.tinder.repository.UserRepository;
 import com.example.tinder.service.like.request.LikeSaveRequest;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,9 @@ public class LikeService {
 
     public long countLikesByLikerAndCurrentDate(Long likerId) {
         return likeRepository.countLikesByLikerAndCurrentDate(likerId);
+    }
+
+    public boolean hasLiked(Long likerId, Long profileId) {
+        return likeRepository.existsByLikee_IdAndLiker_Id(likerId, profileId);
     }
 }

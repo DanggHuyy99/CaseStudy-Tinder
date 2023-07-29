@@ -43,7 +43,7 @@
         <div class="top-side-bar d-flex justify-content-between align-items-center">
             <div class="block-avatar d-flex justify-content-between align-items-center" style="margin-left: 8px;
     border-radius: 30px;">
-<<<<<<< Updated upstream
+
                 <a href="/profile" style="display: contents">
                     <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}">
                     <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
@@ -51,13 +51,6 @@
                     <input type="hidden" id="username-current" th:value="${user.username}">
                     <input type="hidden" id="full-name-current" th:value="${userprofile.fullName}">
                     <input type="hidden" id="url-img-current" th:value="${user.getPhotos().get(0).getImageUrl()}">
-=======
-                <a href="/profile">
-                    <img class="avatar me-2" th:src="${user.getPhotos().get(0).getImageUrl()}" href="/profile">
-                    <label class="name-acount" th:text="${userprofile.fullName}" style="font-size: 20px"></label>
-                    <input type="hidden" id="idcurrent" th:value="${user.id}">
-                    <input type="hidden" id="username-current" th:value="${user.username}">
->>>>>>> Stashed changes
                 </a>
 
 
@@ -128,7 +121,7 @@
                 <button class="btn rounded-circle btn-back close1">
                     <i class="fa-solid fa-xmark fa-2xl close"></i>
                 </button>
-                <button class="btn rounded-circle btn-commen ">
+                <button class="btn rounded-circle btn-commen" id="superLike">
                     <i class="fa-solid fa-star fa-2xl comment"></i>
                 </button>
                 <button class="btn rounded-circle btn-heart">
@@ -463,12 +456,13 @@
 
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const emojiButton = document.getElementById('emojiButton');
-        const emojiContainer = document.querySelector('.emoji-container');
-        const showIconHover = document.getElementById('show-icon-hover');
+    const emojiButton = document.getElementById('emojiButton');
+    const emojiContainer = document.querySelector('.emoji-container');
+    const showIconHover = document.getElementById('show-icon-hover');
 
-        const emojiItems = document.querySelectorAll('.emoji-item');
+    const emojiItems = document.querySelectorAll('.emoji-item');
+    document.addEventListener('DOMContentLoaded', () => {
+
 
 
         emojiItems.forEach(item => {
@@ -500,7 +494,7 @@
 
     document.addEventListener('click', (event) => {
         // Kiểm tra nếu sự kiện click không phát sinh từ emojiButton hoặc các phần tử con của emojiContainer, thì ẩn emojiContainer đi
-        if (!emojiButton.contains(event.target) && !emojiContainer.contains(event.target)) {
+        if (!emojiButton?.contains(event.target) && !emojiContainer?.contains(event.target)) {
             emojiContainer.style.display = 'none';
         }
     });
@@ -588,6 +582,12 @@
             }
         })
     });
+
+
+
+
+
+
 
 </script>
 

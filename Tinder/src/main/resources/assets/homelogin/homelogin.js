@@ -1,6 +1,147 @@
 var stompClient = null;
 var isHidden = false
+let likeeIdUser = 0;
 $(document).ready(function () {
+    let superLikedUsers = [];
+
+    function superLikeCheckFunction() {
+        return superLikedUsers.includes(likeeIdUser);
+    }
+
+    function superLikeSaveFunction() {
+        if (!superLikedUsers.includes(likeeIdUser)) {
+            superLikedUsers.push(likeeIdUser);
+        }
+    }
+
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    document.getElementById("superLike").addEventListener("click", function () {
+        const idCurrentUser = document.getElementById("idcurrent").value;
+        isVipAccountToSuperLike(idCurrentUser);
+    });
+
+    function isVipAccountToSuperLike(userId) {
+        $.ajax({
+            url: "/api/users/isVipAccount",
+            method: "GET",
+            data: {
+                userId: userId,
+            },
+            success: function (isVip) {
+                handleSuperLike(isVip);
+            },
+            error: function (error) {
+                console.log("Lỗi khi kiểm tra tài khoản VIP: " + error);
+            },
+        });
+    }
+
+    function handleSuperLike(isVip) {
+        const randomColor = getRandomColor();
+        const idCurrentUser = document.getElementById("idcurrent").value;
+
+        if (superLikeCheckFunction()) {
+            swal.fire({
+                icon: 'none',
+                title: '<i class="fas fa-heart" style="color: #ff0000;"></i>',
+                html: 'Bạn đã like người dùng này!',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                width: '300px',
+                padding: '10px',
+                customClass: {
+                    popup: 'animate__animated animate__bounceInRight'
+                }
+            });
+            return; // Ngăn không cho gửi Super Like lần nữa
+        }
+
+        if (isVip) {
+            $.ajax({
+                url: "/api/superlikes/superLike",
+                method: "POST",
+                data: {
+                    likerId: idCurrentUser,
+                    likeeId: likeeIdUser,
+                },
+                success: function (response) {
+                    console.log("Super Like!");
+                },
+                error: function (error) {
+                    console.log("Đã có lỗi xảy ra khi Super Like: " + error);
+                    // Xử lý khi Super Like gặp lỗi (nếu cần)
+                }
+            });
+            superLikeSaveFunction(likeeIdUser)
+            swal.fire({
+                icon: 'none', // Xóa icon mặc định
+                title: '<i class="fas fa-thumbs-up" style="color: ' + randomColor + '"></i>', // Sử dụng icon "like" từ Font Awesome
+                html: 'Đã gửi thông báo Super Like đến người dùng!', // Nội dung thông báo
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                width: '300px', // Thiết lập chiều rộng
+                padding: '10px', // Thiết lập khoảng cách giữa nội dung và viền
+                customClass: {
+                    popup: 'animate__animated animate__backInLeft' // Hiệu ứng slide-in từ góc phải bên trên
+                }
+            });
+        } else {
+            swal.fire({
+                icon: 'error',
+                title: 'Chỉ VIP mới được sử dụng Super Like',
+                text: 'Bạn cần nâng cấp tài khoản lên VIP để sử dụng Super Like.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Nâng cấp tài khoản',
+                showCancelButton: true,
+                cancelButtonText: 'Để sau',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/api/users/upgradeAccount",
+                        method: "POST",
+                        data: {
+                            userId: idCurrentUser,
+                        },
+                        success: function (response) {
+                            swal.fire({
+                                icon: "success",
+                                title: "Nâng cấp tài khoản thành công!",
+                                text: "Tài khoản của bạn đã được nâng cấp thành VIP.",
+                            });
+                        },
+                        error: function (error) {
+                            swal.fire({
+                                icon: "error",
+                                title: "Lỗi",
+                                text: "Đã có lỗi xảy ra khi nâng cấp tài khoản. Vui lòng thử lại sau.",
+                            });
+                        },
+                    });
+                } else {
+                    // Xử lý khi người dùng nhấn nút "Để sau"
+                    console.log("Người dùng đã nhấn nút để sau");
+                }
+            });
+        }
+    }
+
+
+
+
+
+
+
     var grabButton = document.getElementById("grab");
     var tinderNotification = document.querySelector(".tinder-notification");
     var isDragging = false;
@@ -189,7 +330,7 @@ function displayChatHistory(chatHistory) {
             var receiver = message.receiver.username;
             var sendDate = formatTimestamp(message.sentAt);
             var idCurrent = message.sender.id;
-            if (+idCurrent === +document.getElementById("idcurrent").value){
+            if (+idCurrent === +document.getElementById("idcurrent").value) {
                 console.log("hello")
             }
 
@@ -280,6 +421,7 @@ function displayMessage(senderId, content) {
         }
     });
 }
+
 function clearCache() {
     if (window.performance && window.performance.clearResourceTimings) {
         console.log("clear resort")
@@ -351,7 +493,7 @@ function openChat(userId, username, urlImage) {
     document.getElementById("chatContainer").style.display = "flex";
 
     var currentUserId = document.getElementById("idcurrent").value;
-    getChatHistory(currentUserId, userId, function(chatHistory) {
+    getChatHistory(currentUserId, userId, function (chatHistory) {
         displayChatHistory(chatHistory);
     });
 
@@ -525,7 +667,7 @@ $(document).ready(function (event) {
         Draggable.create("#photo", {
             throwProps: false,
             onDrag: function () {
-                if (Math.round(this.x) < 50 && Math.round(this.x) > -50){
+                if (Math.round(this.x) < 50 && Math.round(this.x) > -50) {
                     document.getElementById("like").style.display = "none";
                     document.getElementById("dislike").style.display = "none";
                 }
@@ -533,14 +675,14 @@ $(document).ready(function (event) {
 
                     document.getElementById("like").style.display = "block";
                     document.getElementById("dislike").style.display = "none";
-                    if (Math.round(this.x) < 150){
+                    if (Math.round(this.x) < 150) {
                         document.getElementById("like").style.opacity = "0.3";
                     } else if (Math.round(this.x) < 300) {
                         document.getElementById("like").style.opacity = "0.7";
                     } else {
                         document.getElementById("like").style.opacity = "1";
                     }
-                } else if (Math.round(this.endX) < -50){
+                } else if (Math.round(this.endX) < -50) {
                     console.log(this.pointerX)
                     console.log(this.pointerY)
                     // document.getElementById("photo").style.transform =  'rotate(-30deg)';
@@ -561,7 +703,7 @@ $(document).ready(function (event) {
 
                     document.getElementById("dislike").style.display = "block";
                     document.getElementById("like").style.display = "none";
-                    if (Math.round(this.x) > -150){
+                    if (Math.round(this.x) > -150) {
                         document.getElementById("dislike").style.opacity = "0.3";
                     } else if (Math.round(this.x) > -300) {
                         document.getElementById("dislike").style.opacity = "0.7";
@@ -574,12 +716,12 @@ $(document).ready(function (event) {
             onDragEnd: function (endX) {
                 if (Math.round(this.endX) > 50) {
                     console.log(this.endX)
-                    document.getElementById("like").style.display='block'
-                    document.getElementById("dislike").style.display='none'
+                    document.getElementById("like").style.display = 'block'
+                    document.getElementById("dislike").style.display = 'none'
                     swipeLike();
-                } else if (Math.round(this.endX) < -50){
-                    document.getElementById("dislike").style.display='block'
-                    document.getElementById("like").style.display='none'
+                } else if (Math.round(this.endX) < -50) {
+                    document.getElementById("dislike").style.display = 'block'
+                    document.getElementById("like").style.display = 'none'
                     swipeDislike();
                 }
                 console.log(Math.round(this.endX));
@@ -598,8 +740,8 @@ $(document).ready(function (event) {
                 data: {
                     userId: idCurrentUser,
                 },
-                success: function (isVip){
-                    if (isVip){
+                success: function (isVip) {
+                    if (isVip) {
                         $.ajax({
                             url: "/api/likes/like",
                             method: "POST",
@@ -644,9 +786,9 @@ $(document).ready(function (event) {
                             data: {
                                 likerId: idCurrentUser,
                             },
-                            success: function (likeCount){
-                                console.log("like count",likeCount)
-                                if (likeCount < 5){
+                            success: function (likeCount) {
+                                console.log("like count", likeCount)
+                                if (likeCount < 5) {
                                     $.ajax({
                                         url: "/api/likes/like",
                                         method: "POST",
@@ -777,6 +919,26 @@ $(document).ready(function (event) {
         $(photo).remove();
     }
 
+    function hasLikedOrMatched(likerId, profileId) {
+        return new Promise(function(resolve, reject) {
+            $.ajax({
+                url: "/api/hasLikedOrMatched",
+                method: "GET",
+                data: {
+                    likerId: likerId,
+                    profileId: profileId
+                },
+                success: function(response) {
+                    resolve(response);
+                },
+                error: function(error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+
     function addNewProfile() {
         $.ajax({
             url: "api/userprofiles",
@@ -793,6 +955,8 @@ $(document).ready(function (event) {
                 currentProfile = unswipedDatas[index];
                 console.log(currentProfile)
 
+                likeeIdUser = currentProfile.id;
+
                 $("div.content").find('.like-text').css('opacity', 0);
                 $("div.content").find('.dislike-text').css('opacity', 0);
                 // $("div.content").find('.info').find('h3').eq(0).text(currentProfile.fullName);
@@ -803,8 +967,8 @@ $(document).ready(function (event) {
                     <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
                     <div id="dislike">KHÔNG</div>
                      <div id="like">THÍCH</div>
-                    
-                  
+
+
                        <div class="info info-profile">
                             <h3 id="fullName">${currentProfile.fullName}</h3>
                             <!--                        <h1 id="namefull"></h1>-->
@@ -812,41 +976,65 @@ $(document).ready(function (event) {
 
                        </div>
                     </div>
-                    
+
                     `);
-
-                //
-                // $("#fullName").text(currentProfile.fullName);
-                // $("#age").text(currentProfile.age);
-                // $("#namefull").text(currentProfile.fullName)
                 swipe();
-
-
-                // data = datas[index];
-                // var fullName = data.fullName;
-                // var age = data.age;
-                // var photo = data.photos;
-                // console.log(data)
-                // console.log(photo)
-                // // photo.forEach(pt =>{
-                //     $("div.content").prepend(`<div class="photo" id="photo" style="background-image:url(${photo[0].imageUrl});"></div>`);
-                // // })
-                //
-                //
-                // $("div.content").find('.like-text').css('opacity', 0);
-                // $("div.content").find('.dislike-text').css('opacity', 0);
-                // $("div.content").find('.info').find('h3').eq(0).text(fullName);
-                // $("div.content").find('.info').find('h3').eq(1).text(age);
-                //
-
-                //
-                // swipedProfiles.push(data.id);
-                // swipe();
             }
         })
         swipe();
     }
+
+
+    // function addNewProfile() {
+    //     $.ajax({
+    //         url: "api/userprofiles",
+    //         method: "GET",
+    //         success: function (datas) {
+    //             console.log("helooo")
+    //             let unswipedDatas = datas.filter(data => !swipedProfiles.includes(data.id));
+    //
+    //             if (unswipedDatas.length === 0) {
+    //                alert("hello")
+    //                 return;
+    //             }
+    //
+    //             for (const currentProfile of unswipedDatas) {
+    //                 const profileId = currentProfile.id;
+    //                 const likerId = document.getElementById("idcurrent").value;
+    //
+    //                 hasLikedOrMatched(likerId, profileId)
+    //                     .then(function(response) {
+    //                         if (!response) {
+    //                             $("div.content").find('.like-text').css('opacity', 0);
+    //                             $("div.content").find('.dislike-text').css('opacity', 0);
+    //
+    //                             $("div.content").prepend(`
+    //                             <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
+    //                                 <div id="dislike">KHÔNG</div>
+    //                                 <div id="like">THÍCH</div>
+    //                                 <div class="info info-profile">
+    //                                     <h3 id="fullName">${currentProfile.fullName}</h3>
+    //                                     <h3 id="age">${currentProfile.age}</h3>
+    //                                 </div>
+    //                             </div>
+    //                         `);
+    //
+    //
+    //                             swipe();
+    //                         }
+    //                     })
+    //                     .catch(function(error) {
+    //                         console.log("Đã có lỗi xảy ra khi kiểm tra like/match: " + error);
+    //                     });
+    //             }
+    //         }
+    //     });
+    //     swipe();
+    // }
+
 });
+
+
 
 function showTinderNotification() {
     var notification = document.querySelector(".tinder-notification");
@@ -862,7 +1050,7 @@ function showTinderNotification() {
     }
 }
 
-function showUserOver(){
+function showUserOver() {
     Swal.fire({
         title: "Thông báo!",
         text: "Bạn đã gặp hết tất cả người dùng.\nVui lòng mở rộng độ tuổi để tìm thêm tương hợp.",
@@ -916,8 +1104,9 @@ function showNotification(username, userId, imgUrl) {
             openChat(userId, username, imgUrl)
         }
     });
-
 }
+
+
 
 
 

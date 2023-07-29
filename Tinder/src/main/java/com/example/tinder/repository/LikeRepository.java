@@ -18,4 +18,5 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query(value = "SELECT COUNT(*) FROM user_like WHERE liker_id = ?1 AND DATE_FORMAT(like_date, '%W %M %e %Y') = DATE_FORMAT(now(), '%W %M %e %Y')", nativeQuery = true)
     long countLikesByLikerAndCurrentDate(Long likerId);
 
+    boolean existsByLikerIdAndLikeeId(Long liker_id, Long likee_id);
 }
