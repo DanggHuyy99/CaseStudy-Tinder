@@ -476,11 +476,39 @@ function openChat(userId, username, urlImage) {
     imageUrlGlobal = urlImage;
     console.log(imageUrlGlobal)
     userIdGlobal = userId;
+    console.log("id nguoi nhan", receiverId)
     // window.currentReceiverId = userId;
     clearCache()
     disconnect()
     connect()
+    $.ajax({
+        url: "/api/userprofiles/" + receiverId,
+        method: "GET",
+        success: function (user) {
+            console.log(1232132)
+            console.log(user)
+            let interests = ""
+            user.interests.forEach(i => {
+                interests += `<button disabled style="width: 105px" className="btn btn-outline-secondary me-2 radius fw-bold"
+                       htmlFor="option1">${i}</button>`
 
+            })
+            let html = `
+                <img class="avatar-onClick" src="${user.photos[0].imageUrl}" >
+                <p>${user.fullName}</p></br>
+                <p>${user.age}</p></br>
+                <p>${user.gender}</p></br>
+                <p>${user.phone}</p></br>
+                <p>${interests}</p></br>
+            `;
+            console.log(document.getElementById("style-default"))
+            document.getElementById("style-default").innerHTML = html;
+            console.log(user)
+        },
+        error: function () {
+            console.log("Lỗi khi lấy thông tin người gửi");
+        }
+    });
     document.getElementById("default-container").style.display = "none";
     document.getElementById("message-container").style.display = "flex";
     // document.getElementById("chatUsername").innerText = "Chat with " + username;
@@ -962,9 +990,14 @@ $(document).ready(function (event) {
                 // $("div.content").find('.info').find('h3').eq(0).text(currentProfile.fullName);
                 // $("div.content").find('.info').find('h3').eq(1).text(currentProfile.age);
 
+                let interests = currentProfile.interests;
+
+                let interestsHTML = interests.map(interest => `<span class="custom-css-class disabled">${interest}</span>`).join("");
+
 
                 $("div.content").prepend(`
                     <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
+<<<<<<< HEAD
                     <div id="dislike">KHÔNG</div>
                      <div id="like">THÍCH</div>
 
@@ -973,11 +1006,32 @@ $(document).ready(function (event) {
                             <h3 id="fullName">${currentProfile.fullName}</h3>
                             <!--                        <h1 id="namefull"></h1>-->
                             <h3 id="age">${currentProfile.age}</h3>
+=======
+>>>>>>> 2ab9619c6ddafe4e561300716f6e8a3a5a19e25e
 
-                       </div>
+                        <div id="dislike">KHÔNG</div>
+                        <div id="like">THÍCH</div>
+                      
+                        <div class="info info-profile">
+
+                            <h3 id="fullName">${currentProfile.fullName}</h3>
+                            <h3 id="age">${currentProfile.age}</h3>
+                            <div id="interest"></div>
+                        </div>
                     </div>
 
+<<<<<<< HEAD
                     `);
+=======
+                `);
+                $("#interest").html(interestsHTML);
+
+
+                //
+                // $("#fullName").text(currentProfile.fullName);
+                // $("#age").text(currentProfile.age);
+                // $("#namefull").text(currentProfile.fullName)
+>>>>>>> 2ab9619c6ddafe4e561300716f6e8a3a5a19e25e
                 swipe();
             }
         })
@@ -1033,6 +1087,41 @@ $(document).ready(function (event) {
     // }
 
 });
+    function addNewProfile1(users) {
+        // Tiếp tục xử lý hiển thị người dùng như bạn đã làm trước đó
+        // Bạn có thể sử dụng "users" để lọc và hiển thị chỉ những người dùng có cùng "interest" như đã mô tả ở trên
+        // Ví dụ:
+        let unswipedUsers = users.filter(user => !swipedProfiles.includes(user.id));
+
+        if (unswipedUsers.length === 0) {
+            showUserOver();
+            return;
+        }
+
+        let index = Math.floor(Math.random() * unswipedUsers.length);
+        let currentProfile = unswipedUsers[index];
+        console.log(currentProfile);
+
+        $("div.content").find('.like-text').css('opacity', 0);
+        $("div.content").find('.dislike-text').css('opacity', 0);
+
+        $("div.content").prepend(`
+        <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
+        <div id="dislike">KHÔNG</div>
+         <div id="like">THÍCH</div>
+        
+      
+           <div class="info info-profile">
+                <h3 id="fullName">${currentProfile.fullName}</h3>
+                <!--                        <h1 id="namefull"></h1>-->
+                <h3 id="age">${currentProfile.age}</h3>
+           </div>
+        </div>
+        
+        `);
+
+        swipe();
+    }
 
 
 
@@ -1104,6 +1193,32 @@ function showNotification(username, userId, imgUrl) {
             openChat(userId, username, imgUrl)
         }
     });
+<<<<<<< HEAD
+=======
+    var tinderNotification = document.querySelector(".tinder-notification");
+    swal.fire({
+        title: '<i class="fa-regular fa-envelope"></i> Tin nhắn mới',
+        text: `Tin nhắn mới từ ${username} `,
+        icon: 'envelope',
+        timer: 99000,
+        toast: true,
+        position: 'top-end',
+        showCancelButton: true,
+        confirmButtonText: '<i class="fas fa-eye"></i> Xem tin nhắn',
+        cancelButtonText: '<i class="fas fa-times"></i> Đóng',
+        showClass: {
+            popup: 'animate__animated animate__lightSpeedInRight'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__lightSpeedOutRight'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            openChat(userId, username, imgUrl)
+        }
+    });
+>>>>>>> 2ab9619c6ddafe4e561300716f6e8a3a5a19e25e
 }
 
 

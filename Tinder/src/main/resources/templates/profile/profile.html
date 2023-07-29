@@ -33,7 +33,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.15.0/utils/Draggable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>  -->
@@ -67,6 +69,11 @@
 <!--                </div>-->
 <!--            </div>-->
             <div class="tab-content" style="display: block;">
+                <div class="container">
+                    <div id="priceRange" class="form-range"></div>
+                    <input type="text" id="ageMin" readonly>
+                    <input type="text" id="ageMax" readonly>
+                </div>
                 <div id="tab1" class="tab-pane active alert alert-dark text-center logout">
                     <a href="http://localhost:8080/logout" style="width: 100%;margin-left: 0;text-decoration: none;color: white">
                         Đăng xuất
@@ -242,6 +249,48 @@
 </body>
 <script>
 
+    let previousMinAge = 16;
+    let previousMaxAge = 69;
+    $(function () {
+        $("#priceRange").slider({
+            range: true,
+            min: 16,
+            max: 69,
+            values: [16, 69],
+            slide: function (event, ui) {
+                $("#ageMin").val(ui.values[0]);
+                $("#ageMax").val(ui.values[1]);
+                ageMin = $("#ageMin").val();
+                ageMax = $("#ageMax").val();
+                body.innerHTML = '';
+                console.log("min" + ageMin)
+                console.log("max" + ageMax)
+                console.log("minPEEE" + previousMinAge)
+                console.log("maxPRRR" + previousMaxAge)
+                // var filteredProducts = filterProductsByPrice(ui.values[0], ui.values[1]);
+                if (ageMin !== previousMinAge || ageMax !== previousMaxAge) {
+                    filterProductsByPrice(ageMin, ageMax);
+                    body.innerHTML = '';
+                    previousMinAge = ageMin;
+                    previousMaxAge = ageMax;
+                }
+            }
+        });
+        $("#ageMin").val($("#priceRange").slider("values", 0));
+        $("#ageMax").val($("#priceRange").slider("values", 1));
+    });
+
+    // function filterProductsByPrice(ageMin, ageMax) {
+    //     let filteredAges = products.filter(function (product) {
+    //         return product.price >= minPrice && product.price <= maxPrice;
+    //     });
+    //     return filteredProducts;
+    // }
+
+    function onFilter() {
+        minPrice = document.getElementById('min').value;
+        maxPrice = document.getElementById('max').value;
+    }
     function renderPhoto() {
         $.ajax({
             url: "/api/users/getPhoto",
