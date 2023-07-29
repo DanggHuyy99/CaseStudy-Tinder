@@ -488,17 +488,21 @@ function openChat(userId, username, urlImage) {
             console.log(user)
             let interests = ""
             user.interests.forEach(i => {
-                interests += `<button disabled style="width: 105px" className="btn btn-outline-secondary me-2 radius fw-bold"
-                       htmlFor="option1">${i}</button>`
+                interests += `<span disabled style="width: 105px" class="custom-css-class"
+                       htmlFor="option1">${i}</span>`
 
             })
             let html = `
                 <img class="avatar-onClick" src="${user.photos[0].imageUrl}" >
-                <p>${user.fullName}</p></br>
-                <p>${user.age}</p></br>
-                <p>${user.gender}</p></br>
-                <p>${user.phone}</p></br>
-                <p>${interests}</p></br>
+                <div style="margin-left: 10px">
+                    <span style="font-size: 30px;font-weight: bold;margin-right: 10px">${user.fullName}</span>
+                    <span style="font-size: 30px;font-weight: bold">${user.age}</span></br>
+                    <h5 style="margin-top: 15px"><i class="fa fa-user"></i> ${user.gender}</h5>
+                    <h5 style="margin-top: 15px"><i class="fa fa-phone"></i> ${user.phone}</h5>
+                    <hr style="color: white;margin-top: 15px;opacity: 1">
+                    <div style="margin-top: 15px">${interests}</d>
+                </div>
+                
             `;
             console.log(document.getElementById("style-default"))
             document.getElementById("style-default").innerHTML = html;

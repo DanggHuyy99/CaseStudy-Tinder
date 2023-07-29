@@ -12,6 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameIgnoreCaseOrUserProfileEmailIgnoreCaseOrUserProfilePhoneIgnoreCase(String username, String userProfile_email, String userProfile_phone);
     Optional<List<User>> findByInterests(Interest interest);
     public User findByUsernameIgnoreCase(String username);
+
+    User findAllByUserProfileAge(int userProfile_age_min, int userProfile_age_max);
     boolean existsByUsernameIgnoreCase(String username);
 
     boolean existsByUserProfileEmail(String userProfile_email);

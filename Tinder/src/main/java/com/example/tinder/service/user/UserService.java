@@ -39,6 +39,10 @@ public class UserService {
         return optionalUser.orElse(null);
     }
 
+    public User findUsersByAgeRange(int minAge, int maxAge) {
+        return userRepository.findAllByUserProfileAge(minAge, maxAge);
+    }
+
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();

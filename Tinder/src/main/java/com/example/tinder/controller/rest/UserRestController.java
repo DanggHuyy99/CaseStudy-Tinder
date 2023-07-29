@@ -52,6 +52,12 @@ public class UserRestController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/searchByAge")
+    public ResponseEntity<?> searchByAge(@RequestParam("minAge") int minAge, @RequestParam("maxAge") int maxAge) {
+        User users = userService.findUsersByAgeRange(minAge, maxAge);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @GetMapping("/getPhotoById")
     public ResponseEntity<?> getPhotoById(@RequestParam Long id) {
 
