@@ -275,7 +275,6 @@
 .info {
     width: 150px;
     height: 40px;
-    border-radius: none;
     /* background: #FFF; */
     border: none ;
     /* float: left; */
@@ -661,4 +660,78 @@ margin-bottom: 20px;
 }
 .tab-content::-webkit-scrollbar {
     display: none;
+}
+
+#next{
+    margin-left: 361px;
+    border: navajowhite;
+    background: transparent;
+    color: white;
+    font-size: 53px;
+}
+
+#previous{
+    font-size: 53px;
+    background: transparent;
+    border: none;
+    margin-left: -25px;
+    color: white;
+}
+
+
+
+#photo-count {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1;
+    font-size: 22px;
+    font-weight: bolder;
+}
+
+#photo-count span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 2px;
+    background-color: #666;
+    border-radius: 50%;
+}
+
+/* Điều chỉnh màu sắc cho từng khúc trượt */
+#photo-count span:nth-child(1) {
+    background-color: #f00;
+}
+
+#photo-count span:nth-child(2) {
+    background-color: #0f0;
+}
+
+#photo-count span:nth-child(3) {
+    background-color: #00f;
+}
+
+/* Thêm các khúc trượt phụ thuộc vào số lượng ảnh của người dùng */
+#photo-count[data-photo-count="1"] span:nth-child(1) {
+    display: block;
+}
+
+#photo-count[data-photo-count="2"] span:nth-child(1),
+#photo-count[data-photo-count="2"] span:nth-child(2) {
+    display: block;
+}
+
+#photo-count[data-photo-count="3"] span:nth-child(1),
+#photo-count[data-photo-count="3"] span:nth-child(2),
+#photo-count[data-photo-count="3"] span:nth-child(3) {
+    display: block;
+}
+
+#photo-count {
+    --photo-count: 1;
 }

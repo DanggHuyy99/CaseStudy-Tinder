@@ -568,15 +568,15 @@
 
     document.addEventListener('click', (event) => {
         // Kiểm tra nếu sự kiện click không phát sinh từ emojiButton hoặc các phần tử con của emojiContainer, thì ẩn emojiContainer đi
-<<<<<<< HEAD
+
         if (!emojiButton?.contains(event.target) && !emojiContainer?.contains(event.target)) {
             emojiContainer.style.display = 'none';
         }
-=======
+
         // if (!emojiButton.contains(event.target) && !emojiContainer.contains(event.target)) {
         //     emojiContainer.style.display = 'none';
         // }
->>>>>>> 2ab9619c6ddafe4e561300716f6e8a3a5a19e25e
+
     });
 
     function filterEmoji() {
@@ -675,13 +675,32 @@
             }
         });
     }
+    // function showCategory() {
+    //     event.preventDefault();
+    //     console.log(123)
+    //     const searchCategory = document.getElementById("search-category");
+    //     const massage = document.getElementById("massage")
+    //     searchCategory.style.display = "flex";
+    //     massage.style.display = "none"
+    // }
+
+    let isSearchCategoryVisible = false;
     function showCategory() {
         event.preventDefault();
         console.log(123)
         const searchCategory = document.getElementById("search-category");
         const massage = document.getElementById("massage")
-        searchCategory.style.display = "flex";
-        massage.style.display = "none"
+        if (!isSearchCategoryVisible) {
+            // Hiển thị searchCategory nếu nó chưa được hiển thị
+            searchCategory.style.display = "flex";
+            massage.style.display = "none";
+            isSearchCategoryVisible = true;
+        } else {
+            // Hiển thị massage nếu searchCategory đã được hiển thị
+            searchCategory.style.display = "none";
+            massage.style.display = "block";
+            isSearchCategoryVisible = false;
+        }
     }
 
 

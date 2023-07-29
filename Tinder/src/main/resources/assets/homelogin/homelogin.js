@@ -1,6 +1,7 @@
 var stompClient = null;
 var isHidden = false
 let likeeIdUser = 0;
+let currentPhotoIndex = 0;
 $(document).ready(function () {
     let superLikedUsers = [];
 
@@ -62,7 +63,7 @@ $(document).ready(function () {
                     popup: 'animate__animated animate__bounceInRight'
                 }
             });
-            return; // Ngăn không cho gửi Super Like lần nữa
+            return;
         }
 
         if (isVip) {
@@ -78,21 +79,20 @@ $(document).ready(function () {
                 },
                 error: function (error) {
                     console.log("Đã có lỗi xảy ra khi Super Like: " + error);
-                    // Xử lý khi Super Like gặp lỗi (nếu cần)
                 }
             });
             superLikeSaveFunction(likeeIdUser)
             swal.fire({
-                icon: 'none', // Xóa icon mặc định
-                title: '<i class="fas fa-thumbs-up" style="color: ' + randomColor + '"></i>', // Sử dụng icon "like" từ Font Awesome
-                html: 'Đã gửi thông báo Super Like đến người dùng!', // Nội dung thông báo
+                icon: 'none',
+                title: '<i class="fas fa-thumbs-up" style="color: ' + randomColor + '"></i>',
+                html: 'Đã gửi thông báo Super Like đến người dùng!',
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 4000,
-                width: '300px', // Thiết lập chiều rộng
-                padding: '10px', // Thiết lập khoảng cách giữa nội dung và viền
+                width: '300px',
+                padding: '10px',
                 customClass: {
-                    popup: 'animate__animated animate__backInLeft' // Hiệu ứng slide-in từ góc phải bên trên
+                    popup: 'animate__animated animate__backInLeft'
                 }
             });
         } else {
@@ -129,7 +129,6 @@ $(document).ready(function () {
                         },
                     });
                 } else {
-                    // Xử lý khi người dùng nhấn nút "Để sau"
                     console.log("Người dùng đã nhấn nút để sau");
                 }
             });
@@ -967,6 +966,8 @@ $(document).ready(function (event) {
     }
 
 
+
+
     function addNewProfile() {
         $.ajax({
             url: "api/userprofiles",
@@ -983,6 +984,8 @@ $(document).ready(function (event) {
                 currentProfile = unswipedDatas[index];
                 console.log(currentProfile)
 
+                let photoCount = currentProfile.photos.length;
+
                 likeeIdUser = currentProfile.id;
 
                 $("div.content").find('.like-text').css('opacity', 0);
@@ -995,20 +998,12 @@ $(document).ready(function (event) {
                 let interestsHTML = interests.map(interest => `<span class="custom-css-class disabled">${interest}</span>`).join("");
 
 
+
                 $("div.content").prepend(`
                     <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
-<<<<<<< HEAD
-                    <div id="dislike">KHÔNG</div>
-                     <div id="like">THÍCH</div>
-
-
-                       <div class="info info-profile">
-                            <h3 id="fullName">${currentProfile.fullName}</h3>
-                            <!--                        <h1 id="namefull"></h1>-->
-                            <h3 id="age">${currentProfile.age}</h3>
-=======
->>>>>>> 2ab9619c6ddafe4e561300716f6e8a3a5a19e25e
-
+                      <div id="photo-count"><p id="count-img">Số lượng ảnh: ${photoCount}</p></div>
+                        <button id="previous"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button id="next"><i class="fa-solid fa-chevron-right"></i></button>
                         <div id="dislike">KHÔNG</div>
                         <div id="like">THÍCH</div>
                       
@@ -1020,22 +1015,65 @@ $(document).ready(function (event) {
                         </div>
                     </div>
 
-<<<<<<< HEAD
-                    `);
-=======
                 `);
                 $("#interest").html(interestsHTML);
 
 
-                //
-                // $("#fullName").text(currentProfile.fullName);
-                // $("#age").text(currentProfile.age);
-                // $("#namefull").text(currentProfile.fullName)
->>>>>>> 2ab9619c6ddafe4e561300716f6e8a3a5a19e25e
+                $("#previous").on("click", showPreviousPhoto);
+                $("#next").on("click", showNextPhoto);
+                $("#previous, #next").hide();
+
+                $(".photo").on("mouseenter", function () {
+                    $("#previous, #next").fadeIn();
+                });
+
+                $(".photo").on("mouseleave", function () {
+                    $("#previous, #next").fadeOut();
+                });
+
+
+                $("#photo-count").attr("data-photo-count", photoCount);
+
                 swipe();
+                setInterval(changeTextColor, 2000);
             }
         })
         swipe();
+    }
+    function showPreviousPhoto() {
+        if (currentProfile && currentProfile.photos.length > 0) {
+            currentPhotoIndex = (currentPhotoIndex - 1 + currentProfile.photos.length) % currentProfile.photos.length;
+            updateDisplayedPhoto();
+        }
+    }
+
+    function showNextPhoto() {
+        if (currentProfile && currentProfile.photos.length > 0) {
+            currentPhotoIndex = (currentPhotoIndex + 1) % currentProfile.photos.length;
+            updateDisplayedPhoto();
+        }
+    }
+
+    function updateDisplayedPhoto() {
+        if (currentProfile && currentProfile.photos.length > 0) {
+            const imageUrl = currentProfile.photos[currentPhotoIndex].imageUrl;
+            $("#photo").css("background-image", `url(${imageUrl})`);
+        }
+    }
+
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function changeTextColor() {
+        const randomColor = getRandomColor();
+        const textElement = document.getElementById('count-img');
+        textElement.style.color = randomColor;
     }
 
 
@@ -1088,9 +1126,6 @@ $(document).ready(function (event) {
 
 });
     function addNewProfile1(users) {
-        // Tiếp tục xử lý hiển thị người dùng như bạn đã làm trước đó
-        // Bạn có thể sử dụng "users" để lọc và hiển thị chỉ những người dùng có cùng "interest" như đã mô tả ở trên
-        // Ví dụ:
         let unswipedUsers = users.filter(user => !swipedProfiles.includes(user.id));
 
         if (unswipedUsers.length === 0) {
@@ -1135,7 +1170,7 @@ function showTinderNotification() {
         // Nếu đoạn div đã ẩn đi, xóa class fade-out để hiển thị lại đoạn div
         notification.classList.remove("fade-out");
         notification.style.top = originalTop + "px";
-        isHidden = false; // Đánh dấu đoạn div đã hiển thị lại
+        isHidden = false;
     }
 }
 
@@ -1193,32 +1228,6 @@ function showNotification(username, userId, imgUrl) {
             openChat(userId, username, imgUrl)
         }
     });
-<<<<<<< HEAD
-=======
-    var tinderNotification = document.querySelector(".tinder-notification");
-    swal.fire({
-        title: '<i class="fa-regular fa-envelope"></i> Tin nhắn mới',
-        text: `Tin nhắn mới từ ${username} `,
-        icon: 'envelope',
-        timer: 99000,
-        toast: true,
-        position: 'top-end',
-        showCancelButton: true,
-        confirmButtonText: '<i class="fas fa-eye"></i> Xem tin nhắn',
-        cancelButtonText: '<i class="fas fa-times"></i> Đóng',
-        showClass: {
-            popup: 'animate__animated animate__lightSpeedInRight'
-        },
-        hideClass: {
-            popup: 'animate__animated animate__lightSpeedOutRight'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-
-            openChat(userId, username, imgUrl)
-        }
-    });
->>>>>>> 2ab9619c6ddafe4e561300716f6e8a3a5a19e25e
 }
 
 
