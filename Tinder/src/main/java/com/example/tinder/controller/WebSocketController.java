@@ -5,6 +5,7 @@ import com.example.tinder.model.Message;
 import com.example.tinder.model.User;
 import com.example.tinder.repository.MessageRepository;
 import com.example.tinder.repository.UserRepository;
+import com.example.tinder.service.like.request.SuperLikeRequest;
 import com.example.tinder.service.message.MessageService;
 import com.example.tinder.service.message.request.MessageRequest;
 import com.example.tinder.service.user.UserService;
@@ -67,6 +68,30 @@ public class WebSocketController {
         return messageRequest;
     }
 
+    @MessageMapping("/chat.superlike")
+    @SendTo("/topic/public")
+    public SuperLikeRequest superLike(SuperLikeRequest superLikeRequest, Authentication authentication){
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+        String likerUsername = authentication.getName();
+        User liker = userService.findByUsername(likerUsername);
+
+        Long likeeId = superLikeRequest.getLikeeId();
+        User likee = userService.findUserById(likeeId);
+
+        if (liker == null || likee == null) {
+            return null;
+        }
+
+        Map<String, String> notificationData = new HashMap<>();
+        notificationData.put("type", "superlike");
+        notificationData.put("likerName", liker.getUserProfile().getFullName());
+
+        messagingTemplate.convertAndSendToUser(likee.getUsername(), "/queue/notifications", notificationData);
+
+        return superLikeRequest;
+    }
 
 
     @MessageMapping("/chat.sendMessage")

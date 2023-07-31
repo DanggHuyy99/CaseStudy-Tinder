@@ -220,3 +220,51 @@ html, body {
     cursor: pointer;
 }
 
+#show-img-after-end-user{
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: none;
+    animation:  pulse-wave infinite 2s ;
+    transition: transform 0.3s ease;
+}
+
+@keyframes pulse-wave {
+    0% {
+        box-shadow: 0 0 0 0  #f7bdeb;
+    }
+    100% {
+        box-shadow: 0 0 0 100px #fe62d7;
+    }
+}
+
+.wave-effect {
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.wave-effect::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    animation: pulse-wave 2s ease-in-out infinite;
+}
+
+.huy{
+    position: absolute;
+    font-size: 17px;
+    text-align: center;
+    color: white;
+    /* margin: 3px; */
+    margin-bottom: -190px;
+    font-weight: 700;
+    display: none;
+}
+

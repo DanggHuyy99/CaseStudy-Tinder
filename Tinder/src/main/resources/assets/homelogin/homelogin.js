@@ -2,6 +2,8 @@ var stompClient = null;
 var isHidden = false
 let likeeIdUser = 0;
 let currentPhotoIndex = 0;
+
+
 $(document).ready(function () {
     let superLikedUsers = [];
 
@@ -151,7 +153,6 @@ $(document).ready(function () {
     var originalTop = 542;
 
 
-// Xử lý sự kiện khi chuột được nhấn xuống
     grabButton.addEventListener("mousedown", function (e) {
         isDragging = true;
         initialY = e.clientY;
@@ -165,7 +166,7 @@ $(document).ready(function () {
             var offsetY = e.clientY - currentY;
             var newY = tinderNotification.offsetTop + offsetY;
 
-            // Giới hạn di chuyển trong tầm từ top 500px đến top 650px
+            // Giới hạn di chuyển trong tầm từ top bao nhiêu đến bao nhiêu???
             newY = Math.max(minY, Math.min(newY, maxY));
 
             tinderNotification.style.top = newY + "px";
@@ -230,6 +231,7 @@ async function handleMessage(messageDto) {
         }
     }
 }
+
 
 function connect() {
     var socket = new SockJS('/ws');
@@ -488,17 +490,21 @@ function openChat(userId, username, urlImage) {
             console.log(user)
             let interests = ""
             user.interests.forEach(i => {
-                interests += `<button disabled style="width: 105px" className="btn btn-outline-secondary me-2 radius fw-bold"
-                       htmlFor="option1">${i}</button>`
+                interests += `<span disabled style="width: 105px" class="custom-css-class"
+                       htmlFor="option1">${i}</span>`
 
             })
             let html = `
                 <img class="avatar-onClick" src="${user.photos[0].imageUrl}" >
-                <p>${user.fullName}</p></br>
-                <p>${user.age}</p></br>
-                <p>${user.gender}</p></br>
-                <p>${user.phone}</p></br>
-                <p>${interests}</p></br>
+                <div style="margin-left: 10px">
+                    <span style="font-size: 30px;font-weight: bold;margin-right: 10px">${user.fullName}</span>
+                    <span style="font-size: 30px;font-weight: bold">${user.age}</span></br>
+                    <h5 style="margin-top: 15px"><i class="fa fa-user"></i> ${user.gender}</h5>
+                    <h5 style="margin-top: 15px"><i class="fa fa-phone"></i> ${user.phone}</h5>
+                    <hr style="color: white;margin-top: 15px;opacity: 1">
+                    <div style="margin-top: 15px">${interests}</d>
+                </div>
+                
             `;
             console.log(document.getElementById("style-default"))
             document.getElementById("style-default").innerHTML = html;
@@ -578,6 +584,7 @@ function handleEnterKey(event) {
 }
 
 $(document).ready(function (event) {
+
     function showMatchUser() {
         $.ajax({
             url: "/api/matches",
@@ -611,6 +618,30 @@ $(document).ready(function (event) {
             }
         })
     }
+
+
+    $(".search-link.cooking").click(function() {
+        chooseInterest('COOKING');
+    });
+    $(".search-link.sports").click(function() {
+        chooseInterest('SPORTS');
+    });
+    $(".search-link.music").click(function() {
+        chooseInterest('MUSIC');
+    });
+    $(".search-link.travel").click(function() {
+        chooseInterest('TRAVEL');
+    });
+    $(".search-link.reading").click(function() {
+        chooseInterest('READING');
+    });
+    $(".search-link.coffee").click(function() {
+        chooseInterest('COFFEE');
+    });
+    $(".search-link.drink").click(function() {
+        chooseInterest('DRINK');
+    });
+
 
 
     function displayMessage(sender, content) {
@@ -697,6 +728,7 @@ $(document).ready(function (event) {
                 if (Math.round(this.x) < 50 && Math.round(this.x) > -50) {
                     document.getElementById("like").style.display = "none";
                     document.getElementById("dislike").style.display = "none";
+
                 }
                 if (Math.round(this.x) > 50) {
 
@@ -741,6 +773,9 @@ $(document).ready(function (event) {
                 console.log("Vị trí X: ", Math.round(this.x));
             },
             onDragEnd: function (endX) {
+                if (Math.round(this.endX) < 50 && Math.round(this.endX) > -50){
+                    document.getElementById("photo").style.zIndex = "1";
+                }
                 if (Math.round(this.endX) > 50) {
                     console.log(this.endX)
                     document.getElementById("like").style.display = 'block'
@@ -805,7 +840,12 @@ $(document).ready(function (event) {
                             }
                         });
                         swipedProfiles.push(currentProfile.id);
-                        addNewProfile();
+                        if(interestCurrent){
+                            chooseInterest(interestCurrent)
+                        }else{
+                            addNewProfile();
+                        }
+
                     } else {
                         $.ajax({
                             url: "/api/likes/countLike",
@@ -938,7 +978,13 @@ $(document).ready(function (event) {
                 }
             });
             swipedProfiles.push(currentProfile.id);
-            addNewProfile();
+            if(interestCurrent){
+                chooseInterest(interestCurrent);
+
+            }else{
+                addNewProfile();
+            }
+
         }
     }
 
@@ -974,14 +1020,17 @@ $(document).ready(function (event) {
             method: "GET",
             success: function (datas) {
                 console.log("helooo")
-                let unswipedDatas = datas.filter(data => !swipedProfiles.includes(data.id));
+                let unswipedDatas = datas.filter(data => !swipedProfiles.includes(data.id) && data.id !== +document.getElementById("idcurrent").value);
 
                 if (unswipedDatas.length === 0) {
                     showUserOver()
                     return;
                 }
+
                 let index = Math.floor(Math.random() * unswipedDatas.length);
                 currentProfile = unswipedDatas[index];
+
+
                 console.log(currentProfile)
 
                 let photoCount = currentProfile.photos.length;
@@ -1077,6 +1126,91 @@ $(document).ready(function (event) {
     }
 
 
+    var interestCurrent = '';
+    function chooseInterest(interest) {
+        interestCurrent = interest;
+        $.ajax({
+            url: "/api/users/getUserCategory/" + interest,
+            method: "GET",
+            success: function (user) {
+                $("div.content").text('')
+                console.log("List user", user)
+                console.log("ditmemeầeuihfueoahfueia")
+
+                let unswipedUsers = user.filter(data => !swipedProfiles.includes(data.id));
+
+                if (unswipedUsers.length === 0) {
+                    showUserOver();
+                    return;
+                }
+
+                let index = Math.floor(Math.random() * unswipedUsers.length);
+                let currentProfile = unswipedUsers[index];
+                console.log("currentPrrofile", currentProfile)
+
+                $("div.content").find('.like-text').css('opacity', 0);
+                $("div.content").find('.dislike-text').css('opacity', 0);
+                // $("div.content").find('.info').find('h3').eq(0).text(currentProfile.fullName);
+                // $("div.content").find('.info').find('h3').eq(1).text(currentProfile.age);
+
+                let interests = currentProfile.interests;
+
+                let interestsHTML = interests.map(interest => `<span class="custom-css-class disabled">${interest}</span>`).join("");
+
+                let photoCount = currentProfile.photos.length;
+
+                likeeIdUser = currentProfile.id;
+
+
+                $("div.content").prepend(`
+                    <div class="photo" id="photo" style="background-image:url(${currentProfile.photos[0].imageUrl});">
+                      <div id="photo-count"><p id="count-img">Số lượng ảnh: ${photoCount}</p></div>
+                        <button id="previous"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button id="next"><i class="fa-solid fa-chevron-right"></i></button>
+                        <div id="dislike">KHÔNG</div>
+                        <div id="like">THÍCH</div>
+                      
+                        <div class="info info-profile">
+
+                            <h3 id="fullName">${currentProfile.userProfile.fullName}</h3>
+                            <h3 id="age">${currentProfile.userProfile.age}</h3>
+                            <div id="interest"></div>
+                        </div>
+                    </div>
+
+                `);
+                $("#interest").html(interestsHTML);
+
+
+                $("#previous").on("click", showPreviousPhoto);
+                $("#next").on("click", showNextPhoto);
+                $("#previous, #next").hide();
+
+                $(".photo").on("mouseenter", function () {
+                    $("#previous, #next").fadeIn();
+                });
+
+                $(".photo").on("mouseleave", function () {
+                    $("#previous, #next").fadeOut();
+                });
+
+
+                $("#photo-count").attr("data-photo-count", photoCount);
+
+                swipe();
+                setInterval(changeTextColor, 2000);
+                swipedProfiles.push(currentProfile.id)
+            }
+        })
+        swipe();
+    }
+
+
+
+
+
+
+
     // function addNewProfile() {
     //     $.ajax({
     //         url: "api/userprofiles",
@@ -1124,7 +1258,16 @@ $(document).ready(function (event) {
     //     swipe();
     // }
 
+
+
+
 });
+
+
+
+
+
+
     function addNewProfile1(users) {
         let unswipedUsers = users.filter(user => !swipedProfiles.includes(user.id));
 
@@ -1164,8 +1307,8 @@ function showTinderNotification() {
     var notification = document.querySelector(".tinder-notification");
     notification.style.bottom = "0px"; // Hiển thị thông báo lên dưới màn hình
     setTimeout(function () {
-        notification.style.bottom = "-100%"; // Ẩn thông báo xuống bên dưới màn hình sau 3 giây
-    }, 99000);
+        notification.style.bottom = "-100%";
+    }, 5000);
     if (isHidden) {
         // Nếu đoạn div đã ẩn đi, xóa class fade-out để hiển thị lại đoạn div
         notification.classList.remove("fade-out");
@@ -1192,6 +1335,11 @@ function showUserOver() {
     });
     document.getElementById("content1").style.display = 'none';
     showTinderNotification();
+    document.getElementById("default-container").style.background = 'linear-gradient(#D928AE, #F15B76, #FC735C)';
+    document.getElementById("show-img-after-end-user").style.display = 'block'
+    document.getElementsByClassName('bottom-button')[0].style.color = 'white';
+    document.getElementsByClassName('bottom-button')[0].style.fontWeight = '700';
+    document.getElementsByClassName('huy')[0].style.display = 'block'
 }
 
 function showMatchPopup() {
@@ -1229,6 +1377,8 @@ function showNotification(username, userId, imgUrl) {
         }
     });
 }
+
+var swipedProfiles = []
 
 
 

@@ -1,19 +1,18 @@
 package com.example.tinder.controller.rest;
 
-import com.example.tinder.model.Photo;
 import com.example.tinder.model.User;
 import com.example.tinder.model.interest.Interest;
 import com.example.tinder.repository.UserRepository;
 import com.example.tinder.service.user.UserService;
+import com.example.tinder.service.user.request.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +51,12 @@ public class UserRestController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/searchByAge")
+    public ResponseEntity<?> searchByAge(@RequestParam("minAge") int minAge, @RequestParam("maxAge") int maxAge) {
+        User users = userService.findUsersByAgeRange(minAge, maxAge);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @GetMapping("/getPhotoById")
     public ResponseEntity<?> getPhotoById(@RequestParam Long id) {
 
@@ -76,10 +81,21 @@ public class UserRestController {
         return ResponseEntity.ok(isVip);
     }
     @GetMapping("/getUserCategory/{interest}")
-    public  ResponseEntity<List<User>> getUserByCategory(@PathVariable Interest interest){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName();
-        List<User> user = userRepository.findByInterests(interest).get();
-        return ResponseEntity.ok(user);
+    public ResponseEntity<List<UserDTO>> getUserByCategory(@PathVariable Interest interest){
+        List<User> users = userRepository.findByInterests(interest).get();
+        List<UserDTO> userDTOs = new ArrayList<>();
+        for (User user : users) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setUsername(user.getUsername());
+            userDTO.setPassword(user.getPassword());
+            userDTO.setUserProfile(user.getUserProfile());
+            userDTO.setPhotos(user.getPhotos());
+            userDTO.setInterests(user.getInterests());
+
+            userDTOs.add(userDTO);
+        }
+
+        return ResponseEntity.ok(userDTOs);
     }
 }

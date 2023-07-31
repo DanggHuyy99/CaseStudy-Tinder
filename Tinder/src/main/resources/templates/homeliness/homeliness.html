@@ -95,7 +95,7 @@
             <div class="interest-card"></div>
             <div class="scrollbar4" >
                 <div class="search-item">
-                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('DRINK')">
+                    <a class="search-link drink" style="background-color: #670a8a;">
                         <img class="category-img"
                              src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
                              alt="">
@@ -106,7 +106,7 @@
                     </a>
                 </div>
                 <div class="search-item">
-                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('SPORTS')">
+                    <a class="search-link sports" style="background-color: #670a8a;;">
                         <img class="category-img"
                              src="https://shopvnb.com/uploads/images/tin_tuc/vot-cau-long-qua-cung-tac-hai-gi-cach-chon-vot-cau-long-phu-hop-1.webp"
                              alt="">
@@ -117,7 +117,7 @@
                     </a>
                 </div>
                 <div class="search-item">
-                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('MUSIC')">
+                    <a class="search-link music" style="background-color: #670a8a;;">
                         <img class="category-img"
                              src="https://img.pikbest.com/backgrounds/20191024/music-festival-symbol-background-image_2762753.jpg!w700wp"
                              alt="">
@@ -128,7 +128,7 @@
                     </a>
                 </div>
                 <div class="search-item">
-                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('TRAVEL')">
+                    <a class="search-link travel" style="background-color: #670a8a;;" >
                         <img class="category-img"
                              src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
                              alt="">
@@ -139,7 +139,7 @@
                     </a>
                 </div>
                 <div class="search-item">
-                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('COOKING')">
+                    <a class="search-link cooking" style="background-color: #670a8a;;">
                         <img class="category-img"
                              src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
                              alt="">
@@ -150,12 +150,23 @@
                     </a>
                 </div>
                 <div class="search-item">
-                    <a class="search-link" style="background-color: #670a8a;;" onclick="chooseInterest('COFFEE')">
+                    <a class="search-link coffee" style="background-color: #670a8a;;">
                         <img class="category-img"
                              src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
                              alt="">
                         <div class="search-content">
                             <p style="color: aliceblue;">Thích cà phê</p>
+
+                        </div>
+                    </a>
+                </div>
+                <div class="search-item">
+                    <a class="search-link reading" style="background-color: #670a8a;;">
+                        <img class="category-img"
+                             src="https://get.pxhere.com/photo/glass-drink-cocktail-martini-liqueur-cosmopolitan-alcoholic-beverage-distilled-beverage-4954.jpg"
+                             alt="">
+                        <div class="search-content">
+                            <p style="color: aliceblue;">Thích đọc sách</p>
 
                         </div>
                     </a>
@@ -170,7 +181,10 @@
         <h3 id="expandAge">Vui lòng mở rộng độ tuổi để tìm thêm tương hợp</h3>
         <button id="backToDiscover">Quay lại khám phá</button>
     </div>
+
     <div id="default-container" class="wrapper">
+        <img id="show-img-after-end-user" th:src="${user.getPhotos().get(0).getImageUrl()}">
+        <div class="huy">Chúng tôi không tìm được tương hợp tiềm năng cho bạn vào lúc này. <br> Hãy thử thay đổi các ưu tiên của bạn để xem có ai ở gần đây</div>
         <div class="content1" id="content1">
             <div id="swiper">
 
@@ -400,7 +414,7 @@
             </div>
         </div>
         <div class="message-profile-block" id="profileBlock" >
-            <div class="scrollbar3" id="style-default">
+            <div class="scrollbar3 info-user" id="style-default">
             </div>
         </div>
     </div>
@@ -662,27 +676,12 @@
             }
         })
     });
-    function chooseInterest(interest) {
-        console.log(interest)
-        $.ajax({
-            url: "/api/users/getUserCategory/" + interest,
-            method: "GET",
-            success: function (user) {
-                console.log("List user", user)
-            },
-            error: function (error) {
-                console.log("Lỗi khi lấy thông tin người gửi");
-            }
-        });
-    }
-    // function showCategory() {
-    //     event.preventDefault();
-    //     console.log(123)
-    //     const searchCategory = document.getElementById("search-category");
-    //     const massage = document.getElementById("massage")
-    //     searchCategory.style.display = "flex";
-    //     massage.style.display = "none"
-    // }
+    
+    
+
+
+
+
 
     let isSearchCategoryVisible = false;
     function showCategory() {

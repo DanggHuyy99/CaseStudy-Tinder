@@ -35,7 +35,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
 
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>  -->
@@ -70,18 +70,17 @@
 <!--            </div>-->
             <div class="tab-content" style="display: block;">
                 <div class="container">
-                    <div id="priceRange" class="form-range"></div>
-                    <input type="text" id="ageMin" readonly>
-                    <input type="text" id="ageMax" readonly>
+                    <div id="ageRange">
+                        <div class="d-flex justify-content-between" style="width: 106%;margin-left: -12px">
+                            <input type="text" id="ageMin" readonly>
+                            <input type="text" id="ageMax" readonly>
+                        </div>
+                    </div>
                 </div>
-                <div id="tab1" class="tab-pane active alert alert-dark text-center logout">
+                <div id="tab1" class="alert alert-dark text-center logout" style="margin-top: 50px">
                     <a href="http://localhost:8080/logout" style="width: 100%;margin-left: 0;text-decoration: none;color: white">
                         Đăng xuất
                     </a>
-                </div>
-                <div id="tab2" class="tab-pane" style="color: white;">
-                    <i class="active-massage fa-solid fa-comment fa-flip-horizontal fa-2xl"></i>
-
                 </div>
             </div>
         </div>
@@ -93,11 +92,14 @@
             <img th:src="${user.getPhotos().get(0).getImageUrl()}" alt="" class="user-img">
             <div class="info-user">
                 <H1 th:text="${userprofile.fullName}"></H1>
-                <p><i class="fa-solid fa-house"></i> sống ở huế</p>
-                <span class="d-flex"><i class="fas fa-user" style="padding: 5px 3px;line-height: 15px"></i><p
+                <p><i class="fa-solid fa-house" style="padding: 5px 5px;line-height: 15px"></i>Sống ở huế</p>
+                <span class="d-flex"><i class="fas fa-user" style="padding: 5px 5px;line-height: 15px"></i><p
                         th:utext="${userprofile.getGender()}"></p></span>
-                <span class="d-flex"><i class="fa-solid fa-envelope" style="padding: 5px 3px;line-height: 15px"></i><p
+                <span class="d-flex"><i class="fa-solid fa-envelope" style="padding: 5px 5px;line-height: 15px"></i><p
                         th:text="${userprofile.getEmail()}"></p></span>
+                <span class="d-flex"><i class="fa fa-phone" style="padding: 5px 5px;line-height: 15px"></i>
+                    <p th:text="${userprofile.getPhone()}"></p>
+                </span>
                 <div style="color: white;" class="interest">
                     <H2>Sở thích</H2>
                 </div>
@@ -252,7 +254,7 @@
     let previousMinAge = 16;
     let previousMaxAge = 69;
     $(function () {
-        $("#priceRange").slider({
+        $("#ageRange").slider({
             range: true,
             min: 16,
             max: 69,
@@ -260,25 +262,38 @@
             slide: function (event, ui) {
                 $("#ageMin").val(ui.values[0]);
                 $("#ageMax").val(ui.values[1]);
-                ageMin = $("#ageMin").val();
-                ageMax = $("#ageMax").val();
+                ageMin = parseInt($("#ageMin").val());
+                ageMax = parseInt($("#ageMax").val());
                 body.innerHTML = '';
-                console.log("min" + ageMin)
-                console.log("max" + ageMax)
-                console.log("minPEEE" + previousMinAge)
-                console.log("maxPRRR" + previousMaxAge)
-                // var filteredProducts = filterProductsByPrice(ui.values[0], ui.values[1]);
                 if (ageMin !== previousMinAge || ageMax !== previousMaxAge) {
-                    filterProductsByPrice(ageMin, ageMax);
-                    body.innerHTML = '';
+                    // filterProductsByPrice(ageMin, ageMax);
                     previousMinAge = ageMin;
                     previousMaxAge = ageMax;
                 }
             }
         });
-        $("#ageMin").val($("#priceRange").slider("values", 0));
-        $("#ageMax").val($("#priceRange").slider("values", 1));
+        $("#ageMin").val($("#ageRange").slider("values", 0));
+        $("#ageMax").val($("#ageRange").slider("values", 1));
     });
+
+    function searchByAge(minAge, maxAge) {
+        $.ajax({
+            url: "/api/users/searchByAge",
+            type: "GET",
+            data: {
+                minAge: minAge,
+                maxAge: maxAge
+            },
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(xhr, status, error) {
+                console.log("Lỗi: " + error);
+            }
+        });
+    }
+
+    searchByAge(minAge,maxAge);
 
     // function filterProductsByPrice(ageMin, ageMax) {
     //     let filteredAges = products.filter(function (product) {
@@ -288,8 +303,8 @@
     // }
 
     function onFilter() {
-        minPrice = document.getElementById('min').value;
-        maxPrice = document.getElementById('max').value;
+        minAge = document.getElementById('min').value;
+        maxAge = document.getElementById('max').value;
     }
     function renderPhoto() {
         $.ajax({

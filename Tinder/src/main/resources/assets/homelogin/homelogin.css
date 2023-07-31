@@ -569,13 +569,12 @@ input[type="search"]:hover {
     margin-top: 10px;
 }
 
-<<<<<<< HEAD
+
 .rounded-circle {
     width: 70px;
     height: 65px;
 }
 
-=======
 .custom-css-class {
     color: white;
     background-color: transparent;
@@ -618,8 +617,15 @@ input[type="search"]:hover {
     background-color: black;
     border-color: black;
 }
+<<<<<<< Updated upstream
 /*.custom-css-class:not(:disabled):not(.disabled):active:focus, .custom-css-class:not(:disabled):not(.disabled).active:focus,*/
 /*.show > .custom-css-class.dropdown-toggle:focus {*/
 /*    box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.5);*/
 /*}*/
 
+=======
+
+.info-user {
+    color: white;
+}
+>>>>>>> Stashed changes
