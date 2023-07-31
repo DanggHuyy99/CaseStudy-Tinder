@@ -11,6 +11,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> findByUserId(Long user_id);
 
     @Modifying
-    @Query(value = "delete Photo WHERE id = :id")
+    @Query(value = "delete FROM Photo WHERE id = :id")
     void delDe(Long id);
 }

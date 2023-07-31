@@ -56,7 +56,7 @@ public class ProfileController {
     }
 
     @PostMapping("/profile")
-//    @Transactional
+    @Transactional
     public String updateProfile(@RequestParam("fileUpload") MultipartFile[] fileUpload, @Valid @ModelAttribute("request") ProfileRequest request,@ModelAttribute("userprofile") UserProfile userprofile,  BindingResult result, Model model) throws IOException {
         userProfileService.checkProfileUser(request, result);
 

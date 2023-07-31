@@ -20,7 +20,7 @@
 
 .tab-content {
     display: none;
-    padding: 20px 0;
+    /*padding: 20px 0;*/
 }
 
 .tab-content.active {
@@ -473,7 +473,10 @@ body {
     flex-wrap: wrap;
 }
 .logout {
-    background-color: rgba(43, 50, 59, 0.7);
+    background-color: rgba(40, 46, 54, 0.7);
+    margin-top: -17px;
+    height: 65px;
+    border-radius: 0;
 }
 
 .tab-content > #tab1 {
@@ -503,10 +506,25 @@ body {
 input[type="text"] {
     width: 25px;
     height: 25px;
-    margin-top: 10px;
+    margin-top: 13px;
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+
+.text-color {
+    color: white;
+}
+
+.text-color-hover:hover>span{
+    color: red !important;
+    cursor: pointer;
+}
+
+#ageMin, #ageMax {
+    color: white;
+    background-color: rgba(43, 50, 59, 0.7);
+    border-color: rgba(43, 50, 59, 0.7);
 }
 
 

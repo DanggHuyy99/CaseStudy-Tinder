@@ -39,9 +39,6 @@ public class UserService {
         return optionalUser.orElse(null);
     }
 
-    public User findUsersByAgeRange(int minAge, int maxAge) {
-        return userRepository.findAllByUserProfileAge(minAge, maxAge);
-    }
 
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -103,6 +100,7 @@ public class UserService {
         userWithProfileDTO.setEmail(userProfile.getEmail());
         userWithProfileDTO.setPhone(userProfile.getPhone());
         userWithProfileDTO.setAge(userProfile.getAge());
+        userWithProfileDTO.setGender(userProfile.getGender());
         userWithProfileDTO.setPhotos(photos);
         userWithProfileDTO.setInterests(interests);
         userWithProfileDTO.setLocation(userProfile.getLocation());

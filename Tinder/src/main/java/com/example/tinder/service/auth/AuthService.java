@@ -1,8 +1,10 @@
 package com.example.tinder.service.auth;
 
 import com.example.tinder.model.Photo;
+import com.example.tinder.model.Preference;
 import com.example.tinder.model.User;
 import com.example.tinder.model.UserProfile;
+import com.example.tinder.model.gender.Gender;
 import com.example.tinder.model.interest.Interest;
 import com.example.tinder.model.role.Role;
 import com.example.tinder.repository.PhotoRepository;
@@ -48,6 +50,19 @@ public class AuthService implements UserDetailsService {
         userProfile.setAge(Integer.parseInt(request.getAge()));
         userProfile.setLocation(request.getLocation());
         userProfile.setGender(request.getGender());
+
+        Preference preference = new Preference();
+        preference.setUser(user);
+        preference.setMinAge(16);
+        preference.setMaxAge(69);
+        if (request.getGender() == Gender.FEMALE) {
+            preference.setGender(Gender.MALE);
+        } else if (request.getGender() == Gender.MALE){
+            preference.setGender(Gender.FEMALE);
+        } else {
+            preference.setGender(Gender.OTHER);
+        }
+        user.setPreference(preference);
 
         List<Photo> photos = new ArrayList<>();
         for (String url : request.getPhotoUrls()){
