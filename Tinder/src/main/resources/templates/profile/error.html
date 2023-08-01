@@ -72,16 +72,55 @@
             <!--                    <button class="tab-button" data-tab="tab2" style="width: 200px;">Tin nhắn</button>-->
             <!--                </div>-->
             <!--            </div>-->
-            <div class="tab-content" style="display: block;">
-                <div id="tab1" class="tab-pane active alert alert-dark text-center logout">
-                    <a href="http://localhost:8080/logout" style="width: 100%;margin-left: 0;text-decoration: none;color: white">
-                        Đăng xuất
-                    </a>
-                </div>
-                <div id="tab2" class="tab-pane" style="color: white;">
-                    <i class="active-massage fa-solid fa-comment fa-flip-horizontal fa-2xl"></i>
+            <div class="tab-content" style="display: block;margin-top: -15px">
+                <div class="container">
+                    <div class="text-color" style="margin: 20px 0">Account Settings</div>
+                    <div class="d-flex justify-content-between alert alert-dark logout">
+                        <span class="text-color">Email</span>
+                        <span th:text="${user.getUserProfile().email}" class="text-color"></span>
+                    </div>
+                    <div class="d-flex justify-content-between alert alert-dark logout">
+                        <span class="text-color">Phone Number</span>
+                        <span th:text="${user.getUserProfile().phone}" class="text-color"></span>
+                    </div>
+                    <div class="text-color" style="margin: 20px 0">Discovery Settings</div>
+                    <div class="d-flex justify-content-between alert alert-dark logout">
+                        <span class="text-color">Location</span>
+                        <span class="text-color">Hue, VietNam</span>
+                    </div>
+                    <div class="d-flex mb3 alert alert-dark logout">
+                        <span class="text-color me-auto p-2">Looking for</span>
+                        <div class="text-color-hover" style="padding-top: 5px;">
+                            <span th:text="${user.getPreference().getGender()}" class="text-color p-2" style="margin-right: -15px"></span>
+                            <span class="text-color p-2" style="font-size: 15px"><i class="fa-solid fa-chevron-right"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-dark logout" style="padding-bottom: 3rem;height: 100px">
+                        <p class="text-color">Age Preference</p>
+                        <div id="ageRange">
+                            <div class="d-flex justify-content-between" style="width: 107%;margin-left: -13px">
+                                <input type="text" id="ageMin" readonly>
+                                <input type="text" id="ageMax" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-color" style="margin: 20px 0">Display Preference</div>
+                    <div class="d-flex mb3 alert alert-dark logout">
+                        <span class="text-color me-auto p-2">Language</span>
+                        <div class="text-color-hover" style="padding-top: 5px;">
+                            <span class="text-color p-2" style="margin-right: -15px">English</span>
+                            <span class="text-color p-2" style="font-size: 15px"><i class="fa-solid fa-chevron-right"></i></span>
+                        </div>
+                    </div>
+                    <div id="tab1" class="alert alert-dark text-center logout" style="margin-top: 25px">
+                        <a href="http://localhost:8080/logout" style="width: 100%;margin-left: 0;text-decoration: none;color: white">
+                            Đăng xuất
+                        </a>
+                    </div>
 
                 </div>
+
             </div>
         </div>
     </div>
