@@ -2,6 +2,7 @@ package com.example.tinder.controller;
 
 import com.example.tinder.model.User;
 import com.example.tinder.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +21,8 @@ public class LoginController {
     private final UserRepository userRepository;
 
     @GetMapping("/login")
-    public String login(Model model){
+    public String login(Model model, HttpServletRequest request){
+        System.out.println(request.getRemoteAddr());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByUsernameIgnoreCase(username);

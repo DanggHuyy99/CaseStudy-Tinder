@@ -620,3 +620,13 @@ input[type="search"]:hover {
 .info-user {
     color: white;
 }
+
+.div-info {
+    background-color: rgba(40, 46, 54, 0.7);
+    height: 50px;
+    border-radius: 0;
+}
+
+.search-content>p {
+    cursor: pointer;
+}

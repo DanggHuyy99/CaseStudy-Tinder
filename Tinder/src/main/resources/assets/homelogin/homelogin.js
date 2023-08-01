@@ -503,6 +503,8 @@ function openChat(userId, username, urlImage) {
                     <h5 style="margin-top: 15px"><i class="fa fa-phone"></i> ${user.phone}</h5>
                     <hr style="color: white;margin-top: 15px;opacity: 1">
                     <div class="d-flex flex-wrap" style="margin-top: 15px">${interests}</div>
+                    <div class="div-info text-center info-user alert alert-dark">Hủy tương hợp</div>
+                    <div class="div-info text-center info-user alert alert-dark">Chặn</div>
                 </div>
                 
             `;

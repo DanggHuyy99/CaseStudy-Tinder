@@ -74,6 +74,6 @@ public class AuthController {
             return "/user/register";
         }
         authService.register(request);
-        return "redirect:/register?success";
+        return "redirect:/home";
     }
 }
