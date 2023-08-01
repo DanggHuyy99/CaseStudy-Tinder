@@ -6,6 +6,7 @@ import com.example.tinder.model.User;
 import com.example.tinder.model.UserProfile;
 import com.example.tinder.repository.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,4 +82,15 @@ public class MatchService {
         return matchRepository.existsByUser1IdAndUser2Id(userId1, userId2)
                 || matchRepository.existsByUser1IdAndUser2Id(userId2, userId1);
     }
+
+    public void deleteMatch(Long userId1, Long userId2) {
+        Optional<Match> matchOptional = matchRepository.findByUser1IdAndUser2Id(userId1, userId2);
+        if (matchOptional.isPresent()) {
+            Match match = matchOptional.get();
+            matchRepository.delete(match);
+        } else {
+            throw new RuntimeException("lỗi");
+        }
+    }
+
 }

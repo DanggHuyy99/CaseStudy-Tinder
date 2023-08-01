@@ -464,7 +464,70 @@ let urlImageSendMessage = '';
 let userIdSendMessage = 0;
 let fullNameSendMessage = '';
 
+function confirmDelete(userId1) {
+    Swal.fire({
+        title: 'Xác nhận xoá?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Xoá',
+        cancelButtonText: 'Hủy',
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteMatch(userId1);
+        }
+    });
+}
+
+function deleteMatch(userId1) {
+    console.log(JSON.stringify({ userId1: userId1, userId2: document.getElementById("idcurrent").value }))
+    $.ajax({
+        url: '/api/matches/'+userId1,
+        type: 'DELETE',
+        data: JSON.stringify({ userId1: userId1, userId2: document.getElementById("idcurrent").value }),
+        contentType: 'application/json',
+        success: function (data) {
+            Swal.fire({
+                title: data,
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            }).then(() => {
+                // Sau khi xoá thành công, gọi lại API để lấy danh sách Match mới
+                alert("Xoá thành công");
+            });
+        },
+        error: function (error) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: error.responseText,
+                icon: 'error',
+                showConfirmButton: true,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            });
+        }
+    });
+}
+
 function openChat(userId, username, urlImage) {
+    const idcur = document.getElementById("idcurrent").value;
+
     urlImageSendMessage = document.getElementById("url-img-current").value;
     userIdSendMessage = document.getElementById("idcurrent").value;
     fullNameSendMessage = document.getElementById("full-name-current").value;
@@ -503,7 +566,7 @@ function openChat(userId, username, urlImage) {
                     <h5 style="margin-top: 15px"><i class="fa fa-phone"></i> ${user.phone}</h5>
                     <hr style="color: white;margin-top: 15px;opacity: 1">
                     <div class="d-flex flex-wrap" style="margin-top: 15px">${interests}</div>
-                    <div class="div-info text-center info-user alert alert-dark">Hủy tương hợp</div>
+                    <div class="div-info text-center info-user alert alert-dark" onclick="confirmDelete(${user.id})">Hủy tương hợp</div>
                     <div class="div-info text-center info-user alert alert-dark">Chặn</div>
                 </div>
                 

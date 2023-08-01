@@ -15,6 +15,10 @@
           integrity="sha384-pzjw8w/sjRo71QoKtJcWwylF5jGwosWQN4PB9o4k2Iw78Fv1h7Euw4MnsjuM2n1Y" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+    <!-- Thư viện SweetAlert JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
     <style>
         .invalid-feedback {
             margin-top: 10px;
@@ -385,6 +389,7 @@
         } else {
             const form = document.getElementById("formSubmit");
             form.submit();
+            alert("Đã đăng ký tài khoản thành công")
         }
     }
     function saveImageToLocalStorage(fileInput) {

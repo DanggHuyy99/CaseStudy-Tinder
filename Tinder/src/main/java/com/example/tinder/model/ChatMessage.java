@@ -1,5 +1,6 @@
 package com.example.tinder.model;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
